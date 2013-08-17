@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.vilaverde.cronos"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="16" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="br.com.vilaverde.cronos.SplashScreen"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="br.com.vilaverde.cronos.SplashScreen2" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.view.clientes.ClientesForm"
+            android:label="Cadastro de Clientes" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.view.clientes.ClientesList"
+            android:label="Lista de Clientes" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.HeadlinesFragment"
+            android:label="Departamentos" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.ArticleFragment"
+            android:label="Produtos" >
+        </activity>
+        <activity android:name="br.com.vilaverde.cronos.Cronos" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.view.produtos.ProdutosDetalhe"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.view.pedidos.PedidoAberto"
+            android:label="@string/title_activity_pedido_aberto" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.view.clientes.ClienteSearch"
+            android:label="@string/title_activity_cliente_search" >
+        </activity>
+    </application>
+
+</manifest>

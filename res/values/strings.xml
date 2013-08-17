@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Cronos</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="powered_by">Desenvolvido por VilaVerde Sistemas.</string>
+    <string name="description_img_splashscreen">Imagem Logo do Desenvolvedor.</string>
+    <string name="description_img_splashscreen2">Imagem Logo Cliente.</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+
+    <!-- Menu MainActivity -->
+    <string name="menu_settings">Settings</string>
+    <string name="atualizar">Atualizar</string>
+    <string name="sair">Sair</string>
+    <string name="novo_pedido">Novo Pedido</string>
+    <string name="clientes">Clientes</string>
+    <string name="novo_cliente">Adicionar Cliente</string>
+    <string name="listar_cliente">Listar Clientes</string>
+    <string name="cadastro_de_clientes">Cadastro de Clientes</string>
+    <string name="nome_razao_social">Nome / Razão Social:</string>
+    <string name="cpf_cnpj">CPF / CNPJ:</string>
+    <string name="rg_ie">RG / IE:</string>
+    <string name="telefone_fixo">Telefone Fixo:</string>
+    <string name="telefone_movel">Telefone Movel:</string>
+    <string name="title_activity_pedido_aberto">Pedido</string>
+    <string name="action_settings">Settings</string>
+    <string name="selecione_cliente">Selecione um Cliente</string>
+
+    <!-- Menu PEDIDOS -->
+    <string name="menu_excluir_pedido">Excluir Pedido</string>
+    <string name="menu_finalizar_pedido">Finalizar Pedido</string>
+
+    <!-- LABELS PEDIDOS DETALHES -->
+    <string name="lblCliente">Cliente</string>
+    <string name="lblTotal">Total</string>
+    <string name="lblItens">Itens</string>
+    <string name="lblFormaPagamento">Forma de Pagamento:</string>
+    <string name="lblNotaFiscalEletronica">Nota Fiscal Eletronica?</string>
+    <string name="lblObservacoesPedido">Observações</string>
+
+    <!-- PEDIDO PRODUTOS GRID HEADERS -->
+    <string name="colheaderCodigo">Código</string>
+    <string name="colheaderDescricao">Descrição</string>
+    <string name="colheaderQuantidade">Quantidade</string>
+    <string name="colheaderValor">Valor</string>
+    <string name="colheaderValorTotal">Valor Total</string>
+
+    <!-- BOTOES -->
+    <string name="btn_salvar">Salvar</string>
+    <string name="btn_voltar">Voltar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_adicionar">Adicionar</string>
+    <string name="title_activity_cliente_search">Selecine um Cliente</string>
+    
+	<!-- RADIO BUTTONS -->
+	<string name="rbtDinheiro">Dinheiro</string>
+	<string name="rbtCartaoCredito">Cartão de Credito</string>
+	<string name="rbtCheque">Cheque</string>
+	
+	
+
+</resources>

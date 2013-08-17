@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <fragment
+            android:id="@+id/fragment_produto_detalhes_imagem"
+            android:name="br.com.vilaverde.cronos.view.produtos.ProdutoDetalhesImagem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.28"
+            tools:layout="@layout/produtos_detalhe_imagem" />
+
+        <fragment
+            android:id="@+id/fragment_produto_detalhes_form"
+            android:name="br.com.vilaverde.cronos.view.produtos.ProdutoDetalhesForm"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/produtos_detalhe_form" />
+    </LinearLayout>
+
+</LinearLayout>
+<!-- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" -->
+<!--     android:id="@+id/layout_detalhesprodutos" -->
+<!--     android:layout_width="fill_parent" -->
+<!--     android:layout_height="fill_parent" -->
+<!--     android:descendantFocusability="beforeDescendants" -->
+<!--     android:focusableInTouchMode="true" > -->
+
+<!--     <FrameLayout -->
+<!--         android:id="@+id/frameLayout1" -->
+<!--         android:layout_width="400dp" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_alignParentRight="true" -->
+<!--         android:layout_alignParentTop="true" > -->
+
+<!--         <LinearLayout -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:orientation="vertical" > -->
+
+<!-- 			<EditText -->
+<!-- 				android:id="@+id/produto_detalhe_descricao" -->
+<!-- 				android:layout_width="match_parent" -->
+<!-- 				android:layout_height="60dp" -->
+<!-- 				android:ems="10" -->
+<!-- 				android:inputType="textMultiLine" -->
+<!-- 				android:text="Descrição" /> -->
+
+<!-- 			<EditText -->
+<!-- 			    android:id="@+id/produto_detalhe_preco" -->
+<!-- 			    android:layout_width="match_parent" -->
+<!-- 			    android:layout_height="wrap_content" -->
+<!-- 			    android:inputType="numberDecimal" -->
+<!-- 			    android:text="99.99" /> -->
+
+<!-- 			<EditText -->
+<!-- 				android:id="@+id/produto_detalhe_quantidade" -->
+<!-- 				android:layout_width="match_parent" -->
+<!-- 				android:layout_height="wrap_content" -->
+<!-- 				android:inputType="number" -->
+<!-- 				android:text="10" /> -->
+
+<!-- 			<EditText -->
+<!-- 				android:id="@+id/produto_detalhe_observacao" -->
+<!-- 				android:layout_width="wrap_content" -->
+<!-- 				android:layout_height="wrap_content" -->
+<!-- 				android:ems="10" -->
+<!-- 				android:inputType="textMultiLine" -->
+<!-- 				android:text="Observação" /> -->
+
+			
+<!--         </LinearLayout> -->
+        
+<!--     </FrameLayout> -->
+
+<!--     <FrameLayout -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_alignParentTop="true" -->
+<!--         android:layout_toLeftOf="@+id/frameLayout1" > -->
+        
+<!--        	<ImageView -->
+<!--        	    android:id="@+id/produto_full_imageView" -->
+<!--        	    android:layout_width="match_parent" -->
+<!--        	    android:layout_height="match_parent" -->
+<!--        	    android:src="@drawable/produto_default" /> -->
+        
+<!--     </FrameLayout> -->
+
+<!-- </RelativeLayout> -->

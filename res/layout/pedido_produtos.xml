@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/table_pedido_produtos"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <!-- Headers -->
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1" >
+
+        <TextView
+            android:id="@+id/textView1"
+            style="@style/GridHeader"
+            android:text="@string/colheaderCodigo" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/GridHeader"
+            android:layout_weight="1"
+            android:text="@string/colheaderDescricao" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/GridHeader"
+            android:layout_width="150dp"
+            android:text="@string/colheaderQuantidade" />
+
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/GridHeader"
+            android:layout_width="150dp"
+            android:text="@string/colheaderValor" />
+
+        <TextView
+            android:id="@+id/textView5"
+            style="@style/GridHeader"
+            android:layout_width="150dp"
+            android:text="@string/colheaderValorTotal" />
+    </TableRow>
+
+<!--     <TableRow -->
+<!--         android:id="@+id/tableRow1" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:stretchColumns="*" > -->
+
+<!--         <TextView -->
+<!--             style="@style/GridCell" -->
+<!--             android:layout_column="0" -->
+<!--             android:text="612345" /> -->
+
+<!--         <TextView -->
+<!--             android:layout_column="1" -->
+<!--             android:layout_weight="1" -->
+<!--             style="@style/GridCell" -->
+<!--             android:text="@string/colheaderDescricao" /> -->
+<!--     </TableRow> -->
+
+</TableLayout>

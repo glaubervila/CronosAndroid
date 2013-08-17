@@ -1,0 +1,13 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+	<style name="ButtonSave" parent="ButtonText">
+
+	    <item name="android:layout_width">250dp</item>
+	    <item name="android:drawableRight">@drawable/ic_save</item>
+   	    <item name="android:background">@drawable/btn_green</item>
+ 	    <item name="android:paddingLeft">20dp</item>
+ 	    <item name="android:paddingRight">20dp</item>
+ 	    <item name="android:text">@string/btn_salvar</item>
+ 	    
+	</style>
+</resources>
