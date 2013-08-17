@@ -15,7 +15,7 @@ import android.widget.Toast;
 //public class Atualizar extends Activity{
 public class Atualizar {
 
-	
+	// TESTE
 	private static String CNT_LOG = "Actualizar";
 	
     public Handler handler = new Handler();  
