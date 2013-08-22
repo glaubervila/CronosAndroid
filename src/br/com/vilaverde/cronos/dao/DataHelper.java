@@ -14,7 +14,9 @@ public class DataHelper extends SQLiteOpenHelper{
 	protected static  String NOME_BANCO = "cronos.db";
 	
 	private final static String TABELA = "pedidos_produtos";
-	protected static int VERSAO_SCHEMA = 51;
+	protected static int VERSAO_SCHEMA = 52;
+	
+	public Boolean REMOTE = false;
 		
 	protected SQLiteDatabase db;
 	
@@ -72,7 +74,8 @@ public class DataHelper extends SQLiteOpenHelper{
 		this.onCreateTableProdutos(db);
 		this.onCreateTablePedidos(db);
 		this.onCreateTablePedidoProdutos(db);
-		this.onCreateTableVendedor(db);	
+		this.onCreateTableVendedor(db);
+		this.onCreateTableDepartamentos(db);	
 	}
 
 	@Override
@@ -82,6 +85,7 @@ public class DataHelper extends SQLiteOpenHelper{
 		this.onUpgradeTablePedidos(db, oldVersion, newVersion);
 		this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
 //		this.onUpgradeTableVendedor(db, oldVersion, newVersion);
+		this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
 		
 	}
 
@@ -291,5 +295,32 @@ public class DataHelper extends SQLiteOpenHelper{
 		
 		this.onCreate(db);
 	}
+
+	public void onCreateTableDepartamentos(SQLiteDatabase db) {
+		Log.v(CNT_LOG, "Crianda a Tabela [ departamentos ]");
+		
+		String sql = "CREATE TABLE IF NOT EXISTS departamentos"+
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+					" departamento TEXT" +
+				");";
+		
+		db.execSQL(sql);
+		
+		Log.v(CNT_LOG, "Tabela [ departamentos ] Criada com Sucesso!");
+	}
+		
+	public void onUpgradeTableDepartamentos(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.v(CNT_LOG, "onUprade - Drop Table [departamentos]");
+		
+		try {
+			db.execSQL("DROP TABLE IF EXISTS departamentos");
+		}
+		catch (Exception error){
+			Log.e(CNT_LOG, "Falha ao Excluir Tabela [ departamentos ] ERROR ["+error.getMessage()+"]");
+		}
+		
+		this.onCreate(db);
+	}
+
 	
 }

@@ -2,6 +2,8 @@ package br.com.vilaverde.cronos.view.produtos;
 
 
 
+import java.util.List;
+
 import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.R.id;
 import br.com.vilaverde.cronos.dao.DepartamentosHelper;
@@ -36,7 +38,8 @@ public class DepartamentosFragment extends ListFragment {
 
         // Create an array adapter for the list view, using the Ipsum headlines array
         //setListAdapter(new ArrayAdapter<String>(getActivity(), layout, Ipsum.Headlines));
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, DepartamentosHelper.getDepartamentos()));
+        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, DepartamentosHelper.getArrayDepartamentos()));
+        
     }
 
     @Override

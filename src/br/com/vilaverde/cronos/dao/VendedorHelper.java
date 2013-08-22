@@ -117,8 +117,8 @@ public class VendedorHelper extends DataHelper{
 	public void sincronizarVendedores()	{
 		
 		
-		String urlPost = "http://10.0.0.102/cronos/main.php";
-		//String urlPost = "http://192.168.0.3/cronos/main.php";
+		//String urlPost = "http://10.0.0.102/cronos/main.php";
+		String urlPost = "http://192.168.0.200/cronos/main.php";
 		
 		
 		// Parametros
@@ -196,12 +196,10 @@ public class VendedorHelper extends DataHelper{
 		protected void onPreExecute() {
 			
 			super.onPreExecute();
-
 			Log.v(CNT_LOG, "onPreExecute");	
 			
 	    }
 
-		
 	    protected void onPostExecute(JSONObject json) {
 			Log.v(CNT_LOG, "onPostExecute");
 

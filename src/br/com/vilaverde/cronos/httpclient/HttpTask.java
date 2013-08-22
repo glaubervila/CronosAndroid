@@ -44,7 +44,7 @@ public class HttpTask extends AsyncTask<String, integer, String> {
 		
         try {  
 
-            Log.v(CNT_LOG, "Recuperando a Conexao HttoClient");
+            Log.v(CNT_LOG, "Recuperando a Conexao HttpClient");
             ConexaoHttpClient httpClient = new ConexaoHttpClient();  
 
             

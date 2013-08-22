@@ -1,5 +1,6 @@
 package br.com.vilaverde.cronos;
 
+import br.com.vilaverde.cronos.dao.DepartamentosHelper;
 import br.com.vilaverde.cronos.dao.ProdutosHelper;
 import br.com.vilaverde.cronos.dao.VendedorHelper;
 import br.com.vilaverde.cronos.httpclient.ConexaoHttpClient;
@@ -50,12 +51,12 @@ public class Atualizar {
 			//getVendedores();
 			
 			// 3 - Recuperar os Produtos
-			Log.v(CNT_LOG, "2 - Recuperar os Produtos");
+			Log.v(CNT_LOG, "2 - Recuperar os Produtos");	
+			//getProdutos();
 			
-			getProdutos();
-			
-
-			
+			// 4 - Recuperar os Departamentos
+			Log.v(CNT_LOG, "3 - Recuperar os Departamentos");
+			getDepartamentos();
 			
 		}
 		else{
@@ -85,6 +86,14 @@ public class Atualizar {
 				 
 	}
 
+	public void getDepartamentos(){
+		Log.v(CNT_LOG, "getDepartamentos()");
+		
+		DepartamentosHelper departamentosHelper = new DepartamentosHelper(this.context);
+		
+		departamentosHelper.sincronizarDepartamentos();
+				 
+	}
 
 	
 }
