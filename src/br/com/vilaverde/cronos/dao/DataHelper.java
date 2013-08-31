@@ -3,8 +3,10 @@ package br.com.vilaverde.cronos.dao;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class DataHelper extends SQLiteOpenHelper{
@@ -44,6 +46,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	public String getPathImages(){
 		return this.PATH_IMAGES;
 	}
+
 	
 	public String getServerHostLocal(){
 		// Setando o Caminho para conexoes Locais
@@ -328,6 +331,4 @@ public class DataHelper extends SQLiteOpenHelper{
 		
 		this.onCreate(db);
 	}
-
-	
 }

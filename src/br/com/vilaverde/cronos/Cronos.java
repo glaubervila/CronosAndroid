@@ -2,6 +2,7 @@ package br.com.vilaverde.cronos;
 
 import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.dao.DataHelper;
+import br.com.vilaverde.cronos.settings.SettingsActivity;
 import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import br.com.vilaverde.cronos.view.pedidos.PedidoAberto;
 import br.com.vilaverde.cronos.view.produtos.DepartamentosFragment;
@@ -78,6 +79,11 @@ public class Cronos extends FragmentActivity
 	        case R.id.menu_novo_pedido:          
 	    		startActivity(new Intent(this,PedidoAberto.class));
 	            return true;	            
+
+	        case R.id.menu_configuracao:          
+	    		startActivity(new Intent(this,SettingsActivity.class));
+	            return true;	            
+
 	            
 	        default:
 	            return super.onOptionsItemSelected(item);

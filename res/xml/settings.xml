@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/setting_title">
+ <PreferenceCategory android:title="@string/setting_category_servidor">
+        <EditTextPreference
+                android:title="@string/setting_servidor_localhost"
+                android:summary="@string/setting_servidor_localhost_summary"
+                android:key="settingLocalHost" />
+        <EditTextPreference 
+            android:key="settingRemoteHost"
+            android:summary="@string/setting_servidor_remotahost_summary"
+            android:title="@string/setting_servidor_remotahost" />
+    </PreferenceCategory>
+</PreferenceScreen>

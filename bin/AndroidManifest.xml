@@ -63,6 +63,10 @@
             android:name="br.com.vilaverde.cronos.Atualizar"
             android:label="Atualizar" >
         </activity>
+        <activity 
+            android:name=".settings.SettingsActivity"
+            android:label="@string/setting_title" android:icon="@android:drawable/ic_menu_manage">
+        </activity>
         
     </application>
 
