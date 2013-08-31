@@ -3,6 +3,14 @@ package br.com.vilaverde.cronos.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import br.com.vilaverde.cronos.Messages;
+import br.com.vilaverde.cronos.dao.DepartamentosHelper.getDepartamentosHttp;
+import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
 import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Pedido;
 import br.com.vilaverde.cronos.model.PedidoProduto;
@@ -16,16 +24,19 @@ import android.widget.Toast;
 public class PedidoHelper extends DataHelper{
 
 	/** Status
+	 *-1 - Erro (Enviado com Erro)
 	 * 0 - Aberto
-	 * 1 - Fechado
+	 * 1 - Fechado (À Enviar)
+	 * 2 - Enviado 
 	 */
 	
 	private final static String CNT_LOG = "PedidoHelper";
 	private final static String TABELA = "pedidos";
 	
+	private Pedido pedidoAEnviar  = null;
 	private Context context = null;
 	
-	//static int VERSAO_SCHEMA = 39;
+	//static int VERSAO_SCHEMA = 59;
 	
 	public PedidoHelper(Context context) {
 		//super(context, VERSAO_SCHEMA);
@@ -37,6 +48,7 @@ public class PedidoHelper extends DataHelper{
 //	
 //		String sql = "CREATE TABLE IF NOT EXISTS "+TABELA+
 //				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+//					" id_servidor TEXT," +
 //					" id_usuario TEXT," +
 //					" id_cliente TEXT," +
 //					" status INTEGER," +
@@ -98,6 +110,7 @@ public class PedidoHelper extends DataHelper{
 
 		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
 
+		
 		if (c.getCount() > 0) {
 
 			List<Pedido> pedidos = bindValues(c);
@@ -111,6 +124,30 @@ public class PedidoHelper extends DataHelper{
 		}
 	}
 	
+
+	public List<Pedido> getPedidosAEnviar(){
+
+		Log.v(CNT_LOG, "Recuperar Pedidos A Enviar.");
+			
+		this.Open();
+		String status = "1"; // Fechado a Enviar
+		String where = "status = ?";
+        String[] selectionArgs = new String[] {status};
+
+		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
+		
+
+		if (c.getCount() > 0) {
+
+			List<Pedido> pedidos = bindValues(c);
+			    	  	
+			return pedidos;
+		}
+		else {
+			return null;
+		}
+	}
+
 	
 	public List<Pedido> bindValues(Cursor c) {
 		Log.v(CNT_LOG, "bindValues.");
@@ -225,6 +262,7 @@ public class PedidoHelper extends DataHelper{
 	        
 	        // Cria o objeto valores         
 			ContentValues valores = new ContentValues();
+			valores.put("id_servidor", pedido.getId_servidor());
 			valores.put("id_usuario", pedido.getId_usuario());
 			valores.put("id_cliente", pedido.getId_cliente());
 			valores.put("status", pedido.getStatus());
@@ -238,11 +276,13 @@ public class PedidoHelper extends DataHelper{
 			valores.put("observacao", pedido.getObservacao());
 	    
 		    //Alterar o registro com base no ID
-	   		Log.v(CNT_LOG, "Alterando Pedido [ "+pedido.getId()+"]");
+	   		Log.v(CNT_LOG, "Alterando Pedido ["+pedido.getId()+"]");
 	   		
 		    linhaAlterada = db.update(TABELA, valores, "_id = " + id, null);
-		    
+
 		    Log.v(CNT_LOG, "Pedido Alterado ["+linhaAlterada+"], Id ["+id+"]");
+		    String debug = writeJSON(pedido);
+		    Log.v(CNT_LOG,"DEBUG = "+debug);
 	  }
 	  catch (Exception e){
 	  	Log.e(CNT_LOG, "Alterar - Error ["+e.getMessage()+"]");
@@ -299,5 +339,155 @@ public class PedidoHelper extends DataHelper{
     	}
     }
 
-    
+
+    public void enviarPedidos(Pedido pedido) {
+		Log.v(CNT_LOG, "enviarPedidos()");
+		
+		pedidoAEnviar = pedido;
+	
+		// Parametros
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("classe", "ClientAndroid"));
+        nameValuePairs.add(new BasicNameValuePair("action", "setPedidos"));
+        nameValuePairs.add(new BasicNameValuePair("data", pedido.getJsonString()));
+		
+        // Crio um Objeto TaskPost
+    	HttpTaskPost httpPost = new getPedidosHttp();
+    	// Passo os Parametros
+    	httpPost.setParametros(nameValuePairs);
+    	// Passo o Contexto para disparar erros
+    	httpPost.setContext(this.context);
+    	
+    	// Primeito tentar Remoto
+    	if (this.REMOTE == true){ 	
+	    	String urlRemoto = this.getServerHostRemote();
+	    	Log.v(CNT_LOG, "UrlRemoto = "+urlRemoto);
+			httpPost.execute(urlRemoto);
+    	}
+    	else {
+    		// Se falhar no Remoto Tentar no Local
+	    	String urlLocal = this.getServerHostLocal();
+	    	Log.v(CNT_LOG, "UrlLocal = "+urlLocal);
+			httpPost.execute(urlLocal);    		
+    	}
+
+	}
+
+	public class getPedidosHttp extends HttpTaskPost {
+		
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Log.v(CNT_LOG, "onPreExecute");	
+	    }
+		protected void onPostExecute(String[] resultado) {
+			Log.v(CNT_LOG, "onPostExecute");
+
+			if (resultado[0] == "success"){
+				Log.v(CNT_LOG,"Passo 8");
+				// Passando a string para o metodo que vai inserir
+				taskSuccess(resultado[1]);
+			}
+			else {
+				Log.e(CNT_LOG,"Passo 10 - o json veio vazio");
+				taskFailed(resultado);
+			}
+		}	
+	}
+	protected void taskSuccess(String strJson){
+		JSONObject json = null;
+		
+		try {
+			json = new JSONObject(strJson);
+			
+			// Saber se a Resposta do Json Foi de Sucesso
+			Boolean success =  (Boolean) json.get("success");
+
+			if (success){			
+				Log.e(CNT_LOG, "Sucess ID ["+json.get("id")+"] ID_Servidor ["+json.get("id_servidor")+"]");
+				// Recuperar o Pedido que foi enviado Incluir o ID_SERVIDOR ALTERAR O STATUS PARA ENVIADO.
+				pedidoAEnviar.setId_servidor(json.getInt("id_servidor"));
+				pedidoAEnviar.setDt_envio(json.getString("dt_envio"));
+				pedidoAEnviar.setStatus(2); // Enviado com Sucesso
+				
+				// Alterar o Pedido
+
+		    	if (Alterar(pedidoAEnviar) < 0){
+	    			Log.e(CNT_LOG, "Pedido Enviado mas Houve um erro no update do status");
+		    	}
+			
+				// TODO: ENVIAR OS CLIENTES
+				//inserirDepartamentosJson(json);
+			}
+			else {			
+				// No servidor se nao houver resultados na query retorna success=false
+				Log.e(CNT_LOG, "Nenhuma Alteraçao a ser Feita.");
+				Messages.showSuccessToast(this.context, "Nenhum Departamento a ser Alterado");
+			}
+		}
+		catch(JSONException e){
+			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
+			Messages.showErrorAlert(this.context, "Houve um erro na Resposta do Servidor.");
+		}           
+	}
+	
+	protected void taskFailed(String[] resultado){
+		Log.v(CNT_LOG, "taskFailed");
+		
+		// Se a flag REMOTE estiver true significa que ta na 1 tentativa
+		//virar a flag para false para a segunda tentativa se nao conseguir mostrar erro
+		if (this.REMOTE == true){
+			this.REMOTE = false;
+			enviarPedidos(pedidoAEnviar);
+		}
+		else {
+			// Se tiver dado falha nas 2 tentativas retorna mensagem de erro 
+			Messages.showErrorAlert(this.context, resultado[1].toString());
+		}
+	}
+
+	
+	public String writeJSON(Pedido pedido) {
+		  JSONObject object = new JSONObject();
+		  try {
+		    object.put("id", pedido.getId());
+		    object.put("id_usuario", pedido.getId_usuario());
+		    object.put("id_cliente", pedido.getId_cliente());
+		    object.put("status", pedido.getStatus());
+		    object.put("qtd_itens", pedido.getQtd_itens());
+		    object.put("valor_total", pedido.getValor_total());
+		    object.put("finalizadora", pedido.getFinalizadora());
+		    object.put("parcelamento", pedido.getParcelamento());
+		    object.put("nfe", pedido.getNfe());
+		    object.put("dt_inclusao", pedido.getDt_inclusao());
+		    object.put("dt_envio", pedido.getDt_envio());
+		    object.put("observacao", pedido.getObservacao());
+		    
+
+		    if (pedido.getProdutos() != null){
+			    PedidoProdutosHelper pedidoProdutoHelper = new PedidoProdutosHelper(this.context);
+			    
+			    List<PedidoProduto> aProdutos = pedido.getProdutos();
+ 
+				String s ="";
+				for (int i=0; i < aProdutos.size(); i++){
+			    	PedidoProduto produto = aProdutos.get(i);
+			    	String str = pedidoProdutoHelper.writeJSON(produto);
+			    	Log.v(CNT_LOG, "JSON PRODUTO ["+i+"] STR["+str+"]");
+
+			    	s += (i == aProdutos.size() - 1) ? str : str + ",";		   
+			    }
+	    	
+				object.put("produtos", s);
+		    }
+		    else {
+		    	Log.e(CNT_LOG, "ERRO CORRIGIR... UM PEDIDO NAO PODE SER FECHADO SEM PRODUTOS");
+		    }
+		    
+		  } catch (JSONException e) {
+		    e.printStackTrace();
+		  }
+		return object.toString();
+	} 
+	
 }
+

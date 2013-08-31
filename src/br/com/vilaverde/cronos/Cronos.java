@@ -71,8 +71,8 @@ public class Cronos extends FragmentActivity
 	            return true;	            
 	
 	        case R.id.menu_atualizar:          
-	    		//startActivity(new Intent(this,Atualizar.class));
-	        	new Atualizar(this);
+	    		startActivity(new Intent(this,Atualizar.class));
+	        	//new Atualizar(this);
 	            return true;	            
 
 	        case R.id.menu_novo_pedido:          

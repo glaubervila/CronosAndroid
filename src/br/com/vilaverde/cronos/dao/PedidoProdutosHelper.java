@@ -3,6 +3,9 @@ package br.com.vilaverde.cronos.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Pedido;
 import br.com.vilaverde.cronos.model.PedidoProduto;
@@ -280,5 +283,22 @@ public class PedidoProdutosHelper extends DataHelper{
 		finally {
 			this.Close();
 		}
-	}	
+	}
+	
+	public String writeJSON(PedidoProduto produto) {
+		  JSONObject object = new JSONObject();
+		  try {
+		    object.put("id", produto.getId());
+		    object.put("id_pedido", produto.getId_pedido());
+		    object.put("id_produto", produto.getId_produto());
+		    object.put("quantidade", produto.getQuantidade());
+		    object.put("valor", produto.getValor());
+		    object.put("valor_total", produto.getValor_total());
+		    object.put("observacao", produto.getObservacao());
+		    
+		  } catch (JSONException e) {
+		    e.printStackTrace();
+		  }
+		return object.toString();
+	} 	
 }

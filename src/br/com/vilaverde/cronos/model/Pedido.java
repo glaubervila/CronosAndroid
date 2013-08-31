@@ -1,12 +1,30 @@
 package br.com.vilaverde.cronos.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Pedido implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private int id ;					
+	private int id ;
+	public int getId_servidor() {
+		return id_servidor;
+	}
+
+
+
+
+
+	public void setId_servidor(int id_servidor) {
+		this.id_servidor = id_servidor;
+	}
+
+
+
+
+
+	private int id_servidor = 0;		
 	private String id_usuario = "";		
 	private String id_cliente = "";		
 	private int status = 1;    			
@@ -18,7 +36,8 @@ public class Pedido implements Serializable{
 	private String dt_inclusao = "";
 	private String dt_envio = "";
 	private String observacao = "";
-	
+	private List<PedidoProduto> produtos = null;
+	private String jsonString = "";
 		
 
 
@@ -219,6 +238,38 @@ public class Pedido implements Serializable{
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+
+
+
+
+
+	public List<PedidoProduto> getProdutos() {
+		return produtos;
+	}
+
+
+
+
+
+	public void setProdutos(List<PedidoProduto> produtos) {
+		this.produtos = produtos;
+	}
+
+
+
+
+
+	public String getJsonString() {
+		return jsonString;
+	}
+
+
+
+
+
+	public void setJsonString(String jsonString) {
+		this.jsonString = jsonString;
 	}
 
 

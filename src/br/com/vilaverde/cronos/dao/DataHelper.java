@@ -13,8 +13,8 @@ public class DataHelper extends SQLiteOpenHelper{
 	
 	protected static  String NOME_BANCO = "cronos.db";
 	
-	private final static String TABELA = "pedidos_produtos";
-	protected static int VERSAO_SCHEMA = 52;
+	private final static String TABELA = "pedidos";
+	protected static int VERSAO_SCHEMA = 61;
 	
 	public Boolean REMOTE = false;
 		
@@ -74,18 +74,18 @@ public class DataHelper extends SQLiteOpenHelper{
 		this.onCreateTableProdutos(db);
 		this.onCreateTablePedidos(db);
 		this.onCreateTablePedidoProdutos(db);
-		this.onCreateTableVendedor(db);
-		this.onCreateTableDepartamentos(db);	
+//		this.onCreateTableVendedor(db);
+//		this.onCreateTableDepartamentos(db);	
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
-//		this.onUpgradeTableProdutos(db, oldVersion, newVersion);
+		this.onUpgradeTableProdutos(db, oldVersion, newVersion);
 		this.onUpgradeTablePedidos(db, oldVersion, newVersion);
 		this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
-//		this.onUpgradeTableVendedor(db, oldVersion, newVersion);
-		this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
+		//this.onUpgradeTableVendedor(db, oldVersion, newVersion);
+		//this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
 		
 	}
 
@@ -127,7 +127,7 @@ public class DataHelper extends SQLiteOpenHelper{
     
     
     private void createTableCliente(){
-		Log.v(CNT_LOG, "Crianda a Tabela [ clientes ]");
+		Log.v(CNT_LOG, "Criando a Tabela [ clientes ]");
 		
 		String sql = "CREATE TABLE IF NOT EXISTS clientes"+
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -200,10 +200,11 @@ public class DataHelper extends SQLiteOpenHelper{
 	
 	
 	public void onCreateTablePedidos(SQLiteDatabase db) {
-		Log.v(CNT_LOG, "Crianda a Tabela [ pedidos ]");
-	
+		Log.v(CNT_LOG, "Criando a Tabela [ pedidos ]");
+
 		String sql = "CREATE TABLE IF NOT EXISTS pedidos"+
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+					" id_servidor INTEGER," +
 					" id_usuario TEXT," +
 					" id_cliente TEXT," +
 					" status INTEGER," +
@@ -224,10 +225,16 @@ public class DataHelper extends SQLiteOpenHelper{
 
 
 	public void onUpgradeTablePedidos(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.v(CNT_LOG, "onUprade - Drop Table [ pedidos ]");
-		
+		Log.v(CNT_LOG, "onUprade - Table [ pedidos ] OldVersion ["+oldVersion+"] NewVersion ["+newVersion+"]");
 		try {
+			//Log.v(CNT_LOG, "onUprade - Drop Table [ pedidos ]");
 			db.execSQL("DROP TABLE IF EXISTS pedidos");
+//			String sql = "DROP TABLE IF EXISTS pedidos";
+//			if (newVersion == 58) {
+//				sql = "ALTER TABLE pedidos ADD COLUMN id_servidor INTEGER;";
+//			}
+//			Log.v(CNT_LOG, sql);
+//			db.execSQL(sql);
 		}
 		catch (Exception error){
 			Log.e(CNT_LOG, "Falha ao Excluir Tabela [ pedidos ] ERROR ["+error.getMessage()+"]");
@@ -237,7 +244,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	}
 	
 	public void onCreateTablePedidoProdutos(SQLiteDatabase db) {
-	Log.v(CNT_LOG, "Crianda a Tabela [ pedido_produtos ]");
+	Log.v(CNT_LOG, "Criando a Tabela [ pedido_produtos ]");
 
 	// Criacao da Tabela Pedido
 	String sql = "CREATE TABLE IF NOT EXISTS pedido_produtos"+
@@ -270,7 +277,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	}
 	
 	public void onCreateTableVendedor(SQLiteDatabase db) {
-		Log.v(CNT_LOG, "Crianda a Tabela [ vendedor ]");
+		Log.v(CNT_LOG, "Criando a Tabela [ vendedor ]");
 		
 		String sql = "CREATE TABLE IF NOT EXISTS vendedor"+
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -297,7 +304,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	}
 
 	public void onCreateTableDepartamentos(SQLiteDatabase db) {
-		Log.v(CNT_LOG, "Crianda a Tabela [ departamentos ]");
+		Log.v(CNT_LOG, "Criando a Tabela [ departamentos ]");
 		
 		String sql = "CREATE TABLE IF NOT EXISTS departamentos"+
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +

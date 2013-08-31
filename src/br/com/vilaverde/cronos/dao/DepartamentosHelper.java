@@ -58,12 +58,15 @@ public class DepartamentosHelper extends DataHelper{
 	    	  // se nao tiver faz insert
 		      linhasInseridas = db.insert(TABELA, null, valores);
 	      }
-	      //getWritableDatabase().insert(TABELA, null, valores);      
+	      
 	      Log.v(CNT_LOG, "Linhas Inseridas ["+linhasInseridas+"]");
-		      
-	      if (linhasInseridas < 0 ){
+
+          this.Close();
+          
+	      if (linhasInseridas < 0 ){	    	  
 	    	  // Erro no Insert
-	    	  //throw new Exception("Registro não Inserido");	    	  
+	    	  //throw new Exception("Registro não Inserido");
+	    	  return 0;
 	      }
 	      else {
 	    	  return linhasInseridas;
@@ -75,35 +78,40 @@ public class DepartamentosHelper extends DataHelper{
 	    	e.printStackTrace();
 	    	return 0;
 	    }
-	    finally {
-	        this.Close();
-	        return 0;
-	    }
+
 	 }
 
 	public List<Departamento> getDepartamentos(){
 		Log.v(CNT_LOG, "Recupera Todos os Departamentos.");
 			
 		this.Open();
-		
-//		String status = "0"; // Aberto
-//		String where = "status = ?";
-//        String[] selectionArgs = new String[] {status};
-//
-//		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
 
-		// TODO: Trazer somentos os departamentos com produtos ativos
-		Cursor c = db.query(TABELA, null, null, null, null, null, null);
-	   
-		if (c.getCount() > 0) {
-			Log.v(CNT_LOG, "Total Departamentos [ "+c.getCount()+" ].");
-			List<Departamento> departamentos = bindValues(c);
-			    	  
-			return departamentos;
-		}
-		else {
-			return null;
-		}
+		try {  	  
+	//		String status = "0"; // Aberto
+	//		String where = "status = ?";
+	//        String[] selectionArgs = new String[] {status};
+	//
+	//		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
+	
+			// TODO: Trazer somentos os departamentos com produtos ativos
+			Cursor c = db.query(TABELA, null, null, null, null, null, null);
+	        this.Close();
+	        
+			if (c.getCount() > 0) {
+				Log.v(CNT_LOG, "Total Departamentos [ "+c.getCount()+" ].");
+				List<Departamento> departamentos = bindValues(c);
+				    	  
+				return departamentos;
+			}
+			else {
+				return null;
+			}
+	    }
+	    catch (Exception e){
+	    	Log.e(CNT_LOG, "Falha ao Listar Departamentos");
+	    	e.printStackTrace();
+	    	return null;
+	    }
 	}
 
 //	public List<String> getArrayDepartamentos(){
