@@ -136,16 +136,36 @@ public class PedidoHelper extends DataHelper{
 
 		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
 		
-
+		List<Pedido> pedidos = null;
+		
 		if (c.getCount() > 0) {
+			pedidos = bindValues(c);	
+		}
+		
+		c.close();
+		this.Close();
+		return pedidos;
+	}
 
-			List<Pedido> pedidos = bindValues(c);
-			    	  	
-			return pedidos;
+
+	public Pedido getPedido(String id){
+		Log.v(CNT_LOG, "Recuperar Pedido Pelo Id.");
+			
+		this.Open();
+		String where = "_id = ?";
+        String[] selectionArgs = new String[] {id};
+
+		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
+		
+		List<Pedido> pedidos = null;
+		
+		if (c.getCount() > 0) {
+			pedidos = bindValues(c);	
 		}
-		else {
-			return null;
-		}
+		
+		c.close();
+		this.Close();
+		return pedidos.get(0);
 	}
 
 	
@@ -462,7 +482,6 @@ public class PedidoHelper extends DataHelper{
 		    object.put("dt_envio", pedido.getDt_envio());
 		    object.put("observacao", pedido.getObservacao());
 		    
-
 		    if (pedido.getProdutos() != null){
 			    PedidoProdutosHelper pedidoProdutoHelper = new PedidoProdutosHelper(this.context);
 			    
@@ -472,7 +491,7 @@ public class PedidoHelper extends DataHelper{
 				for (int i=0; i < aProdutos.size(); i++){
 			    	PedidoProduto produto = aProdutos.get(i);
 			    	String str = pedidoProdutoHelper.writeJSON(produto);
-			    	Log.v(CNT_LOG, "JSON PRODUTO ["+i+"] STR["+str+"]");
+			    	//Log.v(CNT_LOG, "JSON PRODUTO ["+i+"] STR["+str+"]");
 
 			    	s += (i == aProdutos.size() - 1) ? str : str + ",";		   
 			    }
@@ -486,7 +505,8 @@ public class PedidoHelper extends DataHelper{
 		  } catch (JSONException e) {
 		    e.printStackTrace();
 		  }
-		return object.toString();
+		  //return object.toString().replace("\\", "");
+		  return object.toString();
 	} 
 	
 }

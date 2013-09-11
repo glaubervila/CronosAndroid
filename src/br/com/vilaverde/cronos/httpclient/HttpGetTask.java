@@ -89,10 +89,14 @@ public class HttpGetTask extends AsyncTask<String, Void, String>
 	        }				
 		}
 		catch (ConnectTimeoutException e) {
+			Log.v(CNT_LOG, "ConnectTimeout");
 			e.printStackTrace();		
+			result = "{success:false,msg=\"Tempo Expirado.\"}";
 		}
 		catch (Exception e){
+			Log.v(CNT_LOG, "Erro de Conexao ["+e.toString()+"]");
 			e.printStackTrace();
+			result = "{success:false,msg=\"Falha ao conectar com Servidor.\"}"; 
            // handle "error connecting to the server"
 		}
 

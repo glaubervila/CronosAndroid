@@ -60,10 +60,40 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 	
 	SharedPreferences sharedPrefs = null;
 	String serverHost = "";
+	String task = "";
+	String entidade = "";
+	int aEnviar = 0;
+	int enviados = 0;
     //public Handler handler = new Handler();  
-	//ProgressDialog progressDialog = null;
+	ProgressDialog progressDialog = null;
 	//AlertDialog dialog = null;
-
+	
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);	
+		//setContentView(R.layout.atualizar);
+		// Instanciando o Gerenciador de Preferencias
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		// Este parametro deve ser setado na instancia da classe
+		task = "push";
+		entidade = "pedidos";
+		// Testar Conexao com Internet
+		// 1 - Testar se Tem Conexao com internet
+		Boolean conexao = ConexaoHttpClient.Conectado(this.getApplicationContext());
+				
+		if (conexao){
+			Log.v(CNT_LOG,"CONEXAO ["+conexao+"]");
+			// 2 - Escolher Remota ou Local
+			selectLocalRemoteDialog().show();			
+		}
+		else {
+			Log.w(CNT_LOG,"CONEXAO ["+conexao+"]");
+			// Retornar Erro e Fechar
+			noConectionDialog().show();
+		}	
+	}
+	
+	
 	public boolean setServerHost(String serverhost){
 		if (serverhost.isEmpty() || serverhost.equalsIgnoreCase("NULL")){
 			Log.e(CNT_LOG, "SERVERHOST [ Empty or Null ]");
@@ -78,35 +108,122 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		}
 	}
 	
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);	
-		//setContentView(R.layout.atualizar);
-		// Instanciando o Gerenciador de Preferencias
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		
-		//progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.atualizar), true, true);
-	
-		// Testar Conexao com Internet
-		// 1 - Testar se Tem Conexao com internet
-		Boolean conexao = ConexaoHttpClient.Conectado(this.getApplicationContext());
-				
-		if (conexao){
-			Log.v(CNT_LOG,"CONEXAO ["+conexao+"]");
-			// 2 - Escolher Remota ou Local
-			selectLocalRemoteDialog().show();
-		}
-		else {
-			Log.w(CNT_LOG,"CONEXAO ["+conexao+"]");
-			// Retornar Erro e Fechar
-			noConectionDialog().show();
-		}	
-	}
-	
 	public void sincronizar(){
-		Log.w(CNT_LOG,"sincronizar()");
+		Log.v(CNT_LOG,"sincronizar()");
 		
 		// TODO: Saber se esta enviando ou recebendo
+		if (task == "push"){
+			// Envio de Dados
+			// Setando a Progress
+			progressDialog = ProgressDialog.show(this, "Enviando Dados", getResources().getString(R.string.atualizar), true, true);
+			push();
+		}
+	}
+	
+	public void push(){
+		Log.v(CNT_LOG,"push()");
+
+		// Comecar enviados os clientes 
+		if (entidade.equalsIgnoreCase("clientes")){
+
+		}
+		else if (entidade.equalsIgnoreCase("pedidos")){
+			// Enviar os pedidos			
+			pushPedidos();						
+		}
+	}
+	
+	public boolean pushPedidos(){
+		Log.v(CNT_LOG,"pushPedidos()");
+		// recuperar os pedidos a serem enviados
+		PedidoHelper pedidoHelper = new PedidoHelper(getApplicationContext());
+		PedidoProdutosHelper pedidoProdutosHelper = new PedidoProdutosHelper(getApplicationContext());
+		
+		List<Pedido> pedidos = pedidoHelper.getPedidosAEnviar();
+		
+		if (pedidos != null){
+			// Setar o Total a Enviar
+			aEnviar  = pedidos.size();
+			Log.v(CNT_LOG, "A ENVIAR ["+aEnviar+"]");
+			
+			for (int i=0; i< pedidos.size();i++){
+				Pedido pedido = pedidos.get(i);
+				Log.v(CNT_LOG, "ENVIANDO PEDIDO ["+pedido.getId()+"]");
+								
+				// Para cada Pedido recuperar os produtos.
+				List<PedidoProduto> produtos = pedidoProdutosHelper.getProdutos(pedido);
+				// Setando os Produtos no pedido 
+				pedido.setProdutos(produtos);
+				// Monta a String Json do pedido
+				String jsonString = pedidoHelper.writeJSON(pedido);
+				
+				// Seta os parametros e executa o metodo que vai enviar				
+				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+				params.add(new BasicNameValuePair("classe", "ClientAndroid"));
+				params.add(new BasicNameValuePair("action", "setPedidos"));
+				params.add(new BasicNameValuePair("data", jsonString));
+
+				Log.v(CNT_LOG, "JSON ["+jsonString+"]");
+				
+		    	sendData(params);			
+			}
+			
+			return true;
+		}
+		else {
+			Log.v(CNT_LOG, "Nenhum Pedido a Enviar");
+			return false;
+		}
+	}
+	
+	public void pullPedidos(JSONObject json){
+		Log.v(CNT_LOG,"pullPedidos()");
+		
+		try {
+			String id = json.getString("id");
+			int id_servidor = json.getInt("id_servidor");
+			String dt_envio = json.getString("dt_envio");
+			
+			// Apos enviar o pedido gravar o id do pedido no servidor a data de envio e alterar o status.
+			PedidoHelper pedidoHelper = new PedidoHelper(getApplicationContext());
+			Pedido pedido = pedidoHelper.getPedido(id);
+
+			pedido.setId_servidor(id_servidor);
+			pedido.setDt_envio(dt_envio);
+			//pedido.setStatus(status);
+			
+			if (pedidoHelper.Alterar(pedido) > 0){
+				// Pedido alterado enviado com sucesso
+				enviados++;	
+				finalizaEnvio();
+			}
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void sendData(ArrayList<NameValuePair> params){
+		Log.v(CNT_LOG,"sendData()");
+		HttpGetTask b = new HttpGetTask(this);
+		b.setParametros(params);
+		b.execute(serverHost);
+	}
+	
+	public void finalizaEnvio(){
+		// Atualizando a Progress Dialog
+		int count = enviados;
+		String msg = "Enviando Pedido "+count+ " de "+aEnviar+".";
+		progressDialog.setMessage(msg);
+
+		if (enviados == aEnviar){
+			Log.e(CNT_LOG,"ACABOU");
+			// Enviou Todos
+			progressDialog.dismiss();
+			String msg2 = enviados+" Pedido(s) Enviado(s)";
+			Toast.makeText(this, msg2, Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 //------------------------------ < SELEÇÃO DO TIPO DE CONEXAO > ------------------------------	
@@ -144,8 +261,6 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 	}	
 	
 	
-	
-	
 	public Dialog noConectionDialog() {
 		
 		return new AlertDialog.Builder(this)
@@ -172,10 +287,58 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
         .create();
 	}
 
+	public Dialog onFailure(String msg){
+		// fechar tudo e mostrar a mensagem de erro
+		return new AlertDialog.Builder(this)
+        .setTitle("Atenção")
+        .setMessage(msg)
+        .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            	dialog.dismiss();
+            	finish();
+            }
+        })
+        .create();
+	}
+	
+	
 	@Override
 	public void onTaskComplete(String result) {
-		// TODO Auto-generated method stub
+		Log.v(CNT_LOG, "onTaskComplete()");
 		
+		Log.v(CNT_LOG,"TASK COMPLETE RESULT["+result+"]");
+		
+		JSONObject json = null;
+		
+		try {
+			json = new JSONObject(result);		
+			// Saber se a Resposta do Json Foi de Sucesso
+			Boolean success =  (Boolean) json.get("success");
+
+			if (success){			
+				Log.v(CNT_LOG,"RETORNOU SUCCESS");
+				String entidade = json.getString("entidade");
+				Log.v(CNT_LOG,"Entidade "+entidade);
+				
+				if (entidade.equalsIgnoreCase("vendedores")){
+					Log.v(CNT_LOG,"VENDEDORES");
+				}
+				else if (entidade.equalsIgnoreCase("pedidos")){
+					pullPedidos(json);
+				}
+				else {
+					Log.v(CNT_LOG,"NENHUM");
+				}	
+			}
+			else {
+				Log.v(CNT_LOG,"RETORNOU FAILURE");
+				String msg = json.get("msg").toString();
+				onFailure(msg).show();
+			}		
+		}
+		catch(JSONException e){
+			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
+		}
 	}
 	
 //	@Override
