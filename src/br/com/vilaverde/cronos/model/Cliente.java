@@ -17,7 +17,7 @@ public class Cliente implements Serializable{
 	private String telefoneFixo = "";
 	private String telefoneMovel = "";
 	private String email = "";
-	private String status_servidor = "";
+	private String status_servidor = "0";
 	private String responsavel = "";
 	private String dt_inclusao = "";
 	private String observacao = "";

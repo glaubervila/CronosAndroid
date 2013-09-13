@@ -20,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.com.vilaverde.cronos.dao.ClienteHelper;
 import br.com.vilaverde.cronos.dao.DepartamentosHelper;
 import br.com.vilaverde.cronos.dao.PedidoHelper;
 import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
@@ -27,6 +28,7 @@ import br.com.vilaverde.cronos.dao.ProdutosHelper;
 import br.com.vilaverde.cronos.dao.VendedorHelper;
 import br.com.vilaverde.cronos.httpclient.ConexaoHttpClient;
 import br.com.vilaverde.cronos.httpclient.HttpGetTask;
+import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Pedido;
 import br.com.vilaverde.cronos.model.PedidoProduto;
 import br.com.vilaverde.cronos.view.pedidos.PedidoProdutos;
@@ -76,7 +78,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		
 		// Este parametro deve ser setado na instancia da classe
 		task = "push";
-		entidade = "pedidos";
+		entidade = "clientes";
 		// Testar Conexao com Internet
 		// 1 - Testar se Tem Conexao com internet
 		Boolean conexao = ConexaoHttpClient.Conectado(this.getApplicationContext());
@@ -125,11 +127,94 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 
 		// Comecar enviados os clientes 
 		if (entidade.equalsIgnoreCase("clientes")){
-
+			pushClientes();
 		}
 		else if (entidade.equalsIgnoreCase("pedidos")){
 			// Enviar os pedidos			
 			pushPedidos();						
+		}
+	}
+
+	public boolean pushClientes(){
+		Log.v(CNT_LOG,"pushClientes()");
+		// recuperar os clientes a serem enviados
+		ClienteHelper clienteHelper = new ClienteHelper(getApplicationContext());
+		
+		
+		List<Cliente> clientes = clienteHelper.getClientesAEnviar();
+
+		if (clientes != null){
+			// Setar o Total a Enviar
+			aEnviar  = clientes.size();
+			Log.v(CNT_LOG, "A ENVIAR ["+aEnviar+"]");
+			
+			for (int i=0; i< clientes.size();i++){
+				Cliente cliente = clientes.get(i);
+
+				Log.v(CNT_LOG, "ENVIANDO Cliente ["+cliente.getId()+"]");
+				
+				// Monta a String Json do pedido
+				String jsonString = clienteHelper.writeJSON(cliente);
+				
+				// Seta os parametros e executa o metodo que vai enviar				
+				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+				params.add(new BasicNameValuePair("classe", "ClientAndroid"));
+				params.add(new BasicNameValuePair("action", "setClientes"));
+				params.add(new BasicNameValuePair("data", jsonString));
+
+				Log.v(CNT_LOG, "JSON ["+jsonString+"]");
+				
+		    	sendData(params);			
+
+			}
+			return true;
+		}
+		else {
+			Log.v(CNT_LOG, "Nenhum Cliente a Enviar");
+			Toast.makeText(this, "Nenhum Cliente a Enviar", Toast.LENGTH_LONG).show();
+			entidade = "pedidos";
+			push();
+			return false;
+		}
+	}
+
+	public void pullClientes(JSONObject json){
+		Log.v(CNT_LOG,"pullPedidos()");
+
+		try {
+			
+			int id = json.getInt("id");
+			int id_servidor = json.getInt("id_servidor");
+			
+			// Apos enviar o cliente gravar o id sercidor e alterar os pedidos com o id
+			ClienteHelper clienteHelper = new ClienteHelper(getApplicationContext());			
+			Cliente cliente = clienteHelper.getCliente(id);
+
+			//cliente.setId_servidor(id_servidor);
+			cliente.setStatus_servidor("1");
+			
+			if (clienteHelper.Alterar(cliente) > 0){
+				// cliente alterado enviado com sucesso
+				enviados++;	
+
+				// Atualizando a Progress Dialog
+				int count = enviados;
+				String msg = "Enviando Cliente "+count+ " de "+aEnviar+".";
+				progressDialog.setMessage(msg);
+
+				if (enviados == aEnviar){
+					Log.e(CNT_LOG,"ACABOU DE ENVIAR CLIENTES");
+					// Enviou Todos
+					String msg2 = enviados+" Clientes(s) Enviado(s)";
+					Toast.makeText(this, msg2, Toast.LENGTH_LONG).show();
+					enviados = 0;
+					entidade = "pedidos";
+					push();
+				}
+			}
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -180,6 +265,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		Log.v(CNT_LOG,"pullPedidos()");
 		
 		try {
+		
 			String id = json.getString("id");
 			int id_servidor = json.getInt("id_servidor");
 			String dt_envio = json.getString("dt_envio");
@@ -195,7 +281,23 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 			if (pedidoHelper.Alterar(pedido) > 0){
 				// Pedido alterado enviado com sucesso
 				enviados++;	
-				finalizaEnvio();
+
+				// Atualizando a Progress Dialog
+				int count = enviados;
+				String msg = "Enviando Pedido "+count+ " de "+aEnviar+".";
+				progressDialog.setMessage(msg);
+
+				if (enviados == aEnviar){
+					Log.e(CNT_LOG,"ACABOU DE ENVIAR PEDIDOS");
+					// Enviou Todos
+					String msg2 = enviados+" Pedido(s) Enviado(s)";
+					Toast.makeText(this, msg2, Toast.LENGTH_LONG).show();
+					
+					progressDialog.dismiss();
+					finish();
+				}
+
+				
 			}
 			
 		} catch (JSONException e) {
@@ -211,20 +313,20 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		b.execute(serverHost);
 	}
 	
-	public void finalizaEnvio(){
-		// Atualizando a Progress Dialog
-		int count = enviados;
-		String msg = "Enviando Pedido "+count+ " de "+aEnviar+".";
-		progressDialog.setMessage(msg);
-
-		if (enviados == aEnviar){
-			Log.e(CNT_LOG,"ACABOU");
-			// Enviou Todos
-			progressDialog.dismiss();
-			String msg2 = enviados+" Pedido(s) Enviado(s)";
-			Toast.makeText(this, msg2, Toast.LENGTH_SHORT).show();
-		}
-	}
+//	public void finalizaEnvio(){
+//		// Atualizando a Progress Dialog
+//		int count = enviados;
+//		String msg = "Enviando Pedido "+count+ " de "+aEnviar+".";
+//		progressDialog.setMessage(msg);
+//
+//		if (enviados == aEnviar){
+//			Log.e(CNT_LOG,"ACABOU");
+//			// Enviou Todos
+//			progressDialog.dismiss();
+//			String msg2 = enviados+" Pedido(s) Enviado(s)";
+//			Toast.makeText(this, msg2, Toast.LENGTH_SHORT).show();
+//		}
+//	}
 	
 //------------------------------ < SELEÇÃO DO TIPO DE CONEXAO > ------------------------------	
 	public Dialog selectLocalRemoteDialog(){
@@ -320,8 +422,8 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 				String entidade = json.getString("entidade");
 				Log.v(CNT_LOG,"Entidade "+entidade);
 				
-				if (entidade.equalsIgnoreCase("vendedores")){
-					Log.v(CNT_LOG,"VENDEDORES");
+				if (entidade.equalsIgnoreCase("clientes")){
+					pullClientes(json);
 				}
 				else if (entidade.equalsIgnoreCase("pedidos")){
 					pullPedidos(json);

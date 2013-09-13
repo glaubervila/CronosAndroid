@@ -3,8 +3,12 @@ package br.com.vilaverde.cronos.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Pedido;
+import br.com.vilaverde.cronos.model.PedidoProduto;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -108,7 +112,7 @@ public class ClienteHelper extends DataHelper{
 		    	  valores.put("rg", "");
 		    	  
 		      }
-
+		      valores.put("status_servidor", "0");
       try {
 		      linhasInseridas = db.insert(TABELA, null, valores);
 		      
@@ -202,7 +206,11 @@ public class ClienteHelper extends DataHelper{
 		    	  valores.put("cpf", "");
 		    	  valores.put("rg", "");		    	  
 		      }
-	    
+
+	      	// SOMENTE PARA DEBUG
+		    //valores.put("status_servidor", "0");
+	        valores.put("status_servidor", cliente.getStatus_servidor());
+		    
 		    //Alterar o registro com base no ID
 		    linhaAlterada = db.update(TABELA, valores, "_id = " + id, null);
 	   		Log.v(CNT_LOG, "Alterando Cliente [ "+cliente.getBairro()+"]");
@@ -338,5 +346,61 @@ public class ClienteHelper extends DataHelper{
 
 		return lista;
 	}
-    
+
+	public List<Cliente> getClientesAEnviar() {
+		Log.v(CNT_LOG, "Recuperar Clientes A Enviar.");
+				
+		this.Open();
+		String status = "0"; // a Enviar
+		String where = "status_servidor = ?";
+        String[] selectionArgs = new String[] {status};
+
+		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
+			
+		List<Cliente> clientes = null;
+			
+		if (c.getCount() > 0) {
+			clientes = bindValues(c);	
+		}
+			
+		c.close();
+		this.Close();
+		return clientes;
+	}
+ 
+	
+	public String writeJSON(Cliente cliente) {
+		  JSONObject object = new JSONObject();
+		  try {
+			  		  
+		    object.put("id", cliente.getId());
+		    object.put("id_usuario", cliente.getId_usuario());
+		    object.put("tipo", cliente.getTipo());
+		    object.put("nome", cliente.getNome());
+		    object.put("cpf", cliente.getCpf());
+		    object.put("cnpj", cliente.getCnpj());
+		    object.put("rg", cliente.getRg());
+		    object.put("inscricao_estadual", cliente.getInscricao_estadual());
+		    object.put("telefone_fixo", cliente.getTelefoneFixo());
+		    object.put("telefone_movel", cliente.getTelefoneMovel());
+		    object.put("email", cliente.getEmail());
+		    object.put("status_servidor", cliente.getStatus_servidor());
+		    object.put("responsavel", cliente.getResponsavel());
+		    object.put("dt_inclusao", cliente.getDt_inclusao());
+		    object.put("observacao", cliente.getObservacao());
+		    object.put("rua", cliente.getRua());
+		    object.put("numero", cliente.getNumero());
+		    object.put("bairro", cliente.getBairro());
+		    object.put("cidade", cliente.getCidade());
+		    object.put("uf", cliente.getUf());
+		    object.put("cep", cliente.getCep());
+		    object.put("complemento", cliente.getComplemento());	    
+		    		    
+		  } catch (JSONException e) {
+		    e.printStackTrace();
+		  }
+		  //return object.toString().replace("\\", "");
+		  return object.toString();
+	}
+	
 }

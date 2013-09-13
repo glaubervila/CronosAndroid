@@ -58,8 +58,8 @@ public class HttpGetTask extends AsyncTask<String, Void, String>
 	        HttpPost httpPost = new HttpPost(strings[0].toString());
 	
 	        Log.v(CNT_LOG, "2 - Montando os Parametros do Post");
-	        httpPost.setEntity(new UrlEncodedFormEntity(parametros));
-	          
+	        httpPost.setEntity(new UrlEncodedFormEntity(parametros, "UTF-8"));
+
 	        Log.v(CNT_LOG, "3 - Executando a Requisicao Http");
 	        HttpResponse response = httpClient.execute(httpPost);
 
