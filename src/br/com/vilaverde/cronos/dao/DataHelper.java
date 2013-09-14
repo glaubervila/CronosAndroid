@@ -16,7 +16,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	protected static  String NOME_BANCO = "cronos.db";
 	
 	private final static String TABELA = "pedidos";
-	protected static int VERSAO_SCHEMA = 61;
+	protected static int VERSAO_SCHEMA = 65;
 	
 	public Boolean REMOTE = false;
 		
@@ -70,23 +70,25 @@ public class DataHelper extends SQLiteOpenHelper{
 	}
 
 	
-	@Override
+	//@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 
-		this.onCreateTableProdutos(db);
-		this.onCreateTablePedidos(db);
-		this.onCreateTablePedidoProdutos(db);
+		//this.onCreateTableClientes(db);
+		//this.onCreateTableProdutos(db);
+		//this.onCreateTablePedidos(db);
+		//this.onCreateTablePedidoProdutos(db);
 //		this.onCreateTableVendedor(db);
 //		this.onCreateTableDepartamentos(db);	
 	}
 
-	@Override
+	//@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
-		this.onUpgradeTableProdutos(db, oldVersion, newVersion);
-		this.onUpgradeTablePedidos(db, oldVersion, newVersion);
-		this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
+		//this.onUpgradeTableClientes(db, oldVersion, newVersion);
+		//this.onUpgradeTableProdutos(db, oldVersion, newVersion);
+		//this.onUpgradeTablePedidos(db, oldVersion, newVersion);
+		//this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
 		//this.onUpgradeTableVendedor(db, oldVersion, newVersion);
 		//this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
 		
@@ -128,12 +130,12 @@ public class DataHelper extends SQLiteOpenHelper{
 	    return linhasInseridas;
 	}
     
-    
-    private void createTableCliente(){
+	public void onCreateTableClientes(SQLiteDatabase db) {
 		Log.v(CNT_LOG, "Criando a Tabela [ clientes ]");
 		
 		String sql = "CREATE TABLE IF NOT EXISTS clientes"+
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+					" id_servidor INTEGER," +
 					" id_usuario TEXT," +
 					" tipo TEXT," +
 					" nome TEXT," +
@@ -160,8 +162,54 @@ public class DataHelper extends SQLiteOpenHelper{
 		db.execSQL(sql);
 		
 		Log.v(CNT_LOG, "Tabela [ clientes ] Criada com Sucesso!");
-    }
+	}
+		
+	public void onUpgradeTableClientes(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.v(CNT_LOG, "onUprade - Drop Table [clientes]");
+		
+		try {
+			db.execSQL("DROP TABLE IF EXISTS clientes");
+		}
+		catch (Exception error){
+			Log.e(CNT_LOG, "Falha ao Excluir Tabela [ clientes ] ERROR ["+error.getMessage()+"]");
+		}
+		
+		this.onCreate(db);
+	}
 
+//    private void createTableCliente(){
+//		Log.v(CNT_LOG, "Criando a Tabela [ clientes ]");
+//		
+//		String sql = "CREATE TABLE IF NOT EXISTS clientes"+
+//				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+//					" id_usuario TEXT," +
+//					" tipo TEXT," +
+//					" nome TEXT," +
+//					" cpf TEXT," +
+//					" cnpj TEXT," +
+//					" rg TEXT," +
+//					" inscricao_estadual TEXT," +
+//					" telefone_fixo TEXT," +
+//					" telefone_movel TEXT," +
+//					" email TEXT," +
+//					" status_servidor TEXT," +
+//					" responsavel TEXT," +
+//					" dt_inclusao TEXT," +
+//					" observacao TEXT," +
+//					" rua TEXT," +
+//					" numero TEXT," +
+//					" bairro TEXT," +
+//					" cidade TEXT," +
+//					" uf TEXT," +
+//					" cep TEXT," +
+//					" complemento TEXT" +	
+//				");";
+//		
+//		db.execSQL(sql);
+//		
+//		Log.v(CNT_LOG, "Tabela [ clientes ] Criada com Sucesso!");
+//    }
+//
     private void onCreateTableProdutos(SQLiteDatabase db){
 		Log.v(CNT_LOG, "Criando a Tabela [ produtos ]");
 		
@@ -185,9 +233,7 @@ public class DataHelper extends SQLiteOpenHelper{
 		
 		Log.v(CNT_LOG, "Tabela [ produtos ] Criada com Sucesso!");
     }
-    
-
-
+       
 	public void onUpgradeTableProdutos(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.v(CNT_LOG, "onUprade - Drop Table [ produtos ]");
 		

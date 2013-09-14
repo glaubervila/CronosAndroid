@@ -20,60 +20,13 @@ public class ClienteHelper extends DataHelper{
 	private final static String CNT_LOG = "ClienteHelper";
 	private final static String TABELA = "clientes";
 	
-	//private static final int VERSAO_SCHEMA = 36;
+	//private static final int VERSAO_SCHEMA = 63;
 	
 	public ClienteHelper(Context context) {
 		//super(context, VERSAO_SCHEMA);
 		super(context);
 
 	}
-
-//	public void onCreate(SQLiteDatabase db) {
-//		Log.v(CNT_LOG, "Crianda a Tabela [ "+TABELA+" ]");
-//		
-//		String sql = "CREATE TABLE IF NOT EXISTS "+TABELA+
-//				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-//					" id_usuario TEXT," +
-//					" tipo TEXT," +
-//					" nome TEXT," +
-//					" cpf TEXT," +
-//					" cnpj TEXT," +
-//					" rg TEXT," +
-//					" inscricao_estadual TEXT," +
-//					" telefone_fixo TEXT," +
-//					" telefone_movel TEXT," +
-//					" email TEXT," +
-//					" status_servidor TEXT," +
-//					" responsavel TEXT," +
-//					" dt_inclusao TEXT," +
-//					" observacao TEXT," +
-//					" rua TEXT," +
-//					" numero TEXT," +
-//					" bairro TEXT," +
-//					" cidade TEXT," +
-//					" uf TEXT," +
-//					" cep TEXT," +
-//					" complemento TEXT" +	
-//				");";
-//		
-//		db.execSQL(sql);
-//		
-//		Log.v(CNT_LOG, "Tabela [ "+TABELA+" ] Criada com Sucesso!");
-//	}
-
-//	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//		Log.v(CNT_LOG, "onUprade - Drop Table ["+TABELA+"]");
-//		
-//		try {
-//			db.execSQL("DROP TABLE IF EXISTS " + ClienteHelper.TABELA);
-//		}
-//		catch (Exception error){
-//			Log.e(CNT_LOG, "Falha ao Excluir Tabela [" +TABELA+" ] ERROR ["+error.getMessage()+"]");
-//		}
-//		
-//		this.onCreate(db);
-//	}
-
 
 	public long inserir(Cliente cliente){
 		Log.v(CNT_LOG, "Inserindo Cliente. Nome ["+cliente.getNome().toString()+"]");
@@ -113,6 +66,7 @@ public class ClienteHelper extends DataHelper{
 		    	  
 		      }
 		      valores.put("status_servidor", "0");
+		      valores.put("id_servidor", cliente.getId_servidor());
       try {
 		      linhasInseridas = db.insert(TABELA, null, valores);
 		      
@@ -210,10 +164,11 @@ public class ClienteHelper extends DataHelper{
 	      	// SOMENTE PARA DEBUG
 		    //valores.put("status_servidor", "0");
 	        valores.put("status_servidor", cliente.getStatus_servidor());
+	        valores.put("id_servidor", cliente.getId_servidor());
 		    
 		    //Alterar o registro com base no ID
 		    linhaAlterada = db.update(TABELA, valores, "_id = " + id, null);
-	   		Log.v(CNT_LOG, "Alterando Cliente [ "+cliente.getBairro()+"]");
+	   		Log.v(CNT_LOG, "Alterando Cliente [ "+cliente.getId()+"] Id [ "+cliente.getId()+" ] IdServidor [ "+cliente.getId_servidor()+" ]");
 		    Log.v(CNT_LOG, "Linha Alterada ["+linhaAlterada+"], Id ["+id+"]");
 
 	  }
@@ -278,6 +233,43 @@ public class ClienteHelper extends DataHelper{
 		}
 	 }
 
+	public List<Cliente> getClientes(String col,  String val, String condition){
+		
+		Log.v(CNT_LOG, "Pesquisando Clientes. Query COL [ "+col+" ] VAL [ "+val+" ] Condition [ "+condition+" ]");
+		
+		this.Open();
+		if (condition == null){
+			condition = "=";
+		}
+		
+		String[] selectionArgs;
+		String where = col+" "+condition+" ?";
+		if (condition.toLowerCase().equals("like")){
+			selectionArgs = new String[] {"%"+val+"%"};
+		}
+		else{
+			selectionArgs = new String[] {val};
+		}
+
+        try { 
+
+			Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, "nome");
+			List<Cliente> clientes = bindValues(c);
+			c.close();
+			
+			Log.v(CNT_LOG, "getClientes, Total [ "+ clientes.size()+" ]");
+			
+		    return clientes;
+		}
+		catch (Exception e){
+		 	Log.e(CNT_LOG, "getClientes - Error ["+e.getMessage()+"]");
+		 	return null;
+		}
+		finally {
+		    this.Close();
+		}
+	 }
+	
 	public Cliente getCliente(int id){
 		Log.v(CNT_LOG, "Pesquisando Cliente. Id [ "+id+" ]");
 		
@@ -317,27 +309,28 @@ public class ClienteHelper extends DataHelper{
 			Cliente cliente = new Cliente();
 			
 			cliente.setId(c.getInt(0));
-			cliente.setId_usuario(c.getString(1));
-			cliente.setTipo(c.getInt(2));
-			cliente.setNome(c.getString(3));
-			cliente.setCpf(c.getString(4));
-			cliente.setCnpj(c.getString(5));
-			cliente.setRg(c.getString(6));
-			cliente.setInscricao_estadual(c.getString(7));
-			cliente.setTelefoneFixo(c.getString(8));
-			cliente.setTelefoneMovel(c.getString(9));
-			cliente.setEmail(c.getString(10));
-			cliente.setStatus_servidor(c.getString(11));
-			cliente.setResponsavel(c.getString(12));
-			cliente.setDt_inclusao(c.getString(13));
-			cliente.setObservacao(c.getString(14));
-			cliente.setRua(c.getString(15));
-			cliente.setNumero(c.getString(16));
-			cliente.setBairro(c.getString(17));
-			cliente.setCidade(c.getString(18));
-			cliente.setUf(c.getInt(19));
-			cliente.setCep(c.getString(20));
-			cliente.setComplemento(c.getString(21));
+			cliente.setId_servidor(c.getInt(1));
+			cliente.setId_usuario(c.getString(2));
+			cliente.setTipo(c.getInt(3));
+			cliente.setNome(c.getString(4));
+			cliente.setCpf(c.getString(5));
+			cliente.setCnpj(c.getString(6));
+			cliente.setRg(c.getString(7));
+			cliente.setInscricao_estadual(c.getString(8));
+			cliente.setTelefoneFixo(c.getString(9));
+			cliente.setTelefoneMovel(c.getString(10));
+			cliente.setEmail(c.getString(11));
+			cliente.setStatus_servidor(c.getString(12));
+			cliente.setResponsavel(c.getString(13));
+			cliente.setDt_inclusao(c.getString(14));
+			cliente.setObservacao(c.getString(15));
+			cliente.setRua(c.getString(16));
+			cliente.setNumero(c.getString(17));
+			cliente.setBairro(c.getString(18));
+			cliente.setCidade(c.getString(19));
+			cliente.setUf(c.getInt(20));
+			cliente.setCep(c.getString(21));
+			cliente.setComplemento(c.getString(22));
 			
 			lista.add(cliente);
 		}
@@ -374,6 +367,7 @@ public class ClienteHelper extends DataHelper{
 		  try {
 			  		  
 		    object.put("id", cliente.getId());
+		    object.put("id_servidor", cliente.getId_servidor());
 		    object.put("id_usuario", cliente.getId_usuario());
 		    object.put("tipo", cliente.getTipo());
 		    object.put("nome", cliente.getNome());
@@ -404,3 +398,51 @@ public class ClienteHelper extends DataHelper{
 	}
 	
 }
+
+
+//public void onCreate(SQLiteDatabase db) {
+//Log.v(CNT_LOG, "Crianda a Tabela [ "+TABELA+" ]");
+//
+//String sql = "CREATE TABLE IF NOT EXISTS "+TABELA+
+//		"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+//			" id_servidor INTEGER," +
+//			" id_usuario TEXT," +
+//			" tipo TEXT," +
+//			" nome TEXT," +
+//			" cpf TEXT," +
+//			" cnpj TEXT," +
+//			" rg TEXT," +
+//			" inscricao_estadual TEXT," +
+//			" telefone_fixo TEXT," +
+//			" telefone_movel TEXT," +
+//			" email TEXT," +
+//			" status_servidor TEXT," +
+//			" responsavel TEXT," +
+//			" dt_inclusao TEXT," +
+//			" observacao TEXT," +
+//			" rua TEXT," +
+//			" numero TEXT," +
+//			" bairro TEXT," +
+//			" cidade TEXT," +
+//			" uf TEXT," +
+//			" cep TEXT," +
+//			" complemento TEXT" +	
+//		");";
+//
+//db.execSQL(sql);
+//
+//Log.v(CNT_LOG, "Tabela [ "+TABELA+" ] Criada com Sucesso!");
+//}
+//
+//public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//Log.v(CNT_LOG, "onUprade - Drop Table ["+TABELA+"]");
+//
+//try {
+//	db.execSQL("DROP TABLE IF EXISTS " + ClienteHelper.TABELA);
+//}
+//catch (Exception error){
+//	Log.e(CNT_LOG, "Falha ao Excluir Tabela [" +TABELA+" ] ERROR ["+error.getMessage()+"]");
+//}
+//
+//this.onCreate(db);
+//}

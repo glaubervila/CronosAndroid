@@ -27,7 +27,8 @@ public class PedidoHelper extends DataHelper{
 	 *-1 - Erro (Enviado com Erro)
 	 * 0 - Aberto
 	 * 1 - Fechado (À Enviar)
-	 * 2 - Enviado 
+	 * 2 - Enviado
+	 * 9 - Enviado COM ERRO 
 	 */
 	
 	private final static String CNT_LOG = "PedidoHelper";
@@ -43,44 +44,6 @@ public class PedidoHelper extends DataHelper{
 		super(context);
 		this.context = context;
 	}
-//	public void onCreate(SQLiteDatabase db) {
-//		Log.v(CNT_LOG, "Crianda a Tabela [ "+TABELA+" ]");
-//	
-//		String sql = "CREATE TABLE IF NOT EXISTS "+TABELA+
-//				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-//					" id_servidor TEXT," +
-//					" id_usuario TEXT," +
-//					" id_cliente TEXT," +
-//					" status INTEGER," +
-//					" qtd_itens REAL," +
-//					" valor_total REAL," +
-//					" finalizadora INTEGER," +
-//					" parcelamento INTEGER," +
-//					" nfe INTEGER," +
-//					" dt_inclusao TEXT," +
-//					" dt_envio TEXT," +
-//					" observacao TEXT" +
-//				");";
-//		
-//		db.execSQL(sql);
-//		
-//		Log.v(CNT_LOG, "Tabela [ "+TABELA+" ] Criada com Sucesso!");
-//	}
-
-	
-//	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//		Log.v(CNT_LOG, "onUprade - Drop Table ["+TABELA+"]");
-//		
-//		try {
-//			db.execSQL("DROP TABLE IF EXISTS " + PedidoHelper.TABELA);
-//		}
-//		catch (Exception error){
-//			Log.e(CNT_LOG, "Falha ao Excluir Tabela [" +TABELA+" ] ERROR ["+error.getMessage()+"]");
-//		}
-//		
-//		this.onCreate(db);
-//	}
-
 
 	public List<Pedido> getPedidos(){
 		Log.v(CNT_LOG, "Recupera Todos os Pedidos.");
@@ -358,113 +321,6 @@ public class PedidoHelper extends DataHelper{
     		return false;
     	}
     }
-
-
-    public void enviarPedidos(Pedido pedido) {
-		Log.v(CNT_LOG, "enviarPedidos()");
-		
-		pedidoAEnviar = pedido;
-	
-		// Parametros
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("classe", "ClientAndroid"));
-        nameValuePairs.add(new BasicNameValuePair("action", "setPedidos"));
-        nameValuePairs.add(new BasicNameValuePair("data", pedido.getJsonString()));
-		
-        // Crio um Objeto TaskPost
-    	HttpTaskPost httpPost = new getPedidosHttp();
-    	// Passo os Parametros
-    	httpPost.setParametros(nameValuePairs);
-    	// Passo o Contexto para disparar erros
-    	httpPost.setContext(this.context);
-    	
-    	// Primeito tentar Remoto
-    	if (this.REMOTE == true){ 	
-	    	String urlRemoto = this.getServerHostRemote();
-	    	Log.v(CNT_LOG, "UrlRemoto = "+urlRemoto);
-			httpPost.execute(urlRemoto);
-    	}
-    	else {
-    		// Se falhar no Remoto Tentar no Local
-	    	String urlLocal = this.getServerHostLocal();
-	    	Log.v(CNT_LOG, "UrlLocal = "+urlLocal);
-			httpPost.execute(urlLocal);    		
-    	}
-
-	}
-
-	public class getPedidosHttp extends HttpTaskPost {
-		
-		protected void onPreExecute() {
-			super.onPreExecute();
-			Log.v(CNT_LOG, "onPreExecute");	
-	    }
-		protected void onPostExecute(String[] resultado) {
-			Log.v(CNT_LOG, "onPostExecute");
-
-			if (resultado[0] == "success"){
-				Log.v(CNT_LOG,"Passo 8");
-				// Passando a string para o metodo que vai inserir
-				taskSuccess(resultado[1]);
-			}
-			else {
-				Log.e(CNT_LOG,"Passo 10 - o json veio vazio");
-				taskFailed(resultado);
-			}
-		}	
-	}
-	protected void taskSuccess(String strJson){
-		JSONObject json = null;
-		
-		try {
-			json = new JSONObject(strJson);
-			
-			// Saber se a Resposta do Json Foi de Sucesso
-			Boolean success =  (Boolean) json.get("success");
-
-			if (success){			
-				Log.e(CNT_LOG, "Sucess ID ["+json.get("id")+"] ID_Servidor ["+json.get("id_servidor")+"]");
-				// Recuperar o Pedido que foi enviado Incluir o ID_SERVIDOR ALTERAR O STATUS PARA ENVIADO.
-				pedidoAEnviar.setId_servidor(json.getInt("id_servidor"));
-				pedidoAEnviar.setDt_envio(json.getString("dt_envio"));
-				pedidoAEnviar.setStatus(2); // Enviado com Sucesso
-				
-				// Alterar o Pedido
-
-		    	if (Alterar(pedidoAEnviar) < 0){
-	    			Log.e(CNT_LOG, "Pedido Enviado mas Houve um erro no update do status");
-		    	}
-			
-				// TODO: ENVIAR OS CLIENTES
-				//inserirDepartamentosJson(json);
-			}
-			else {			
-				// No servidor se nao houver resultados na query retorna success=false
-				Log.e(CNT_LOG, "Nenhuma Alteraçao a ser Feita.");
-				Messages.showSuccessToast(this.context, "Nenhum Departamento a ser Alterado");
-			}
-		}
-		catch(JSONException e){
-			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
-			Messages.showErrorAlert(this.context, "Houve um erro na Resposta do Servidor.");
-		}           
-	}
-	
-	protected void taskFailed(String[] resultado){
-		Log.v(CNT_LOG, "taskFailed");
-		
-		// Se a flag REMOTE estiver true significa que ta na 1 tentativa
-		//virar a flag para false para a segunda tentativa se nao conseguir mostrar erro
-		if (this.REMOTE == true){
-			this.REMOTE = false;
-			enviarPedidos(pedidoAEnviar);
-		}
-		else {
-			// Se tiver dado falha nas 2 tentativas retorna mensagem de erro 
-			Messages.showErrorAlert(this.context, resultado[1].toString());
-		}
-	}
-
 	
 	public String writeJSON(Pedido pedido) {
 		  JSONObject object = new JSONObject();
@@ -511,3 +367,146 @@ public class PedidoHelper extends DataHelper{
 	
 }
 
+//public void enviarPedidos(Pedido pedido) {
+//	Log.v(CNT_LOG, "enviarPedidos()");
+//	
+//	pedidoAEnviar = pedido;
+//
+//	// Parametros
+//	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//  nameValuePairs.add(new BasicNameValuePair("classe", "ClientAndroid"));
+//  nameValuePairs.add(new BasicNameValuePair("action", "setPedidos"));
+//  nameValuePairs.add(new BasicNameValuePair("data", pedido.getJsonString()));
+//	
+//  // Crio um Objeto TaskPost
+//	HttpTaskPost httpPost = new getPedidosHttp();
+//	// Passo os Parametros
+//	httpPost.setParametros(nameValuePairs);
+//	// Passo o Contexto para disparar erros
+//	httpPost.setContext(this.context);
+//	
+//	// Primeito tentar Remoto
+//	if (this.REMOTE == true){ 	
+//  	String urlRemoto = this.getServerHostRemote();
+//  	Log.v(CNT_LOG, "UrlRemoto = "+urlRemoto);
+//		httpPost.execute(urlRemoto);
+//	}
+//	else {
+//		// Se falhar no Remoto Tentar no Local
+//  	String urlLocal = this.getServerHostLocal();
+//  	Log.v(CNT_LOG, "UrlLocal = "+urlLocal);
+//		httpPost.execute(urlLocal);    		
+//	}
+//
+//}
+//
+//public class getPedidosHttp extends HttpTaskPost {
+//	
+//	protected void onPreExecute() {
+//		super.onPreExecute();
+//		Log.v(CNT_LOG, "onPreExecute");	
+//  }
+//	protected void onPostExecute(String[] resultado) {
+//		Log.v(CNT_LOG, "onPostExecute");
+//
+//		if (resultado[0] == "success"){
+//			Log.v(CNT_LOG,"Passo 8");
+//			// Passando a string para o metodo que vai inserir
+//			taskSuccess(resultado[1]);
+//		}
+//		else {
+//			Log.e(CNT_LOG,"Passo 10 - o json veio vazio");
+//			taskFailed(resultado);
+//		}
+//	}	
+//}
+//protected void taskSuccess(String strJson){
+//	JSONObject json = null;
+//	
+//	try {
+//		json = new JSONObject(strJson);
+//		
+//		// Saber se a Resposta do Json Foi de Sucesso
+//		Boolean success =  (Boolean) json.get("success");
+//
+//		if (success){			
+//			Log.e(CNT_LOG, "Sucess ID ["+json.get("id")+"] ID_Servidor ["+json.get("id_servidor")+"]");
+//			// Recuperar o Pedido que foi enviado Incluir o ID_SERVIDOR ALTERAR O STATUS PARA ENVIADO.
+//			pedidoAEnviar.setId_servidor(json.getInt("id_servidor"));
+//			pedidoAEnviar.setDt_envio(json.getString("dt_envio"));
+//			pedidoAEnviar.setStatus(2); // Enviado com Sucesso
+//			
+//			// Alterar o Pedido
+//
+//	    	if (Alterar(pedidoAEnviar) < 0){
+//  			Log.e(CNT_LOG, "Pedido Enviado mas Houve um erro no update do status");
+//	    	}
+//		
+//			// TODO: ENVIAR OS CLIENTES
+//			//inserirDepartamentosJson(json);
+//		}
+//		else {			
+//			// No servidor se nao houver resultados na query retorna success=false
+//			Log.e(CNT_LOG, "Nenhuma Alteraçao a ser Feita.");
+//			Messages.showSuccessToast(this.context, "Nenhum Departamento a ser Alterado");
+//		}
+//	}
+//	catch(JSONException e){
+//		Log.e(CNT_LOG, "Error parsing Json "+e.toString());
+//		Messages.showErrorAlert(this.context, "Houve um erro na Resposta do Servidor.");
+//	}           
+//}
+//
+//protected void taskFailed(String[] resultado){
+//	Log.v(CNT_LOG, "taskFailed");
+//	
+//	// Se a flag REMOTE estiver true significa que ta na 1 tentativa
+//	//virar a flag para false para a segunda tentativa se nao conseguir mostrar erro
+//	if (this.REMOTE == true){
+//		this.REMOTE = false;
+//		enviarPedidos(pedidoAEnviar);
+//	}
+//	else {
+//		// Se tiver dado falha nas 2 tentativas retorna mensagem de erro 
+//		Messages.showErrorAlert(this.context, resultado[1].toString());
+//	}
+//}
+
+
+//public void onCreate(SQLiteDatabase db) {
+//Log.v(CNT_LOG, "Crianda a Tabela [ "+TABELA+" ]");
+//
+//String sql = "CREATE TABLE IF NOT EXISTS "+TABELA+
+//		"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+//			" id_servidor TEXT," +
+//			" id_usuario TEXT," +
+//			" id_cliente TEXT," +
+//			" status INTEGER," +
+//			" qtd_itens REAL," +
+//			" valor_total REAL," +
+//			" finalizadora INTEGER," +
+//			" parcelamento INTEGER," +
+//			" nfe INTEGER," +
+//			" dt_inclusao TEXT," +
+//			" dt_envio TEXT," +
+//			" observacao TEXT" +
+//		");";
+//
+//db.execSQL(sql);
+//
+//Log.v(CNT_LOG, "Tabela [ "+TABELA+" ] Criada com Sucesso!");
+//}
+
+
+//public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//Log.v(CNT_LOG, "onUprade - Drop Table ["+TABELA+"]");
+//
+//try {
+//	db.execSQL("DROP TABLE IF EXISTS " + PedidoHelper.TABELA);
+//}
+//catch (Exception error){
+//	Log.e(CNT_LOG, "Falha ao Excluir Tabela [" +TABELA+" ] ERROR ["+error.getMessage()+"]");
+//}
+//
+//this.onCreate(db);
+//}

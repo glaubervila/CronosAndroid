@@ -69,18 +69,18 @@ public class ProdutosHelper extends DataHelper{
 //		Log.v(CNT_LOG, "Tabela [ "+TABELA+" ] Criada com Sucesso!");
 //	}
 			
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.v(CNT_LOG, "onUprade - Drop Table ["+TABELA+"]");
-		
-		try {
-			db.execSQL("DROP TABLE IF EXISTS " + TABELA);
-		}
-		catch (Exception error){
-			Log.e(CNT_LOG, "Falha ao Excluir Tabela [" +TABELA+" ] ERROR ["+error.getMessage()+"]");
-		}
-		
-		this.onCreate(db);
-	}
+//	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//		Log.v(CNT_LOG, "onUprade - Drop Table ["+TABELA+"]");
+//		
+//		try {
+//			db.execSQL("DROP TABLE IF EXISTS " + TABELA);
+//		}
+//		catch (Exception error){
+//			Log.e(CNT_LOG, "Falha ao Excluir Tabela [" +TABELA+" ] ERROR ["+error.getMessage()+"]");
+//		}
+//		
+//		this.onCreate(db);
+//	}
 	
 	public long inserir(Produto produto){
 		Log.v(CNT_LOG, "inserir");

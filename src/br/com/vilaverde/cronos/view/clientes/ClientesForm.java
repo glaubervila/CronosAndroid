@@ -222,6 +222,8 @@ public class ClientesForm extends Activity {
 	                      
 	            Intent intent = new Intent();
 	            
+	            // Seta o Status Servidor para a Enviar
+	        	cliente.setStatus_servidor("0");
 	    		// Setando os valores na classe model
 	    		cliente.setNome(etNome.getText().toString());
 	    		cliente.setTelefoneFixo(etTelFixo.getText().toString());

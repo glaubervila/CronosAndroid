@@ -7,6 +7,7 @@ public class Cliente implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private int id ;						// 0
+	private int id_servidor;    	// 1
 	private String id_usuario = "";			// 1
 	private int tipo = 1;    				// 2
 	private String nome = "";				// 3
@@ -38,6 +39,16 @@ public class Cliente implements Serializable{
 	
 	public void setId(int id) {
 		this.id = id;
+	}
+
+
+	public int getId_servidor() {
+		return id_servidor;
+	}
+
+
+	public void setId_servidor(int id_servidor) {
+		this.id_servidor = id_servidor;
 	}
 
 

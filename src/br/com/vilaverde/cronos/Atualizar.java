@@ -190,8 +190,9 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 			ClienteHelper clienteHelper = new ClienteHelper(getApplicationContext());			
 			Cliente cliente = clienteHelper.getCliente(id);
 
-			//cliente.setId_servidor(id_servidor);
+			cliente.setId_servidor(id_servidor);
 			cliente.setStatus_servidor("1");
+			
 			
 			if (clienteHelper.Alterar(cliente) > 0){
 				// cliente alterado enviado com sucesso
@@ -239,6 +240,13 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 				List<PedidoProduto> produtos = pedidoProdutosHelper.getProdutos(pedido);
 				// Setando os Produtos no pedido 
 				pedido.setProdutos(produtos);
+				
+				// Recuperar o Id Cliente no Servidor
+				ClienteHelper clienteHelper = new ClienteHelper(getApplicationContext());			
+				Cliente cliente = clienteHelper.getCliente(Integer.parseInt(pedido.getId_cliente()));
+
+				// Setando o id servidor no pedido substituindo o id_cliente local somente para o envio
+				pedido.setId_cliente(""+cliente.getId_servidor());
 				// Monta a String Json do pedido
 				String jsonString = pedidoHelper.writeJSON(pedido);
 				
@@ -257,6 +265,10 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		}
 		else {
 			Log.v(CNT_LOG, "Nenhum Pedido a Enviar");
+			String msg = "Nenhum Pedido a Enviar";
+			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+			progressDialog.dismiss();
+			finish();
 			return false;
 		}
 	}
@@ -269,6 +281,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 			String id = json.getString("id");
 			int id_servidor = json.getInt("id_servidor");
 			String dt_envio = json.getString("dt_envio");
+			int status = json.getInt("status");
 			
 			// Apos enviar o pedido gravar o id do pedido no servidor a data de envio e alterar o status.
 			PedidoHelper pedidoHelper = new PedidoHelper(getApplicationContext());
@@ -276,7 +289,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 
 			pedido.setId_servidor(id_servidor);
 			pedido.setDt_envio(dt_envio);
-			//pedido.setStatus(status);
+			pedido.setStatus(status);
 			
 			if (pedidoHelper.Alterar(pedido) > 0){
 				// Pedido alterado enviado com sucesso
