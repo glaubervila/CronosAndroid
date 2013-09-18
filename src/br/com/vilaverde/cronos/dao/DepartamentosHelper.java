@@ -183,17 +183,13 @@ public class DepartamentosHelper extends DataHelper{
 
 	}
 	
-	public void inserirDepartamentosJson(JSONObject json){
+	public Boolean inserirDepartamentosJson(JSONObject json){
 		Log.v(CNT_LOG, "inserirDepartamentosJson");
 
 		int count = 0;
-		int erro = 0;
-		
-		// Fazer o parse para array
+		int erros = 0;
 		try {
-			
 			JSONArray arrayDepartamentos = (JSONArray) json.get("rows");
-
 			
 	        for (int i = 0; i < arrayDepartamentos.length(); i++) {
 	        	
@@ -204,16 +200,23 @@ public class DepartamentosHelper extends DataHelper{
 	        	departamento.setId(departamentoItem.getInt("_id"));
 	        	departamento.setDepartamento(departamentoItem.getString("departamento"));
 
-	        	if (inserir(departamento) > 0){
-        			count++;
+	        	if (inserir(departamento) < 0){
+	        		erros++;
 	        	}
 	        	else {
-	        		erro++;
+	        		count++;
 	        	}
-			
+	        }
+	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
+	        if (erros == 0){
+	        	return true;
+	        }
+	        else {
+	        	return false;
 	        }
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
 	}

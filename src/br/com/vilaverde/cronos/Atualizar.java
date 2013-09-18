@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.com.vilaverde.cronos.dao.ClienteHelper;
+import br.com.vilaverde.cronos.dao.DataHelper.Result;
 import br.com.vilaverde.cronos.dao.DepartamentosHelper;
 import br.com.vilaverde.cronos.dao.PedidoHelper;
 import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
@@ -120,13 +121,17 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 			progressDialog = ProgressDialog.show(this, "Enviando Dados", getResources().getString(R.string.atualizar), true, true);
 			push();
 		}
+		else if (task == "pull"){
+			// Recebendo Dados
+			pull();
+		}
 	}
 	
 	public void push(){
 		Log.v(CNT_LOG,"push()");
 
-		// Comecar enviados os clientes 
 		if (entidade.equalsIgnoreCase("clientes")){
+			// Enviar Clientes
 			pushClientes();
 		}
 		else if (entidade.equalsIgnoreCase("pedidos")){
@@ -135,6 +140,25 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		}
 	}
 
+	public void pull(){
+		Log.v(CNT_LOG,"pull()");
+ 
+		if (entidade.equalsIgnoreCase("vendedores")){
+			pullVendedores();
+		}
+		else if (entidade.equalsIgnoreCase("departamentos")){		
+			pullDepartamentos();						
+		}
+		else if (entidade.equalsIgnoreCase("produtos")){
+			pullProdutos();						
+		}
+		else if (entidade.equalsIgnoreCase("clientes")){	
+			pullClientes();						
+		}
+	}
+
+	// ---------------------------------------< PUSH >-----------------------------------------
+	
 	public boolean pushClientes(){
 		Log.v(CNT_LOG,"pushClientes()");
 		// recuperar os clientes a serem enviados
@@ -267,8 +291,13 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 			Log.v(CNT_LOG, "Nenhum Pedido a Enviar");
 			String msg = "Nenhum Pedido a Enviar";
 			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-			progressDialog.dismiss();
-			finish();
+//			progressDialog.dismiss();
+//			finish();
+			task = "pull";
+			entidade = "vendedores";
+			sincronizar();
+
+			
 			return false;
 		}
 	}
@@ -305,9 +334,13 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 					// Enviou Todos
 					String msg2 = enviados+" Pedido(s) Enviado(s)";
 					Toast.makeText(this, msg2, Toast.LENGTH_LONG).show();
-					
-					progressDialog.dismiss();
-					finish();
+				
+//					progressDialog.dismiss();
+//					finish();
+					// TODO Por enquanto vai chamar o push por aki
+					task = "pull";
+					entidade = "vendedores";
+					sincronizar();
 				}
 
 				
@@ -319,27 +352,144 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		
 	}
 	
-	public void sendData(ArrayList<NameValuePair> params){
-		Log.v(CNT_LOG,"sendData()");
-		HttpGetTask b = new HttpGetTask(this);
-		b.setParametros(params);
-		b.execute(serverHost);
+	// ---------------------------------------< PULL >-----------------------------------------
+	public void pullVendedores(){
+		Log.v(CNT_LOG,"pullVendedores()");
+		// recuperar os Vendedores		
+		// Seta os parametros e executa o metodo que vai enviar
+		progressDialog.setMessage("Recebendo Vendedores");
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+		params.add(new BasicNameValuePair("classe", "ClientAndroid"));
+		params.add(new BasicNameValuePair("action", "getVendedores"));
+			
+		sendData(params);
 	}
 	
-//	public void finalizaEnvio(){
-//		// Atualizando a Progress Dialog
-//		int count = enviados;
-//		String msg = "Enviando Pedido "+count+ " de "+aEnviar+".";
-//		progressDialog.setMessage(msg);
-//
-//		if (enviados == aEnviar){
-//			Log.e(CNT_LOG,"ACABOU");
-//			// Enviou Todos
-//			progressDialog.dismiss();
-//			String msg2 = enviados+" Pedido(s) Enviado(s)";
-//			Toast.makeText(this, msg2, Toast.LENGTH_SHORT).show();
+	public void pushVendedores(JSONObject json){
+		Log.v(CNT_LOG,"pushVendedores()");
+		
+		progressDialog.setMessage("Atualizando Vendedores");
+		VendedorHelper vendedorHelper = new VendedorHelper(this);
+		Boolean r = vendedorHelper.inserirVendedoresJson(json);
+		Log.v(CNT_LOG, "RESULT"+r);
+		if (r){
+			String msg ="Registros Atualizados.";
+			progressDialog.setMessage(msg);
+
+			// Executa o pull da proxima entidade
+			entidade = "departamentos";
+			pull();
+		}
+		else {			
+			onFailure("Falha ao Atualizar os Registros de Vendedores");
+
+		}
+	}
+
+	public void pullDepartamentos(){
+		Log.v(CNT_LOG,"pullDepartamentos()");
+		// recuperar os Vendedores		
+		// Seta os parametros e executa o metodo que vai enviar
+		progressDialog.setMessage("Recebendo Departamentos");
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+		params.add(new BasicNameValuePair("classe", "ClientAndroid"));
+		params.add(new BasicNameValuePair("action", "getDepartamentos"));
+			
+		sendData(params);
+	}
+
+	public void pushDepartamentos(JSONObject json){
+		Log.v(CNT_LOG,"pushDepartamentos()");
+		
+		progressDialog.setMessage("Atualizando Departamentos");
+		DepartamentosHelper departamentosHelper = new DepartamentosHelper(this);
+		Boolean r = departamentosHelper.inserirDepartamentosJson(json);
+		Log.v(CNT_LOG, "RESULT [ "+r+"]");
+		if (r){
+			String msg ="Registros Atualizados.";
+			progressDialog.setMessage(msg);
+			// Executa o pull da proxima entidade
+			entidade = "produtos";
+			pull();
+		}
+		else {			
+			onFailure("Falha ao Atualizar os Registros de departamentos");
+		}
+	}
+
+	public void pullProdutos(){
+		Log.v(CNT_LOG,"pullProdutos()");
+		// recuperar os Produtos		
+		// Seta os parametros e executa o metodo que vai enviar
+		progressDialog.setMessage("Recebendo Produtos");
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+		params.add(new BasicNameValuePair("classe", "ClientAndroid"));
+		params.add(new BasicNameValuePair("action", "getProdutos"));
+			
+		sendData(params);
+	}
+
+	public void pushProdutos(JSONObject json){
+		Log.v(CNT_LOG,"pushProdutos()");
+		
+		progressDialog.setMessage("Atualizando Produtos");
+		ProdutosHelper produtosHelper = new ProdutosHelper(this);
+		Boolean r = produtosHelper.inserirProdutosJson(json);
+		Log.v(CNT_LOG, "RESULT [ "+r+"]");
+		if (r){
+			String msg ="Registros Atualizados.";
+			progressDialog.setMessage(msg);
+			// Executa o pull da proxima entidade
+			entidade = "clientes";
+			pull();
+		}
+		else {			
+			onFailure("Falha ao Atualizar os Registros de produtos");
+		}
+	}
+
+	public void pullClientes(){
+		Log.v(CNT_LOG,"pullClientes()");
+		// recuperar os Clientes para um Vendedor		
+		// Seta os parametros e executa o metodo que vai enviar
+		progressDialog.setMessage("Recebendo Clientes");
+
+		JSONObject data = new JSONObject();
+		try {
+		    data.put("id_vendedor", 1);
+		}
+		catch (JSONException e) {
+		    e.printStackTrace();
+		}
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+		params.add(new BasicNameValuePair("classe", "ClientAndroid"));
+		params.add(new BasicNameValuePair("action", "getClientes"));
+		params.add(new BasicNameValuePair("data", data.toString()));
+			
+		sendData(params);
+	}
+
+	public void pushClientes(JSONObject json){
+		Log.v(CNT_LOG,"pushClientes()");
+		
+//		progressDialog.setMessage("Atualizando Clientes");
+//		ProdutosHelper produtosHelper = new ProdutosHelper(this);
+//		Boolean r = produtosHelper.inserirProdutosJson(json);
+//		Log.v(CNT_LOG, "RESULT [ "+r+"]");
+//		if (r){
+//			String msg ="Registros Atualizados.";
+//			progressDialog.setMessage(msg);
+//			// Executa o pull da proxima entidade
+//			entidade = "fotos";
+//			pull();
 //		}
-//	}
+//		else {			
+//			onFailure("Falha ao Atualizar os Registros de clientes");
+//		}
+	}
+	
+
 	
 //------------------------------ < SELEÇÃO DO TIPO DE CONEXAO > ------------------------------	
 	public Dialog selectLocalRemoteDialog(){
@@ -416,6 +566,13 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
         .create();
 	}
 	
+
+	public void sendData(ArrayList<NameValuePair> params){
+		Log.v(CNT_LOG,"sendData()");
+		HttpGetTask b = new HttpGetTask(this);
+		b.setParametros(params);
+		b.execute(serverHost);
+	}
 	
 	@Override
 	public void onTaskComplete(String result) {
@@ -434,13 +591,29 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 				Log.v(CNT_LOG,"RETORNOU SUCCESS");
 				String entidade = json.getString("entidade");
 				Log.v(CNT_LOG,"Entidade "+entidade);
-				
+				// Envio
 				if (entidade.equalsIgnoreCase("clientes")){
 					pullClientes(json);
 				}
 				else if (entidade.equalsIgnoreCase("pedidos")){
 					pullPedidos(json);
 				}
+				// Recebendo
+				else if (entidade.equalsIgnoreCase("vendedores")){
+					pushVendedores(json);
+				}
+				else if (entidade.equalsIgnoreCase("departamentos")){
+					pushDepartamentos(json);
+				}
+				else if (entidade.equalsIgnoreCase("produtos")){
+					pushProdutos(json);
+				}
+				else if (entidade.equalsIgnoreCase("pullclientes")){
+					pushClientes(json);
+				}
+//				else if (entidade.equalsIgnoreCase("fotos")){
+//					pushFotos(json);
+//				}
 				else {
 					Log.v(CNT_LOG,"NENHUM");
 				}	
@@ -453,6 +626,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		}
 		catch(JSONException e){
 			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
+			onFailure("Falha na Atualização").show();
 		}
 	}
 	

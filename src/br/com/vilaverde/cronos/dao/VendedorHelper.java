@@ -152,20 +152,15 @@ public class VendedorHelper extends DataHelper{
 	}
 	
 	
-	public void inserirVendedoresJson(JSONObject json){
+	public Boolean inserirVendedoresJson(JSONObject json){
 		Log.v(CNT_LOG, "inserirVendedoresJson");
-
 		int count = 0;
-		int erro = 0;
-		
-		// Apagar a Tabela de vendedores 
-		
+		int erros = 0;	
 		// Fazer o parse para array
 		try {
 			
 			JSONArray arrayVendedores = (JSONArray) json.get("rows");
 
-			
 	        for (int i = 0; i < arrayVendedores.length(); i++) {
 	        	
 	        	JSONObject vendedorItem = arrayVendedores.getJSONObject(i);        
@@ -176,19 +171,26 @@ public class VendedorHelper extends DataHelper{
 	        	vendedor.setNome(vendedorItem.getString("Nome"));
 	        	vendedor.setGrupo(vendedorItem.getInt("Grupo"));
 
-	        	if (inserir(vendedor) > 0){
-        			count++;
+	        	if (inserir(vendedor) < 0){
+	        		erros++;
 	        	}
 	        	else {
-	        		erro++;
+					count++;					
 	        	}
-			
 	        }
-		} catch (JSONException e) {
+	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
+	        if (erros == 0){
+	        	return true;
+	        }
+	        else {
+	        	return false;
+	        }
+		} 	
+		catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
-		
 	}
 	
 	public class getVendedorHttp extends HttpTaskPost {

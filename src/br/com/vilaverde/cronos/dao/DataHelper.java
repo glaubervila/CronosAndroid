@@ -377,4 +377,14 @@ public class DataHelper extends SQLiteOpenHelper{
 		
 		this.onCreate(db);
 	}
+	
+	
+	// ---------------------------------------< Classe Result >-----------------------------------------
+	public class Result {
+
+		public int count = 0;
+		public int erros = 0;
+		public String msg = "";
+		public boolean success = true;
+	}
 }

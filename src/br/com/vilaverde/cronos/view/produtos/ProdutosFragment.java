@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -42,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView.ScaleType;
 
 public class ProdutosFragment extends Fragment {
     public final static String ARG_POSITION = "position";
@@ -96,9 +98,12 @@ public class ProdutosFragment extends Fragment {
 		image_default_id = cursor.getLong(cursor.getColumnIndex("_id"));
 		
 		// Setando o Bitmap da imagem default      			
-		image_default_bitmap = MediaStore.Images.Thumbnails.getThumbnail(
-                    view.getContext().getContentResolver(), image_default_id,
-                    MediaStore.Images.Thumbnails.MINI_KIND, null);
+//		image_default_bitmap = MediaStore.Images.Thumbnails.getThumbnail(
+//                    view.getContext().getContentResolver(), image_default_id,
+//                    MediaStore.Images.Thumbnails.MINI_KIND, null);
+		
+		image_default_bitmap  = BitmapFactory.decodeResource(getResources(), R.drawable.ic_camera);
+
 		
 		cursor.close();
 		
@@ -292,7 +297,8 @@ public class ProdutosFragment extends Fragment {
  	           viewHolder.txtViewDescricao.setText(produto.getDescricao_curta());
 	           viewHolder.txtViewPreco.setText("R$ "+ produto.getStrPreco());
 	           
-	           viewHolder.txtViewPosition.setText(""+position);
+	           // Mostrar a Position de uma Imagem
+	           //viewHolder.txtViewPosition.setText(""+position);
 	           		
 	           // Guardo a ImageView e a sua posicao para usar quando a imagem estiver carregada
 	           imageViews.put(position, viewHolder.imageViewProduto);
@@ -379,6 +385,7 @@ public class ProdutosFragment extends Fragment {
         			// Se nao tiver bitmap logar para verificar
     				Log.e("LoadImage", "Imagem nao Carregada");
 	    			imageView.setImageBitmap((Bitmap) image_default_bitmap);
+	    			imageView.setScaleType(ScaleType.CENTER);
     			}
     		}
     		

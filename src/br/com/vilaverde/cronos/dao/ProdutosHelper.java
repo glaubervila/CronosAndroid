@@ -26,6 +26,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.SlidingDrawer;
 
 public class ProdutosHelper extends DataHelper{
 
@@ -136,15 +137,19 @@ public class ProdutosHelper extends DataHelper{
 	    //return linhasInseridas;
 	 }
 	
-	public void inserir(JSONArray produtos){
-		Log.v(CNT_LOG, "inserir Json");
-		
-		// Para Cada Item no array transformar em um objeto
-		for (int i = 0; i < produtos.length(); i++) {
+	public Boolean inserirProdutosJson(JSONObject json){
+		Log.v(CNT_LOG, "inserirProdutosJson()");
+		int count = 0;
+		int auxCount = 0;
+		int erros = 0;
+		try {		
+			JSONArray arrayProdutos = (JSONArray) json.get("rows");
+			// Para Cada Item no array transformar em um objeto
+			for (int i = 0; i < arrayProdutos.length(); i++) {
+	
+				JSONObject ProdutoItem;
 
-			JSONObject ProdutoItem;
-			try {
-				ProdutoItem = produtos.getJSONObject(i);
+				ProdutoItem = arrayProdutos.getJSONObject(i);
 				
 	        	Produto produto = new Produto();
 	        	
@@ -157,21 +162,19 @@ public class ProdutosHelper extends DataHelper{
 	        	produto.setQuantidade(ProdutoItem.getInt("quantidade"));
 	        	produto.setPreco(ProdutoItem.getDouble("preco"));
 
-	        	
 	        	// Tratamento das Imagens
 	        	produto.setImage_name(ProdutoItem.getString("image_name"));
-	        	
-	        	
+	        		        	
 	        	// Procurar a Imagem Local
 	        	String path_images = this.getPathImages();
 	            String image_name  = produto.getImage_name();
 	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
-	            Log.v(CNT_LOG,"Chegou Aki");
+
 	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
 	           		new String[] {image_where},
 	           		null);
-	            Log.v(CNT_LOG,"Chegou Aki2");	            
+	            
 	           	if (cursor != null) {
 	         	
 	           		if (cursor.getCount() > 0){
@@ -196,15 +199,32 @@ public class ProdutosHelper extends DataHelper{
 	           		}
 	           	}
 	        	cursor.close();
-	        	//Log.v(CNT_LOG, "Codigo = "+produto.getCodigo()+"Produto = "+produto.getDescricao_curta());
-	        	this.inserir(produto);
-	        	
-			} 
-			catch (JSONException e) {
-				e.printStackTrace();
-			}        
+	        	//Log.v(CNT_LOG, "Codigo = "+produto.getCodigo()+"Produto = "+produto.getDescricao_curta());        	
+	        	if (inserir(produto) < 0){
+	        		erros++;
+	        	}
+	        	else {
+	        		count++;
+	        		auxCount++;
+	        	}
+	        	// Garbage Colector
+	        	if (auxCount == 100){
+	        		Log.w(CNT_LOG, "DISPARANDO GARBAGE COLECTOR");
+	        		System.gc();
+	        		auxCount = 0;
+	        	}
+	        }
+	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
+	        if (erros == 0){
+	        	return true;
+	        }
+	        else {
+	        	return false;
+	        }
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return false;
 		}
-		
 	}
 	
 	public Cursor getProdutos() {
@@ -293,116 +313,116 @@ public class ProdutosHelper extends DataHelper{
 
 	
 	
-	public void getWSProdutos(){
-		Log.v(CNT_LOG, "getWSProdutos()");
-					
-		// Parametros
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("classe", "ClientAndroid"));
-        nameValuePairs.add(new BasicNameValuePair("action", "getProdutos"));
-		
-        // Crio um Objeto TaskPost
-    	HttpTaskPost httpPost = new getProdutosHttp();
-    	// Passo os Parametros
-    	httpPost.setParametros(nameValuePairs);
-    	// Passo o Contexto para disparar erros
-    	httpPost.setContext(this.context);
-    	
-    	// Primeito tentar Remoto
-    	if (this.REMOTE == true){ 	
-	    	String urlRemoto = this.getServerHostRemote();
-	    	Log.v(CNT_LOG, "UrlRemoto = "+urlRemoto);
-			httpPost.execute(urlRemoto);
-    	}
-    	else {
-    		// Se falhar no Remoto Tentar no Local
-	    	String urlLocal = this.getServerHostLocal();
-	    	Log.v(CNT_LOG, "UrlLocal = "+urlLocal);
-			httpPost.execute(urlLocal);    		
-    	}
-    	
-	}
+//	public void getWSProdutos(){
+//		Log.v(CNT_LOG, "getWSProdutos()");
+//					
+//		// Parametros
+//		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//        nameValuePairs.add(new BasicNameValuePair("classe", "ClientAndroid"));
+//        nameValuePairs.add(new BasicNameValuePair("action", "getProdutos"));
+//		
+//        // Crio um Objeto TaskPost
+//    	HttpTaskPost httpPost = new getProdutosHttp();
+//    	// Passo os Parametros
+//    	httpPost.setParametros(nameValuePairs);
+//    	// Passo o Contexto para disparar erros
+//    	httpPost.setContext(this.context);
+//    	
+//    	// Primeito tentar Remoto
+//    	if (this.REMOTE == true){ 	
+//	    	String urlRemoto = this.getServerHostRemote();
+//	    	Log.v(CNT_LOG, "UrlRemoto = "+urlRemoto);
+//			httpPost.execute(urlRemoto);
+//    	}
+//    	else {
+//    		// Se falhar no Remoto Tentar no Local
+//	    	String urlLocal = this.getServerHostLocal();
+//	    	Log.v(CNT_LOG, "UrlLocal = "+urlLocal);
+//			httpPost.execute(urlLocal);    		
+//    	}
+//    	
+//	}
+//	
 	
-	
-	public class getProdutosHttp extends HttpTaskPost {
-	
-	
-		protected void onPostExecute(String[] resultado) {
-			Log.v(CNT_LOG, "onPostExecute");
+//	public class getProdutosHttp extends HttpTaskPost {
+//	
+//	
+//		protected void onPostExecute(String[] resultado) {
+//			Log.v(CNT_LOG, "onPostExecute");
+//
+//			if (resultado[0] == "success"){
+//				// Passando a string para o metodo que vai inserir
+//				taskSuccess(resultado[1]);
+//			}
+//			else {
+//				taskFailed(resultado);
+//			}
+//		}	
+//	}
 
-			if (resultado[0] == "success"){
-				// Passando a string para o metodo que vai inserir
-				taskSuccess(resultado[1]);
-			}
-			else {
-				taskFailed(resultado);
-			}
-		}	
-	}
-
-	protected void taskSuccess(String strJson){
-	
-		JSONObject json = null;
-	
-		try {
-			json = new JSONObject(strJson);
-			
-			// Saber se a Resposta do Json Foi de Sucesso
-			Boolean success =  (Boolean) json.get("success");
-
-			if (success){
-				
-				// recuperar os objetos na resposta
-				JSONArray arrayObjetos = (JSONArray) json.get("rows");
-				
-				
-				//inserir(arrayObjetos);
-
-				LongOperation MyTask= new LongOperation();
-		        MyTask.execute(arrayObjetos);
-			}
-			else {			
-				// No servidor se nao houver resultados na query retorna success=false
-				Log.e(CNT_LOG, "Nenhuma Alteraçao a ser Feita.");
-				Messages.showSuccessToast(this.context, "Nenhum Produto a ser Alterado");
-			}
-		}
-		catch(JSONException e){
-			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
-			Messages.showErrorAlert(this.context, "Houve um erro na Resposta do Servidor.");
-		}           
-		
-		// Teste de mensagem de sucesso
-		//Messages.showSuccessToast(this.context, "Produtos Atualizados");
-	}
-	
-	protected void taskFailed(String[] resultado){
-		Log.v(CNT_LOG, "taskFailed");
-		
-		// Se a flag REMOTE estiver true significa que ta na 1 tentativa
-		//virar a flag para false para a segunda tentativa se nao conseguir mostrar erro
-		if (this.REMOTE == true){
-			this.REMOTE = false;
-			getWSProdutos();
-		}
-		else {
-			// Se tiver dado falha nas 2 tentativas retorna mensagem de erro 
-			Messages.showErrorAlert(this.context, resultado[1].toString());
-		}
-	}
-	
-	
-	private class LongOperation extends AsyncTask<JSONArray, Void, String> {
-		@Override
-		protected String doInBackground(JSONArray... params) {
-
-			inserir(params[0]);
-			return null;
-		}
-		protected void onPostExecute(String result) {
-			Log.v(CNT_LOG,"Fim da Importacao");
-	    }		
-	}
+//	protected void taskSuccess(String strJson){
+//	
+//		JSONObject json = null;
+//	
+//		try {
+//			json = new JSONObject(strJson);
+//			
+//			// Saber se a Resposta do Json Foi de Sucesso
+//			Boolean success =  (Boolean) json.get("success");
+//
+//			if (success){
+//				
+//				// recuperar os objetos na resposta
+//				JSONArray arrayObjetos = (JSONArray) json.get("rows");
+//				
+//				
+//				//inserir(arrayObjetos);
+//
+//				LongOperation MyTask= new LongOperation();
+//		        MyTask.execute(arrayObjetos);
+//			}
+//			else {			
+//				// No servidor se nao houver resultados na query retorna success=false
+//				Log.e(CNT_LOG, "Nenhuma Alteraçao a ser Feita.");
+//				Messages.showSuccessToast(this.context, "Nenhum Produto a ser Alterado");
+//			}
+//		}
+//		catch(JSONException e){
+//			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
+//			Messages.showErrorAlert(this.context, "Houve um erro na Resposta do Servidor.");
+//		}           
+//		
+//		// Teste de mensagem de sucesso
+//		//Messages.showSuccessToast(this.context, "Produtos Atualizados");
+//	}
+//	
+//	protected void taskFailed(String[] resultado){
+//		Log.v(CNT_LOG, "taskFailed");
+//		
+//		// Se a flag REMOTE estiver true significa que ta na 1 tentativa
+//		//virar a flag para false para a segunda tentativa se nao conseguir mostrar erro
+//		if (this.REMOTE == true){
+//			this.REMOTE = false;
+//			getWSProdutos();
+//		}
+//		else {
+//			// Se tiver dado falha nas 2 tentativas retorna mensagem de erro 
+//			Messages.showErrorAlert(this.context, resultado[1].toString());
+//		}
+//	}
+//	
+//	
+//	private class LongOperation extends AsyncTask<JSONArray, Void, String> {
+//		@Override
+//		protected String doInBackground(JSONArray... params) {
+//
+//			inserir(params[0]);
+//			return null;
+//		}
+//		protected void onPostExecute(String result) {
+//			Log.v(CNT_LOG,"Fim da Importacao");
+//	    }		
+//	}
 
 
 
