@@ -243,7 +243,10 @@ public class ProdutosDetalhe extends Activity {
 		TextView txtViewDescricao = (TextView) findViewById(R.id.produto_detalhe_descricao);
 		TextView txtViewPreco = (TextView) findViewById(R.id.produto_detalhe_preco);
 
-        txtViewDescricao.setText(produto.getDescricao_curta());
+		String title = produto.getCodigo()+" - "+produto.getDescricao_curta();
+		this.setTitle(title);
+        //txtViewDescricao.setText(produto.getDescricao_curta());
+		txtViewDescricao.setText(produto.getDescricao());
         txtViewPreco.setText("R$ "+ produto.getStrPreco());
 		
 		// Criar um Fragment Manager para recuperar os fragments

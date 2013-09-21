@@ -44,7 +44,7 @@
         android:textOn="Sim" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/produto_detalhe_preco"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/lblObservacoesPedido"

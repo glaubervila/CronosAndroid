@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo">
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -35,4 +35,6 @@
     </style>
     
     <color name="row_impar">#1a2421</color>
+    <color name="label_color">#C0C0C0</color>
+    <color name="produto_preco">#4682B4</color>
 </resources>        

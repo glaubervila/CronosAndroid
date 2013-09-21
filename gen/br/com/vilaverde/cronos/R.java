@@ -21,6 +21,8 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int label_color=0x7f090001;
+        public static final int produto_preco=0x7f090002;
         public static final int row_impar=0x7f090000;
     }
     public static final class dimen {
@@ -32,6 +34,9 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f080000;
         public static final int activity_vertical_margin=0x7f080001;
+        public static final int produto_descricao=0x7f080002;
+        public static final int produto_preco=0x7f080004;
+        public static final int produto_quantidade=0x7f080003;
     }
     public static final class drawable {
         public static final int background=0x7f020000;
@@ -56,24 +61,27 @@ public final class R {
         public static final int cell_shape_impar=0x7f020013;
         public static final int header_shape=0x7f020014;
         public static final int ic_add=0x7f020015;
-        public static final int ic_boxes=0x7f020016;
-        public static final int ic_calendar=0x7f020017;
-        public static final int ic_camera=0x7f020018;
-        public static final int ic_cancel=0x7f020019;
-        public static final int ic_client=0x7f02001a;
-        public static final int ic_discard=0x7f02001b;
-        public static final int ic_launcher=0x7f02001c;
-        public static final int ic_menu_cliente=0x7f02001d;
-        public static final int ic_menu_lista_clientes=0x7f02001e;
-        public static final int ic_menu_novo_cliente=0x7f02001f;
-        public static final int ic_money_bag=0x7f020020;
-        public static final int ic_save=0x7f020021;
-        public static final int image_border=0x7f020022;
-        public static final int logo_cliente=0x7f020023;
-        public static final int logo_vilaverde=0x7f020024;
-        public static final int menu_background=0x7f020025;
-        public static final int produto_default=0x7f020026;
-        public static final int separate_bar=0x7f020027;
+        public static final int ic_add_light=0x7f020016;
+        public static final int ic_boxes=0x7f020017;
+        public static final int ic_calendar=0x7f020018;
+        public static final int ic_camera=0x7f020019;
+        public static final int ic_cancel=0x7f02001a;
+        public static final int ic_client=0x7f02001b;
+        public static final int ic_discard=0x7f02001c;
+        public static final int ic_discard_light=0x7f02001d;
+        public static final int ic_launcher=0x7f02001e;
+        public static final int ic_menu_cliente=0x7f02001f;
+        public static final int ic_menu_lista_clientes=0x7f020020;
+        public static final int ic_menu_novo_cliente=0x7f020021;
+        public static final int ic_money_bag=0x7f020022;
+        public static final int ic_save=0x7f020023;
+        public static final int ic_save_light=0x7f020024;
+        public static final int image_border=0x7f020025;
+        public static final int logo_cliente=0x7f020026;
+        public static final int logo_vilaverde=0x7f020027;
+        public static final int menu_background=0x7f020028;
+        public static final int produto_default=0x7f020029;
+        public static final int separate_bar=0x7f02002a;
     }
     public static final class id {
         public static final int Cliente_ListRow_tvBairro=0x7f0b002a;
@@ -84,16 +92,16 @@ public final class R {
         public static final int Cliente_ListRow_tvTelefone=0x7f0b002c;
         public static final int LinearLayout1=0x7f0b0008;
         public static final int LinearLayout10=0x7f0b0027;
-        public static final int RelativeLayout1=0x7f0b0052;
-        public static final int ViewFlipper1=0x7f0b0049;
+        public static final int RelativeLayout1=0x7f0b0051;
+        public static final int ViewFlipper1=0x7f0b0048;
         public static final int article=0x7f0b0002;
         public static final int article_fragment=0x7f0b0030;
         public static final int bt_clientes_cancelar=0x7f0b0025;
         public static final int bt_clientes_salvar=0x7f0b0024;
         public static final int bt_main_teste=0x7f0b0001;
-        public static final int bt_produto_detalhe_adicionar=0x7f0b0048;
-        public static final int btn_Cancelar=0x7f0b0051;
-        public static final int btn_Confirmar=0x7f0b0050;
+        public static final int bt_produto_detalhe_adicionar=0x7f0b0047;
+        public static final int btn_Cancelar=0x7f0b0050;
+        public static final int btn_Confirmar=0x7f0b004f;
         public static final int cell=0x7f0b0006;
         public static final int cliente_et_bairro=0x7f0b001b;
         public static final int cliente_et_cep=0x7f0b0021;
@@ -110,37 +118,37 @@ public final class R {
         public static final int cliente_rb_pessoa_fisica=0x7f0b0009;
         public static final int cliente_rb_pessoa_juridica=0x7f0b000a;
         public static final int cliente_search_list=0x7f0b0007;
-        public static final int clientes=0x7f0b0059;
-        public static final int clientes_list_action_search=0x7f0b0060;
+        public static final int clientes=0x7f0b0058;
+        public static final int clientes_list_action_search=0x7f0b005f;
         public static final int clientes_listview=0x7f0b0026;
-        public static final int clientes_search_action_search=0x7f0b005d;
+        public static final int clientes_search_action_search=0x7f0b005c;
         public static final int clientes_sp_uf=0x7f0b0020;
-        public static final int etValor=0x7f0b004f;
+        public static final int etValor=0x7f0b004e;
         public static final int fragment_container=0x7f0b002e;
         public static final int fragment_pedido_detalhes=0x7f0b003a;
         public static final int fragment_pedido_produtos=0x7f0b003b;
         public static final int fragment_produto_detalhes_form=0x7f0b0043;
         public static final int fragment_produto_detalhes_imagem=0x7f0b0042;
         public static final int headlines_fragment=0x7f0b002f;
-        public static final int imageView1=0x7f0b0055;
+        public static final int imageView1=0x7f0b0054;
         public static final int linearLayout1=0x7f0b0000;
-        public static final int linearLayout2=0x7f0b0054;
-        public static final int linearLayout3=0x7f0b0053;
+        public static final int linearLayout2=0x7f0b0053;
+        public static final int linearLayout3=0x7f0b0052;
         public static final int lista_produtos_gridview=0x7f0b0036;
         public static final int lista_produtos_imageViewProdutos=0x7f0b0037;
         public static final int lista_produtos_textViewDescricao=0x7f0b0038;
         public static final int lista_produtos_textViewPosition=0x7f0b0039;
         public static final int lista_produtos_textViewPreco=0x7f0b000c;
-        public static final int menu_atualizar=0x7f0b005a;
-        public static final int menu_cliente_add=0x7f0b0061;
-        public static final int menu_cliente_discard=0x7f0b005f;
-        public static final int menu_cliente_lista=0x7f0b0056;
-        public static final int menu_cliente_save=0x7f0b005e;
-        public static final int menu_configuracao=0x7f0b005b;
-        public static final int menu_excluir_pedido=0x7f0b0063;
-        public static final int menu_finalizar_pedido=0x7f0b0062;
-        public static final int menu_novo_pedido=0x7f0b0057;
-        public static final int novo_pedido=0x7f0b0058;
+        public static final int menu_atualizar=0x7f0b0059;
+        public static final int menu_cliente_add=0x7f0b0060;
+        public static final int menu_cliente_discard=0x7f0b005e;
+        public static final int menu_cliente_lista=0x7f0b0055;
+        public static final int menu_cliente_save=0x7f0b005d;
+        public static final int menu_configuracao=0x7f0b005a;
+        public static final int menu_excluir_pedido=0x7f0b0062;
+        public static final int menu_finalizar_pedido=0x7f0b0061;
+        public static final int menu_novo_pedido=0x7f0b0056;
+        public static final int novo_pedido=0x7f0b0057;
         public static final int pedido_data_inclusao=0x7f0b003c;
         public static final int pedido_et_observacoes=0x7f0b0035;
         public static final int pedido_nome_cliente=0x7f0b003f;
@@ -149,20 +157,19 @@ public final class R {
         public static final int pedido_sw_nota_fiscal=0x7f0b0034;
         public static final int pedido_valor_total=0x7f0b003e;
         public static final int produto_detalhe_descricao=0x7f0b0044;
-        public static final int produto_detalhe_observacao=0x7f0b0047;
-        public static final int produto_detalhe_preco=0x7f0b0045;
-        public static final int produto_detalhe_quantidade=0x7f0b0046;
-        public static final int produto_full_one=0x7f0b004b;
-        public static final int produto_full_two=0x7f0b004c;
-        public static final int produto_full_zero=0x7f0b004a;
-        public static final int produtos_grid_view=0x7f0b004d;
+        public static final int produto_detalhe_observacao=0x7f0b0046;
+        public static final int produto_detalhe_preco=0x7f0b0003;
+        public static final int produto_detalhe_quantidade=0x7f0b0045;
+        public static final int produto_full_one=0x7f0b004a;
+        public static final int produto_full_two=0x7f0b004b;
+        public static final int produto_full_zero=0x7f0b0049;
+        public static final int produtos_grid_view=0x7f0b004c;
         public static final int progressBar1=0x7f0b0005;
         public static final int rd_forma_pagamento0=0x7f0b0031;
         public static final int rd_forma_pagamento1=0x7f0b0032;
         public static final int rd_forma_pagamento2=0x7f0b0033;
-        public static final int sair=0x7f0b005c;
+        public static final int sair=0x7f0b005b;
         public static final int table_pedido_produtos=0x7f0b0040;
-        public static final int textView1=0x7f0b0003;
         public static final int textView10=0x7f0b0018;
         public static final int textView11=0x7f0b001c;
         public static final int textView12=0x7f0b001d;
@@ -175,7 +182,7 @@ public final class R {
         public static final int textView7=0x7f0b0022;
         public static final int textView8=0x7f0b0016;
         public static final int textView9=0x7f0b0017;
-        public static final int tvMens=0x7f0b004e;
+        public static final int tvMens=0x7f0b004d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

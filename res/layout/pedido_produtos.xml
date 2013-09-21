@@ -12,7 +12,7 @@
         android:stretchColumns="1" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/produto_detalhe_preco"
             style="@style/GridHeader"
             android:text="@string/colheaderCodigo" />
 

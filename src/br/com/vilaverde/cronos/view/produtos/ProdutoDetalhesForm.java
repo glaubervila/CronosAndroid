@@ -10,6 +10,7 @@ import br.com.vilaverde.cronos.model.PedidoProduto;
 import br.com.vilaverde.cronos.model.Produto;
 import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -75,32 +76,60 @@ public class ProdutoDetalhesForm extends Fragment {
 				Log.v(CNT_LOG, "Tem pedido Aberto Pedido = "+pedidoAberto.getId());
 				
 				if (selectedProduto != null) {
-				
+							
 					// Recuperar a Quantidade
 					EditText vQuantidade = (EditText)view.findViewById(R.id.produto_detalhe_quantidade);
-					float quantidade = Float.parseFloat(vQuantidade.getText().toString());
+					Log.v(CNT_LOG,"TAMANHO DA QUANTIDEDE = "+vQuantidade.getText().length());
+					if (vQuantidade.getText().length() > 0) {
 
-					// Calcular Valor Total
-					float valor_total = (float) (quantidade * selectedProduto.getPreco());
-					
-					Log.v(CNT_LOG, "Adicionando Produto = "+selectedProduto.getDescricao()+" Quantidade = "+quantidade);
-					
-					
-					pedidoProduto = new PedidoProduto();
-					pedidoProduto.setId_pedido(""+pedidoAberto.getId());
-					pedidoProduto.setId_produto(""+selectedProduto.getId());
-					pedidoProduto.setQuantidade(quantidade);
-					pedidoProduto.setValor(selectedProduto.getPreco());
-					pedidoProduto.setValor_total(valor_total);
-					pedidoProduto.setObservacao("teste de observacao");
-		
-					if(pedidoProdutoHelper.inserir(pedidoProduto) > -1){
-						Toast.makeText(context, "Produto Adicionado ao Pedido", Toast.LENGTH_LONG).show();					
+						float quantidade = Float.parseFloat(vQuantidade.getText().toString());
+						
+						// Calcular Valor Total
+						float valor_total = (float) (quantidade * selectedProduto.getPreco());
+						
+						Log.v(CNT_LOG, "Adicionando Produto = "+selectedProduto.getDescricao()+" Quantidade = "+quantidade);
+						
+						
+						pedidoProduto = new PedidoProduto();
+						pedidoProduto.setId_pedido(""+pedidoAberto.getId());
+						pedidoProduto.setId_produto(""+selectedProduto.getId());
+						pedidoProduto.setQuantidade(quantidade);
+						pedidoProduto.setValor(selectedProduto.getPreco());
+						pedidoProduto.setValor_total(valor_total);
+						pedidoProduto.setObservacao("teste de observacao");
+			
+						if(pedidoProdutoHelper.inserir(pedidoProduto) > -1){
+							Toast.makeText(context, "Produto Adicionado ao Pedido", Toast.LENGTH_LONG).show();					
+						}
+						else {
+							Log.v(CNT_LOG,"Erro na Inclusao do Produto");
+						}
 					}
 					else {
-						Log.v(CNT_LOG,"Erro na Inclusao do Produto");
+						Log.w(CNT_LOG, "Produto Sem Quantidade");
+						new AlertDialog.Builder(this.getActivity())
+				        .setTitle("Atenção")
+				        .setMessage("Inclua uma Quantidade no Produto.")
+				        .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+				            public void onClick(DialogInterface dialog, int which) {
+				            	dialog.dismiss();
+				            }
+				        })
+				        .create().show();						
 					}
 				}
+			}
+			else {
+				Log.w(CNT_LOG, "NÃO TEM Pedido Aberto");
+				new AlertDialog.Builder(this.getActivity())
+		        .setTitle("Atenção")
+		        .setMessage("Não Há Pedido Aberto.")
+		        .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		            	dialog.dismiss();
+		            }
+		        })
+		        .create().show();
 			}
 			
 			

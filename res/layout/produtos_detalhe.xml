@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:orientation="horizontal" >
 
     <LinearLayout
@@ -23,7 +24,9 @@
             android:name="br.com.vilaverde.cronos.view.produtos.ProdutoDetalhesForm"
             android:layout_width="400dp"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
             tools:layout="@layout/produtos_detalhe_form" />
+
     </LinearLayout>
 
 </LinearLayout>

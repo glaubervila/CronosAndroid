@@ -2,54 +2,110 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-	<EditText
-		android:id="@+id/produto_detalhe_descricao"
-		android:layout_width="match_parent"
-		android:layout_height="60dp"
-		android:ems="10"
-		android:inputType="textMultiLine"
-		android:text="Descrição" />
-	
-	<EditText
-	    android:id="@+id/produto_detalhe_preco"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:inputType="numberDecimal"
-	    android:text="99.99" />
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:showDividers="none" >
 
-	<EditText
-	    android:id="@+id/produto_detalhe_quantidade"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:inputType="numberDecimal" >
+    <!-- produto_detalhe_descricao -->
 
-	    <requestFocus />
-	</EditText>
-	
-	<EditText
-		android:id="@+id/produto_detalhe_observacao"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:ems="10"
-		android:inputType="textMultiLine"
-		android:text="Observação" />
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="20dp"
-	    android:orientation="vertical" >
+    <!-- <TextView -->
+    <!-- android:id="@+id/produto_detalhe_descricao" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="60dp" -->
+    <!-- android:hint="Descrição" -->
+    <!-- android:textAppearance="?android:attr/textAppearanceMedium" /> -->
 
-		<Button
-		    android:id="@+id/bt_produto_detalhe_adicionar"
-		    style="@style/ButtonAdd"
-		    android:layout_width="match_parent"
-		     />
-		<!-- 		    android:text="@string/btn_adicionar" -->
 
-	</LinearLayout>
+    <!-- <TextView -->
+    <!-- android:id="@+id/produto_detalhe_preco" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:gravity="right" -->
+    <!-- android:hint="R$ 9999.99" -->
+    <!-- android:text="R$ 9999.99" -->
+    <!-- android:textAppearance="?android:attr/textAppearanceLarge" -->
+    <!-- android:textColor="@color/produto_preco" -->
+    <!-- android:textSize="@dimen/produto_preco" -->
+    <!-- android:textStyle="bold" -->
+    <!-- android:typeface="normal" /> -->
+
+
+    <!-- <EditText -->
+    <!-- android:id="@+id/produto_detalhe_quantidade" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:ems="10" -->
+    <!-- android:gravity="right|center_horizontal" -->
+    <!-- android:hint="0" -->
+    <!-- android:inputType="number|numberDecimal" -->
+    <!-- android:textSize="@dimen/produto_quantidade" > -->
+
+
+    <!-- <requestFocus /> -->
+    <!-- </EditText> -->
+
+
+    <!-- <EditText -->
+    <!-- android:id="@+id/produto_detalhe_observacao" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:ems="10" -->
+    <!-- android:gravity="top|left|center_vertical" -->
+    <!-- android:hint="Observação" -->
+    <!-- android:inputType="textShortMessage" -->
+    <!-- android:minHeight="150dp" /> -->
+
+    <TextView
+        android:id="@+id/produto_detalhe_descricao"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:hint="Descricao"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/produto_detalhe_preco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:hint="9999.99"
+        android:text="R$ 9999.99"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/produto_preco"
+        android:textSize="@dimen/produto_preco" />
+
+    <EditText
+        android:id="@+id/produto_detalhe_quantidade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center_vertical"
+        android:hint="Quantidade"
+        android:inputType="number"
+        android:textSize="@dimen/produto_quantidade" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/produto_detalhe_observacao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="top|left|center_vertical"
+        android:hint="Observações do produto"
+        android:inputType="text"
+        android:minHeight="120dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/bt_produto_detalhe_adicionar"
+            style="@style/ButtonAdd"
+            android:layout_width="match_parent" />
+    </LinearLayout>
 
 </LinearLayout>
