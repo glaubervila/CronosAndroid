@@ -6,7 +6,11 @@ import java.util.List;
 
 import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.R.id;
+import br.com.vilaverde.cronos.dao.ClienteHelper;
 import br.com.vilaverde.cronos.dao.DepartamentosHelper;
+import br.com.vilaverde.cronos.model.Cliente;
+import br.com.vilaverde.cronos.model.Departamento;
+import br.com.vilaverde.cronos.view.clientes.ClienteAdapter;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,10 +25,16 @@ public class DepartamentosFragment extends ListFragment {
     OnHeadlineSelectedListener mCallback;
 
 	private static String CNT_LOG = "Departamentos";
+	private DepartamentosHelper helper;   //instância responsável pela persistência dos dados
+	private DepartamentoAdapter adapter; //Adapter responsável por apresentar os clientes na tela
+	
+	private List<Departamento> lstDepartamentos = null; //lista de departamentos cadastrados no BD
     
     // The container Activity must implement this interface so the frag can deliver messages
     public interface OnHeadlineSelectedListener {
-        /** Called by HeadlinesFragment when a list item is selected */
+        /** Called by HeadlinesFragment when a list item is selected 
+         * @param departamento_id 
+         * @param departamento */
         public void onArticleSelected(int position);
     }
 
@@ -36,9 +46,16 @@ public class DepartamentosFragment extends ListFragment {
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
-        // Create an array adapter for the list view, using the Ipsum headlines array
-        //setListAdapter(new ArrayAdapter<String>(getActivity(), layout, Ipsum.Headlines));
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, DepartamentosHelper.getArrayDepartamentos()));
+    	// Instanciar o Helper 
+        helper = new DepartamentosHelper(this.getActivity());
+        
+        // Recuperar o Array de Departamentos no DB
+        lstDepartamentos = helper.getDepartamentos();
+        
+        // Instanciar o Adapter e passar o array clientes
+        adapter = new DepartamentoAdapter(this.getActivity(), lstDepartamentos);
+        
+        setListAdapter(adapter);
         
     }
 
@@ -70,8 +87,13 @@ public class DepartamentosFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Notify the parent activity of selected item
+    	Departamento departamento = lstDepartamentos.get(position);
+    	int departamento_id = departamento.getId();
+    	
+		Log.v(CNT_LOG, "Position "+position+" DepartamentoID["+departamento_id+"]");
+		
         mCallback.onArticleSelected(position);
-		Log.v(CNT_LOG, "Position "+position);
+
         // Set the item as checked to be highlighted when in two-pane layout
         getListView().setItemChecked(position, true);
     }

@@ -86,50 +86,35 @@ public class DepartamentosHelper extends DataHelper{
 			
 		this.Open();
 
+		Departamento departamento = new Departamento();
+		departamento.setId(-1);
+		departamento.setDepartamento("Sem Produtos");
+
+		List<Departamento> departamentos = null;
 		try {  	  
-	//		String status = "0"; // Aberto
-	//		String where = "status = ?";
-	//        String[] selectionArgs = new String[] {status};
-	//
-	//		Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
-	
-			// TODO: Trazer somentos os departamentos com produtos ativos
-			Cursor c = db.query(TABELA, null, null, null, null, null, null);
-	        this.Close();
-	        
+			//Trazer somentos os departamentos com produtos ativos	
+			String sql = "SELECT * FROM "+TABELA+" WHERE _id IN (SELECT DISTINCT(categoria_id) FROM produtos WHERE status = 1);";
+			Cursor c = db.rawQuery(sql, null);
+			
 			if (c.getCount() > 0) {
 				Log.v(CNT_LOG, "Total Departamentos [ "+c.getCount()+" ].");
-				List<Departamento> departamentos = bindValues(c);
-				    	  
-				return departamentos;
+				 departamentos = bindValues(c);
+
+		        this.Close();
+		        c.close();
 			}
 			else {
-				return null;
+				departamentos.add(departamento);
 			}
 	    }
 	    catch (Exception e){
 	    	Log.e(CNT_LOG, "Falha ao Listar Departamentos");
 	    	e.printStackTrace();
-	    	return null;
+			departamentos.add(departamento);
+			return departamentos;
 	    }
+		return departamentos;
 	}
-
-//	public List<String> getArrayDepartamentos(){
-//		
-//		String[] a = null;
-//		
-//		List<Departamento> departamentos = getDepartamentos();
-//		
-//		List<String> list = new ArrayList<String>(departamentos.size());  
-//		for (int i=0;i<=departamentos.size();i++){
-//			Departamento departamento = departamentos.get(i);
-//			list.add(departamento.getDepartamento());
-//		}
-//		
-//		return list;
-//		
-//	}
-
 	
 	public List<Departamento> bindValues(Cursor c) {
 		Log.v(CNT_LOG, "bindValues.");
@@ -150,8 +135,6 @@ public class DepartamentosHelper extends DataHelper{
 
 		return lista;
 	}
-
-	
 	
 	public void sincronizarDepartamentos(){
 		Log.v(CNT_LOG, "sincronizarDepartamentoes()");

@@ -22,7 +22,9 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -142,7 +144,15 @@ public class ProdutosHelper extends DataHelper{
 		int count = 0;
 		int auxCount = 0;
 		int erros = 0;
-		try {		
+		
+		this.Open();
+		db.beginTransaction();
+		try {
+			
+			// Primeiro Setar Todos os Produtos para NAO ATIVOS
+			Log.v(CNT_LOG,"Setando TODOS os produtos para inativos");
+			db.execSQL("UPDATE "+TABELA+" SET status = -1");
+			
 			JSONArray arrayProdutos = (JSONArray) json.get("rows");
 			// Para Cada Item no array transformar em um objeto
 			for (int i = 0; i < arrayProdutos.length(); i++) {
@@ -161,53 +171,74 @@ public class ProdutosHelper extends DataHelper{
 	        	produto.setDescricao(ProdutoItem.getString("descricao"));
 	        	produto.setQuantidade(ProdutoItem.getInt("quantidade"));
 	        	produto.setPreco(ProdutoItem.getDouble("preco"));
-
+	        	// SETANDO O PRODUTO COMO ATIVO
+	        	produto.setStatus(1);
+	        	
 	        	// Tratamento das Imagens
 	        	produto.setImage_name(ProdutoItem.getString("image_name"));
-	        		        	
-	        	// Procurar a Imagem Local
-	        	String path_images = this.getPathImages();
-	            String image_name  = produto.getImage_name();
-	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
 
-	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-	           		new String[] {image_where},
-	           		null);
-	            
-	           	if (cursor != null) {
-	         	
-	           		if (cursor.getCount() > 0){
-		           		Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
-		           		
-		           		cursor.moveToPosition(0);
-			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
-		           		
-		           		// Setando as variaveis de Imagem
-		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
-		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
-		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
-		           		produto.setImage_status(1);
-		           		
-		           		Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
-//		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
-		           		Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
-		           		
-	           		}
-	           		else {
-	           			produto.setImage_status(0);
-	           		}
-	           	}
-	        	cursor.close();
-	        	//Log.v(CNT_LOG, "Codigo = "+produto.getCodigo()+"Produto = "+produto.getDescricao_curta());        	
-	        	if (inserir(produto) < 0){
-	        		erros++;
-	        	}
-	        	else {
-	        		count++;
-	        		auxCount++;
-	        	}
-	        	// Garbage Colector
+           		produto.setImage_id(0);
+           		produto.setImage_path("");
+           		produto.setImage_size("");
+	        	produto.setImage_status(0);
+	        	
+//	        	// Procurar a Imagem Local
+//	        	String path_images = this.getPathImages();
+//	            String image_name  = produto.getImage_name();
+//	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
+//
+//	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
+//	           		new String[] {image_where},
+//	           		null);
+//	            
+//	           	if (cursor != null) {
+//	         	
+//	           		if (cursor.getCount() > 0){
+//		           		//Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
+//		           		
+//		           		cursor.moveToPosition(0);
+//			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
+//		           		
+//		           		// Setando as variaveis de Imagem
+//		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
+//		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
+//		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
+//		           		produto.setImage_status(1);
+//		           		
+//		           		//Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
+////		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
+//		           		//Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
+//		           		
+//	           		}
+//	           		else {
+//	           			produto.setImage_status(0);
+//	           		}
+//	           	}
+//	        	cursor.close();
+	        	
+	        	ContentValues valores = new ContentValues();
+	        	valores.put("_id", produto.getId());
+	        	valores.put("status", produto.getStatus());
+	        	valores.put("codigo", produto.getCodigo());
+	        	valores.put("categoria_id", produto.getCategoria_id());
+	        	valores.put("descricao_curta", produto.getDescricao_curta());
+	        	valores.put("descricao", produto.getDescricao());
+	        	valores.put("quantidade", produto.getQuantidade());
+	        	valores.put("preco", produto.getPreco());
+  
+	        	valores.put("image_name", produto.getImage_name());
+	        	valores.put("image_path", produto.getImage_path());
+	        	valores.put("image_size", produto.getImage_size());
+	        	valores.put("image_id", produto.getImage_id());
+	        	valores.put("image_status", produto.getImage_status());
+	        	
+	        	db.replace(TABELA, null, valores);
+        		count++;
+        		auxCount++;
+
+	        	Log.v(CNT_LOG, "REPLACE - Codigo = "+produto.getCodigo()+" Produto = "+produto.getDescricao_curta());        	
+//	        	// Garbage Colector
 	        	if (auxCount == 100){
 	        		Log.w(CNT_LOG, "DISPARANDO GARBAGE COLECTOR");
 	        		System.gc();
@@ -215,15 +246,19 @@ public class ProdutosHelper extends DataHelper{
 	        	}
 	        }
 	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
-	        if (erros == 0){
-	        	return true;
-	        }
-	        else {
-	        	return false;
-	        }
+        	db.setTransactionSuccessful();
+        	return true;
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return false;
+		}
+		catch(SQLException e){
+			Log.e(CNT_LOG,"SQLException="+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		finally{
+			 db.endTransaction();
 		}
 	}
 	
@@ -246,14 +281,13 @@ public class ProdutosHelper extends DataHelper{
 		
 		String depart_id = Integer.toString(departamento_id) ;
 		
-		String where = "categoria_id = ?";
+		String where = "categoria_id = ? AND status = 1";
         String[] selectionArgs = {depart_id};
 	
 		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, null);
 
-		
 		Log.w(CNT_LOG, "Total Registros = "+c.getCount());
-		////return db.rawQuery("select _id, nome FROM clientes ORDER BY nome", null);
+
 		this.Close();		
 		return c;
 	}
@@ -262,27 +296,16 @@ public class ProdutosHelper extends DataHelper{
 		Log.v(CNT_LOG, "getProdutos. Depart [ "+departamento_id+" ]");
 		
 		this.Open();
-		
-		//String depart_id = Integer.toString(departamento_id) ;
-		String depart_id = "1000";
-		//Log.w(CNT_LOG, "HARDCODE! Depart [ "+depart_id+" ]");
-		
-		String where = "categoria_id = ?";
+		// So retornar os produtos com status diferente de inativo (-1)		
+		String depart_id = Integer.toString(departamento_id) ;
+		String where = "categoria_id = ? AND status = 1";
         String[] selectionArgs = {depart_id};
-		
-//		String where = "descricao Like ?";
-//        String[] selectionArgs = {"%caneta%"};
-    	
-//		String where = "codigo = ?";
-//        String[] selectionArgs = {"2738"};
 
 		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, null);
-		//Cursor c = db.query(TABELA, null, null, null,null , null, null);
 		
 		List<Produto> lista = new ArrayList<Produto>();
 	      
-		while(c.moveToNext()){
-	    	  
+		while(c.moveToNext()){    	  
 			Produto produto = new Produto();
 			
 			produto.setId(c.getInt(c.getColumnIndex("_id")));

@@ -10,10 +10,12 @@ import java.util.List;
 import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.R.id;
 import br.com.vilaverde.cronos.R.layout;
+import br.com.vilaverde.cronos.dao.DepartamentosHelper;
 import br.com.vilaverde.cronos.dao.ProdutosHelper;
 
 
 import br.com.vilaverde.cronos.model.Cliente;
+import br.com.vilaverde.cronos.model.Departamento;
 import br.com.vilaverde.cronos.model.Produto;
 import br.com.vilaverde.cronos.view.clientes.ClienteAdapter;
 
@@ -161,10 +163,8 @@ public class ProdutosFragment extends Fragment {
     }
 
     public void updateArticleView(int position) {
-   	
+    	// Ao Escolher um departamento carregar as imagens
         mCurrentPosition = position;
-    	
-    	// Ao Escolher um departamento carregar as imagens 
         this.getProdutos(position);
 
     }
@@ -178,14 +178,20 @@ public class ProdutosFragment extends Fragment {
     }
         
     
-    public void getProdutos(int departamento){
-    	Log.v(CNT_LOG, "Departamento Id = "+departamento);
+    public void getProdutos(int position){
+    	Log.v(CNT_LOG, "Departamento Id = "+position);
+    	
+        DepartamentosHelper helper = new DepartamentosHelper(getActivity());
+		// Recuperar o Array de Departamentos no DB
+        List<Departamento> lstDepartamentos = helper.getDepartamentos();
+    	Departamento departamento = lstDepartamentos.get(position);
     	
     	// Limpar a lista de produtos
     	lstProdutos.clear();
 
     	// Pesquisar pelo departamento e adicionar a list
-		lstProdutos.addAll(produtosHelper.ListProdutosByDepartamentos(5000));
+    	int departamento_id = departamento.getId();
+		lstProdutos.addAll(produtosHelper.ListProdutosByDepartamentos(departamento_id));
 
 		//método responsável pela atualiza da lista de dados na tela
 		adapter.notifyDataSetChanged();
@@ -327,7 +333,7 @@ public class ProdutosFragment extends Fragment {
 
     		@Override
     		protected Bundle doInBackground(Bundle... bundle) {
-    			Log.w("LoadImage", "doInBackground");
+    			//Log.w("LoadImage", "doInBackground");
 
     			// Recuperando os Parametros do Bundle
     			int position = bundle[0].getInt("position");
@@ -354,10 +360,10 @@ public class ProdutosFragment extends Fragment {
     		
     		protected void onPostExecute(Bundle result) {
     			super.onPostExecute(result);
-    			Log.w("LoadImage", "onPostExecute");
+    			//Log.w("LoadImage", "onPostExecute");
     			// No Metodo onPostExecute verifico se retornou o bitmap
     			
-    			Log.v("LoadImage", "Thumbnail Position: "+result.getInt("position")+" ID: " +result.getLong("image_id")+ result.getParcelable("bitmap"));
+    			//Log.v("LoadImage", "Thumbnail Position: "+result.getInt("position")+" ID: " +result.getLong("image_id")+ result.getParcelable("bitmap"));
 
     			// Recupero o imageView do array imageViews na posicao da imagem 
     			ImageView imageView = imageViews.get(result.getInt("position"));
@@ -383,7 +389,7 @@ public class ProdutosFragment extends Fragment {
     			}
     			else {
         			// Se nao tiver bitmap logar para verificar
-    				Log.e("LoadImage", "Imagem nao Carregada");
+    				//Log.e("LoadImage", "Imagem nao Carregada");
 	    			imageView.setImageBitmap((Bitmap) image_default_bitmap);
 	    			imageView.setScaleType(ScaleType.CENTER);
     			}

@@ -2,7 +2,9 @@ package br.com.vilaverde.cronos;
 
 import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.dao.DataHelper;
+import br.com.vilaverde.cronos.model.Departamento;
 import br.com.vilaverde.cronos.settings.SettingsActivity;
+import br.com.vilaverde.cronos.view.clientes.ClienteAdapter;
 import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import br.com.vilaverde.cronos.view.pedidos.PedidoAberto;
 import br.com.vilaverde.cronos.view.produtos.DepartamentosFragment;
@@ -12,15 +14,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 public class Cronos extends FragmentActivity 
-        implements DepartamentosFragment.OnHeadlineSelectedListener {
+        implements DepartamentosFragment.OnHeadlineSelectedListener{
+
+    
+	private String CNT_LOG = "MainActivity";
 
     /** Called when the activity is first created. */
     @Override
@@ -60,9 +67,10 @@ public class Cronos extends FragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
+		
 		return true;
 	}
-	
+		
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	            
@@ -123,6 +131,7 @@ public class Cronos extends FragmentActivity
             transaction.commit();
         }
     }
+    
 }
 
       

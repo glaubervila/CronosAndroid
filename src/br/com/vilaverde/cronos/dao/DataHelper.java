@@ -16,7 +16,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	protected static  String NOME_BANCO = "cronos.db";
 	
 	private final static String TABELA = "pedidos";
-	protected static int VERSAO_SCHEMA = 65;
+	protected static int VERSAO_SCHEMA = 66;
 	
 	public Boolean REMOTE = false;
 		
@@ -79,7 +79,7 @@ public class DataHelper extends SQLiteOpenHelper{
 		//this.onCreateTablePedidos(db);
 		//this.onCreateTablePedidoProdutos(db);
 //		this.onCreateTableVendedor(db);
-//		this.onCreateTableDepartamentos(db);	
+		this.onCreateTableDepartamentos(db);	
 	}
 
 	//@Override
@@ -90,7 +90,7 @@ public class DataHelper extends SQLiteOpenHelper{
 		//this.onUpgradeTablePedidos(db, oldVersion, newVersion);
 		//this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
 		//this.onUpgradeTableVendedor(db, oldVersion, newVersion);
-		//this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
+		this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
 		
 	}
 
