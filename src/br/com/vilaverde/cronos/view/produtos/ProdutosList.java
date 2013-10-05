@@ -51,7 +51,10 @@ SearchView.OnCloseListener {
 		
         // Recuperar o Array de Clientes no DB
         lstProdutos = helper.getListProdutos();
+        String title = lstProdutos.size()+" Produtos";
+        setTitle(title);
 
+        
         // Instanciar o Adapter e passar o array clientes
         adapter = new ProdutosListAdapter(this, lstProdutos);
         
@@ -134,6 +137,9 @@ SearchView.OnCloseListener {
     	
     	lstProdutos = helper.getListProdutos(query);
 
+        String title = lstProdutos.size()+" Produtos Encontrados";
+        setTitle(title);
+    	
         adapter = new ProdutosListAdapter(this, lstProdutos);
         listView.setAdapter(adapter);
         
@@ -145,8 +151,13 @@ SearchView.OnCloseListener {
     	lstProdutos.clear();
     	
         lstProdutos = helper.getListProdutos();
+        
+        String title = lstProdutos.size()+" Produtos";
+        setTitle(title);
+        
         adapter = new ProdutosListAdapter(this, lstProdutos);
         listView.setAdapter(adapter);
     	adapter.notifyDataSetChanged();
     }
+    
 }
