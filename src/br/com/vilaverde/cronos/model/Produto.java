@@ -5,7 +5,10 @@ import java.text.NumberFormat;
 
 import android.util.Log;
 
-public class Produto implements Serializable {
+public class Produto implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private int id ;
 	private int status;
 	private int codigo;

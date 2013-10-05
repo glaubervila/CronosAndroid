@@ -182,40 +182,40 @@ public class ProdutosHelper extends DataHelper{
            		produto.setImage_size("");
 	        	produto.setImage_status(0);
 	        	
-//	        	// Procurar a Imagem Local
-//	        	String path_images = this.getPathImages();
-//	            String image_name  = produto.getImage_name();
-//	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
-//
-//	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-//	           		new String[] {image_where},
-//	           		null);
-//	            
-//	           	if (cursor != null) {
-//	         	
-//	           		if (cursor.getCount() > 0){
-//		           		//Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
-//		           		
-//		           		cursor.moveToPosition(0);
-//			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
-//		           		
-//		           		// Setando as variaveis de Imagem
-//		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
-//		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
-//		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
-//		           		produto.setImage_status(1);
-//		           		
-//		           		//Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
-////		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
-//		           		//Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
-//		           		
-//	           		}
-//	           		else {
-//	           			produto.setImage_status(0);
-//	           		}
-//	           	}
-//	        	cursor.close();
+	        	// Procurar a Imagem Local
+	        	String path_images = this.getPathImages();
+	            String image_name  = produto.getImage_name();
+	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
+
+	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
+	           		new String[] {image_where},
+	           		null);
+	            
+	           	if (cursor != null) {
+	         	
+	           		if (cursor.getCount() > 0){
+		           		//Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
+		           		
+		           		cursor.moveToPosition(0);
+			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
+		           		
+		           		// Setando as variaveis de Imagem
+		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
+		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
+		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
+		           		produto.setImage_status(1);
+		           		
+		           		//Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
+//		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
+		           		//Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
+		           		
+	           		}
+	           		else {
+	           			produto.setImage_status(0);
+	           		}
+	           	}
+	        	cursor.close();
 	        	
 	        	ContentValues valores = new ContentValues();
 	        	valores.put("_id", produto.getId());
@@ -275,6 +275,39 @@ public class ProdutosHelper extends DataHelper{
 		return c;
 	} 
 
+	public List<Produto> getListProdutos(String q){
+		Log.v(CNT_LOG, "Pesquisando Produtos. Query [ "+q+" ]");
+		this.Open();			
+
+		Cursor c = null;
+
+		String where = "descricao_curta LIKE ? AND status = 1";
+        String[] selectionArgs = {"%"+q+"%"};
+        
+		c = db.query(TABELA, null, where, selectionArgs,null , null,"descricao_curta");
+		
+		Log.v(CNT_LOG, "Produtos Count["+c.getCount()+"]");
+		List<Produto> lista = bindValues(c);
+		return lista;
+	}
+
+	public List<Produto> getListProdutos(){
+		Log.v(CNT_LOG, "Pesquisando Produtos.");
+		this.Open();			
+
+		Cursor c = null;
+
+		String where = " status = ?";
+	    String[] selectionArgs = {"1"};
+	    
+		c = db.query(TABELA, null, where, selectionArgs,null,null,"descricao_curta");
+		
+		Log.v(CNT_LOG, "Produtos Count["+c.getCount()+"]");
+		List<Produto> lista = bindValues(c);
+		return lista;
+	}
+
+	
 	public Cursor getProdutosByDepartamentos(int departamento_id) {
 		Log.v(CNT_LOG, "getProdutos()");		
 		this.Open();
@@ -303,6 +336,19 @@ public class ProdutosHelper extends DataHelper{
 
 		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, null);
 		
+		List<Produto> lista = bindValues(c);
+
+
+		this.Close();
+		
+		Log.v(CNT_LOG, "getLista, Total [ "+ lista.size()+" ]");
+		
+	    return lista;
+	 }
+
+	public List<Produto> bindValues(Cursor c) {
+		Log.v(CNT_LOG, "bindValues.");
+
 		List<Produto> lista = new ArrayList<Produto>();
 	      
 		while(c.moveToNext()){    	  
@@ -324,17 +370,11 @@ public class ProdutosHelper extends DataHelper{
 		      
 			lista.add(produto);
 		}
-
 		c.close();
 
-		this.Close();
-		
-		Log.v(CNT_LOG, "getLista, Total [ "+ lista.size()+" ]");
-		
-	    return lista;
-	 }
+		return lista;
+	}
 
-	
 	
 //	public void getWSProdutos(){
 //		Log.v(CNT_LOG, "getWSProdutos()");
@@ -450,3 +490,4 @@ public class ProdutosHelper extends DataHelper{
 
 
 }
+

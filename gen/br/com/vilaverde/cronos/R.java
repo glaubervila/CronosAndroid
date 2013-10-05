@@ -92,7 +92,7 @@ public final class R {
         public static final int Cliente_ListRow_tvTelefone=0x7f0b002c;
         public static final int LinearLayout1=0x7f0b0008;
         public static final int LinearLayout10=0x7f0b0027;
-        public static final int RelativeLayout1=0x7f0b0052;
+        public static final int RelativeLayout1=0x7f0b0055;
         public static final int ViewFlipper1=0x7f0b0049;
         public static final int article=0x7f0b0002;
         public static final int article_fragment=0x7f0b0030;
@@ -100,8 +100,8 @@ public final class R {
         public static final int bt_clientes_salvar=0x7f0b0024;
         public static final int bt_main_teste=0x7f0b0001;
         public static final int bt_produto_detalhe_adicionar=0x7f0b0048;
-        public static final int btn_Cancelar=0x7f0b0051;
-        public static final int btn_Confirmar=0x7f0b0050;
+        public static final int btn_Cancelar=0x7f0b0054;
+        public static final int btn_Confirmar=0x7f0b0053;
         public static final int cell=0x7f0b0006;
         public static final int cliente_et_bairro=0x7f0b001b;
         public static final int cliente_et_cep=0x7f0b0021;
@@ -118,38 +118,39 @@ public final class R {
         public static final int cliente_rb_pessoa_fisica=0x7f0b0009;
         public static final int cliente_rb_pessoa_juridica=0x7f0b000a;
         public static final int cliente_search_list=0x7f0b0007;
-        public static final int clientes=0x7f0b0059;
-        public static final int clientes_list_action_search=0x7f0b0060;
+        public static final int clientes=0x7f0b005d;
+        public static final int clientes_list_action_search=0x7f0b0064;
         public static final int clientes_listview=0x7f0b0026;
-        public static final int clientes_search_action_search=0x7f0b005d;
+        public static final int clientes_search_action_search=0x7f0b0061;
         public static final int clientes_sp_uf=0x7f0b0020;
         public static final int departamentos_ListRow_tvDepartamento=0x7f0b0031;
-        public static final int etValor=0x7f0b004f;
+        public static final int etValor=0x7f0b0052;
         public static final int fragment_container=0x7f0b002e;
         public static final int fragment_pedido_detalhes=0x7f0b003b;
         public static final int fragment_pedido_produtos=0x7f0b003c;
         public static final int fragment_produto_detalhes_form=0x7f0b0044;
         public static final int fragment_produto_detalhes_imagem=0x7f0b0043;
         public static final int headlines_fragment=0x7f0b002f;
-        public static final int imageView1=0x7f0b0055;
+        public static final int imageView1=0x7f0b0058;
         public static final int linearLayout1=0x7f0b0000;
-        public static final int linearLayout2=0x7f0b0054;
-        public static final int linearLayout3=0x7f0b0053;
+        public static final int linearLayout2=0x7f0b0057;
+        public static final int linearLayout3=0x7f0b0056;
         public static final int lista_produtos_gridview=0x7f0b0037;
         public static final int lista_produtos_imageViewProdutos=0x7f0b0038;
         public static final int lista_produtos_textViewDescricao=0x7f0b0039;
         public static final int lista_produtos_textViewPosition=0x7f0b003a;
         public static final int lista_produtos_textViewPreco=0x7f0b000c;
-        public static final int menu_atualizar=0x7f0b005a;
-        public static final int menu_cliente_add=0x7f0b0061;
-        public static final int menu_cliente_discard=0x7f0b005f;
-        public static final int menu_cliente_lista=0x7f0b0056;
-        public static final int menu_cliente_save=0x7f0b005e;
-        public static final int menu_configuracao=0x7f0b005b;
-        public static final int menu_excluir_pedido=0x7f0b0063;
-        public static final int menu_finalizar_pedido=0x7f0b0062;
-        public static final int menu_novo_pedido=0x7f0b0057;
-        public static final int novo_pedido=0x7f0b0058;
+        public static final int menu_atualizar=0x7f0b005e;
+        public static final int menu_cliente_add=0x7f0b0065;
+        public static final int menu_cliente_discard=0x7f0b0063;
+        public static final int menu_cliente_lista=0x7f0b0059;
+        public static final int menu_cliente_save=0x7f0b0062;
+        public static final int menu_configuracao=0x7f0b005f;
+        public static final int menu_excluir_pedido=0x7f0b0067;
+        public static final int menu_finalizar_pedido=0x7f0b0066;
+        public static final int menu_novo_pedido=0x7f0b005a;
+        public static final int menu_produtos=0x7f0b005b;
+        public static final int novo_pedido=0x7f0b005c;
         public static final int pedido_data_inclusao=0x7f0b003d;
         public static final int pedido_et_observacoes=0x7f0b0036;
         public static final int pedido_nome_cliente=0x7f0b0040;
@@ -165,11 +166,15 @@ public final class R {
         public static final int produto_full_two=0x7f0b004c;
         public static final int produto_full_zero=0x7f0b004a;
         public static final int produtos_grid_view=0x7f0b004d;
+        public static final int produtos_list=0x7f0b004e;
+        public static final int produtos_listrow_tvDescricao=0x7f0b004f;
+        public static final int produtos_listrow_tvPreco=0x7f0b0050;
+        public static final int produtos_search_action_search=0x7f0b0068;
         public static final int progressBar1=0x7f0b0005;
         public static final int rd_forma_pagamento0=0x7f0b0032;
         public static final int rd_forma_pagamento1=0x7f0b0033;
         public static final int rd_forma_pagamento2=0x7f0b0034;
-        public static final int sair=0x7f0b005c;
+        public static final int sair=0x7f0b0060;
         public static final int table_pedido_produtos=0x7f0b0041;
         public static final int textView10=0x7f0b0018;
         public static final int textView11=0x7f0b001c;
@@ -183,7 +188,7 @@ public final class R {
         public static final int textView7=0x7f0b0022;
         public static final int textView8=0x7f0b0016;
         public static final int textView9=0x7f0b0017;
-        public static final int tvMens=0x7f0b004e;
+        public static final int tvMens=0x7f0b0051;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -207,9 +212,11 @@ public final class R {
         public static final int produtos_detalhe_form=0x7f030012;
         public static final int produtos_detalhe_imagem=0x7f030013;
         public static final int produtos_grid_view=0x7f030014;
-        public static final int select_cliente_dialog=0x7f030015;
-        public static final int splashscreen=0x7f030016;
-        public static final int splashscreen2=0x7f030017;
+        public static final int produtos_list=0x7f030015;
+        public static final int produtos_list_row=0x7f030016;
+        public static final int select_cliente_dialog=0x7f030017;
+        public static final int splashscreen=0x7f030018;
+        public static final int splashscreen2=0x7f030019;
     }
     public static final class menu {
         public static final int activity_main=0x7f0a0000;
@@ -217,6 +224,7 @@ public final class R {
         public static final int clientes_form=0x7f0a0002;
         public static final int clientes_list=0x7f0a0003;
         public static final int pedido_aberto=0x7f0a0004;
+        public static final int produtos_search=0x7f0a0005;
     }
     public static final class string {
         public static final int SERVER_HOST=0x7f070000;

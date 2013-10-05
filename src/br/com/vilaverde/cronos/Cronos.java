@@ -9,6 +9,7 @@ import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import br.com.vilaverde.cronos.view.pedidos.PedidoAberto;
 import br.com.vilaverde.cronos.view.produtos.DepartamentosFragment;
 import br.com.vilaverde.cronos.view.produtos.ProdutosFragment;
+import br.com.vilaverde.cronos.view.produtos.ProdutosList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -81,7 +82,6 @@ public class Cronos extends FragmentActivity
 	
 	        case R.id.menu_atualizar:          
 	    		startActivity(new Intent(this,Atualizar.class));
-	        	//new Atualizar(this);
 	            return true;	            
 
 	        case R.id.menu_novo_pedido:          
@@ -92,6 +92,9 @@ public class Cronos extends FragmentActivity
 	    		startActivity(new Intent(this,SettingsActivity.class));
 	            return true;	            
 
+	        case R.id.menu_produtos:          
+	    		startActivity(new Intent(this,ProdutosList.class));
+	            return true;	            
 	            
 	        default:
 	            return super.onOptionsItemSelected(item);
