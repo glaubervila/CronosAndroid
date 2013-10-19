@@ -12,8 +12,8 @@
         android:right="1dp" android:bottom="1dp">
         <shape android:shape="rectangle">
             <gradient android:angle="90"
-            	android:startColor="#000000" 
-            	android:endColor="#000000" />
+            	android:startColor="#FFFFFF" 
+            	android:endColor="#FFFFFF" />
         </shape>
     </item>
 </layer-list>

@@ -17,7 +17,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="GridHeader" parent="android:Widget.Holo.TextView">
+    <style name="GridHeader" parent="android:Widget.Holo.Light.TextView">
         <item name="android:background">@drawable/header_shape</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">10dp</item>
@@ -25,7 +25,7 @@
         <item name="android:paddingTop">8dp</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
-    <style name="GridCell" parent="android:Widget.Holo.TextView">
+    <style name="GridCell" parent="android:Widget.Holo.Light.TextView">
         <item name="android:background">@drawable/cell_shape</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">10dp</item>
@@ -34,7 +34,7 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
     
-    <color name="row_impar">#1a2421</color>
+    <color name="row_impar">#F0F0F0</color>
     <color name="label_color">#C0C0C0</color>
     <color name="produto_preco">#4682B4</color>
 </resources>        
