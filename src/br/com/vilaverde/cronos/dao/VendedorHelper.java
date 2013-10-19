@@ -8,19 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Vendedor;
-import android.R;
-import android.R.integer;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
+import br.com.vilaverde.cronos.model.Vendedor;
 
 public class VendedorHelper extends DataHelper{
 

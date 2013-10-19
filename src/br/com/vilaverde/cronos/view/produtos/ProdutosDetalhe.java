@@ -1,35 +1,24 @@
 package br.com.vilaverde.cronos.view.produtos;
 
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
 
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.id;
-import br.com.vilaverde.cronos.R.layout;
-import br.com.vilaverde.cronos.model.Produto;
-import br.com.vilaverde.cronos.view.ProdutosFragment;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.model.Produto;
 
 public class ProdutosDetalhe extends Activity {
 	

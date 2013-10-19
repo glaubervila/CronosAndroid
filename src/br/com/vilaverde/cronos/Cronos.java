@@ -1,28 +1,18 @@
 package br.com.vilaverde.cronos;
 
-import br.com.vilaverde.cronos.R;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
 import br.com.vilaverde.cronos.dao.DataHelper;
-import br.com.vilaverde.cronos.model.Departamento;
 import br.com.vilaverde.cronos.settings.SettingsActivity;
-import br.com.vilaverde.cronos.view.clientes.ClienteAdapter;
 import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import br.com.vilaverde.cronos.view.pedidos.PedidoAberto;
 import br.com.vilaverde.cronos.view.produtos.DepartamentosFragment;
 import br.com.vilaverde.cronos.view.produtos.ProdutosFragment;
 import br.com.vilaverde.cronos.view.produtos.ProdutosList;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 public class Cronos extends FragmentActivity 
         implements DepartamentosFragment.OnHeadlineSelectedListener{

@@ -4,21 +4,16 @@ package br.com.vilaverde.cronos.view.produtos;
 
 import java.util.List;
 
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.id;
-import br.com.vilaverde.cronos.dao.ClienteHelper;
-import br.com.vilaverde.cronos.dao.DepartamentosHelper;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Departamento;
-import br.com.vilaverde.cronos.view.clientes.ClienteAdapter;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.dao.DepartamentosHelper;
+import br.com.vilaverde.cronos.model.Departamento;
 
 
 public class DepartamentosFragment extends ListFragment {

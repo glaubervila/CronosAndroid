@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.model.Departamento;
-import br.com.vilaverde.cronos.model.Departamento;
 
 public class DepartamentoAdapter extends BaseAdapter{
 

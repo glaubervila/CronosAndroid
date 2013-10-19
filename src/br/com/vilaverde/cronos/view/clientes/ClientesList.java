@@ -1,11 +1,8 @@
 package br.com.vilaverde.cronos.view.clientes;
 
 import java.util.List;
-import br.com.vilaverde.cronos.R;
+
 import android.app.Activity;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TextView;
 import android.widget.Toast;
-
+import br.com.vilaverde.cronos.R;
 import br.com.vilaverde.cronos.dao.ClienteHelper;
 import br.com.vilaverde.cronos.model.Cliente;
 

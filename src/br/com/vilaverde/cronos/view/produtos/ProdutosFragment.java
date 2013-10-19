@@ -2,50 +2,35 @@ package br.com.vilaverde.cronos.view.produtos;
 
 
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.id;
-import br.com.vilaverde.cronos.R.layout;
-import br.com.vilaverde.cronos.dao.DepartamentosHelper;
-import br.com.vilaverde.cronos.dao.ProdutosHelper;
-
-
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Departamento;
-import br.com.vilaverde.cronos.model.Produto;
-import br.com.vilaverde.cronos.view.clientes.ClienteAdapter;
-
-import android.R.integer;
-import android.support.v4.app.Fragment;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.dao.DepartamentosHelper;
+import br.com.vilaverde.cronos.dao.ProdutosHelper;
+import br.com.vilaverde.cronos.model.Departamento;
+import br.com.vilaverde.cronos.model.Produto;
 
 public class ProdutosFragment extends Fragment {
     public final static String ARG_POSITION = "position";

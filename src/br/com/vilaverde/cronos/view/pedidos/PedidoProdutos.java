@@ -1,32 +1,22 @@
 package br.com.vilaverde.cronos.view.pedidos;
 
-import java.awt.font.TextAttribute;
 import java.util.List;
 
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.id;
-import br.com.vilaverde.cronos.R.layout;
-import br.com.vilaverde.cronos.dao.PedidoHelper;
-import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Pedido;
-import br.com.vilaverde.cronos.model.PedidoProduto;
-import br.com.vilaverde.cronos.model.Produto;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.dao.PedidoHelper;
+import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
+import br.com.vilaverde.cronos.model.Pedido;
+import br.com.vilaverde.cronos.model.PedidoProduto;
 
 public class PedidoProdutos extends Fragment {
 	

@@ -1,33 +1,24 @@
 package br.com.vilaverde.cronos.view.produtos;
 
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.id;
-import br.com.vilaverde.cronos.R.layout;
 import br.com.vilaverde.cronos.dao.PedidoHelper;
 import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
 import br.com.vilaverde.cronos.model.Pedido;
 import br.com.vilaverde.cronos.model.PedidoProduto;
 import br.com.vilaverde.cronos.model.Produto;
-import br.com.vilaverde.cronos.view.clientes.ClientesList;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 public class ProdutoDetalhesForm extends Fragment {
 

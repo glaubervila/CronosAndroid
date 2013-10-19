@@ -1,14 +1,5 @@
 package br.com.vilaverde.cronos.view.pedidos;
 
-import java.util.zip.Inflater;
-
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.layout;
-import br.com.vilaverde.cronos.dao.ClienteHelper;
-import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Pedido;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.dao.ClienteHelper;
+import br.com.vilaverde.cronos.model.Cliente;
+import br.com.vilaverde.cronos.model.Pedido;
 
 public class PedidoDetalhes extends Fragment {
 	

@@ -1,12 +1,9 @@
 package br.com.vilaverde.cronos.dao;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class DataHelper extends SQLiteOpenHelper{

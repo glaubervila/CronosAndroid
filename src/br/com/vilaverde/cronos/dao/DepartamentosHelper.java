@@ -9,16 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.vilaverde.cronos.Messages;
-import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
-import br.com.vilaverde.cronos.model.Departamento;
-import br.com.vilaverde.cronos.model.Pedido;
-import br.com.vilaverde.cronos.model.Vendedor;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.util.Log;
+import br.com.vilaverde.cronos.Messages;
+import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
+import br.com.vilaverde.cronos.model.Departamento;
 
 public class DepartamentosHelper extends DataHelper{
 

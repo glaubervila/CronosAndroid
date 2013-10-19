@@ -1,11 +1,11 @@
 package br.com.vilaverde.cronos.view;
 
-import br.com.vilaverde.cronos.R;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import br.com.vilaverde.cronos.R;
 
 public class ProdutosFragment  extends Fragment {
 

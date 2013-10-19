@@ -1,10 +1,6 @@
 package br.com.vilaverde.cronos.view;
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.dao.DepartamentosHelper;
 import android.app.ListFragment;
-import android.os.Build;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 
 public class DepartamentosFragment extends ListFragment {
 

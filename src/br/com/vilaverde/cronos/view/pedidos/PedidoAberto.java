@@ -2,25 +2,11 @@ package br.com.vilaverde.cronos.view.pedidos;
 
 import java.util.List;
 
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.id;
-import br.com.vilaverde.cronos.R.layout;
-import br.com.vilaverde.cronos.R.menu;
-import br.com.vilaverde.cronos.dao.PedidoHelper;
-import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Pedido;
-import br.com.vilaverde.cronos.model.PedidoProduto;
-import br.com.vilaverde.cronos.view.clientes.ClienteSearch;
-import br.com.vilaverde.cronos.view.clientes.ClientesForm;
-import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +17,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.Toast;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.dao.PedidoHelper;
+import br.com.vilaverde.cronos.model.Cliente;
+import br.com.vilaverde.cronos.model.Pedido;
+import br.com.vilaverde.cronos.view.clientes.ClienteSearch;
 
 public class PedidoAberto extends Activity {
 	

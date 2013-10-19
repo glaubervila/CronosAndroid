@@ -3,23 +3,16 @@ package br.com.vilaverde.cronos.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.vilaverde.cronos.Messages;
-import br.com.vilaverde.cronos.dao.DepartamentosHelper.getDepartamentosHttp;
-import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Pedido;
-import br.com.vilaverde.cronos.model.PedidoProduto;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
+import br.com.vilaverde.cronos.model.Pedido;
+import br.com.vilaverde.cronos.model.PedidoProduto;
 
 public class PedidoHelper extends DataHelper{
 

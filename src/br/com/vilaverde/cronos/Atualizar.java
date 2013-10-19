@@ -1,27 +1,24 @@
 package br.com.vilaverde.cronos;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.entity.AbstractHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 import br.com.vilaverde.cronos.dao.ClienteHelper;
-import br.com.vilaverde.cronos.dao.DataHelper.Result;
 import br.com.vilaverde.cronos.dao.DepartamentosHelper;
 import br.com.vilaverde.cronos.dao.PedidoHelper;
 import br.com.vilaverde.cronos.dao.PedidoProdutosHelper;
@@ -32,30 +29,6 @@ import br.com.vilaverde.cronos.httpclient.HttpGetTask;
 import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Pedido;
 import br.com.vilaverde.cronos.model.PedidoProduto;
-import br.com.vilaverde.cronos.view.pedidos.PedidoProdutos;
-import android.R.bool;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.Toast;
 
 public class Atualizar extends Activity  implements AsyncTaskCompleteListener<String>{
 

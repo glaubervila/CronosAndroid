@@ -3,8 +3,6 @@ package br.com.vilaverde.cronos.model;
 import java.io.Serializable;
 import java.text.NumberFormat;
 
-import android.util.Log;
-
 public class PedidoProduto implements Serializable {
 	
 	private int id ;

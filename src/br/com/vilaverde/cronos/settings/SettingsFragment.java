@@ -1,8 +1,8 @@
 package br.com.vilaverde.cronos.settings;
 
-import br.com.vilaverde.cronos.R;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import br.com.vilaverde.cronos.R;
 
 public class SettingsFragment extends PreferenceFragment {
     @Override

@@ -1,9 +1,7 @@
 package br.com.vilaverde.cronos;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 public class Messages {

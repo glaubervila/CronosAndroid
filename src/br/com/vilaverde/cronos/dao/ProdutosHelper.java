@@ -1,34 +1,19 @@
 package br.com.vilaverde.cronos.dao;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.vilaverde.cronos.Messages;
-import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Produto;
-import br.com.vilaverde.cronos.model.Vendedor;
-
-import android.R.integer;
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.SlidingDrawer;
+import br.com.vilaverde.cronos.model.Produto;
 
 public class ProdutosHelper extends DataHelper{
 

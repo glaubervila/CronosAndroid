@@ -1,27 +1,20 @@
 package br.com.vilaverde.cronos.view.produtos;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import br.com.vilaverde.cronos.R;
-import br.com.vilaverde.cronos.R.layout;
-import br.com.vilaverde.cronos.R.menu;
-import br.com.vilaverde.cronos.dao.ProdutosHelper;
-import br.com.vilaverde.cronos.dao.ProdutosHelper;
-import br.com.vilaverde.cronos.model.Cliente;
-import br.com.vilaverde.cronos.model.Produto;
-import br.com.vilaverde.cronos.view.pedidos.PedidoAberto;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.dao.ProdutosHelper;
+import br.com.vilaverde.cronos.model.Produto;
 
 public class ProdutosList extends Activity implements SearchView.OnQueryTextListener,
 SearchView.OnCloseListener {
