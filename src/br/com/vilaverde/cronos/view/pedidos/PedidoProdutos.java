@@ -132,11 +132,12 @@ public class PedidoProdutos extends Fragment {
         cellLayout.column = colIndex;
         cellLayout.weight = weight;
        
-        textView.setLayoutParams(cellLayout);
-        
 //        if ( !background ){ 
 //        	textView.setBackgroundResource(R.drawable.cell_shape_impar);	
 //		}
+       
+        textView.setLayoutParams(cellLayout);
+        
         
 
 		return textView;

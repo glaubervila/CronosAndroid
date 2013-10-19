@@ -3,4 +3,3 @@
     android:id="@+id/cell"
     style="@style/GridCell"
  />
-

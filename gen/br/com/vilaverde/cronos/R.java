@@ -32,11 +32,11 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f080000;
-        public static final int activity_vertical_margin=0x7f080001;
-        public static final int produto_descricao=0x7f080002;
-        public static final int produto_preco=0x7f080004;
-        public static final int produto_quantidade=0x7f080003;
+        public static final int activity_horizontal_margin=0x7f070000;
+        public static final int activity_vertical_margin=0x7f070001;
+        public static final int produto_descricao=0x7f070002;
+        public static final int produto_preco=0x7f070004;
+        public static final int produto_quantidade=0x7f070003;
     }
     public static final class drawable {
         public static final int background=0x7f020000;
@@ -227,80 +227,79 @@ public final class R {
         public static final int produtos_search=0x7f0a0005;
     }
     public static final class string {
-        public static final int SERVER_HOST=0x7f070000;
-        public static final int action_settings=0x7f070016;
-        public static final int app_name=0x7f070001;
-        public static final int atualizar=0x7f070009;
-        public static final int btn_adicionar=0x7f070029;
-        public static final int btn_cancelar=0x7f070028;
-        public static final int btn_local=0x7f07002a;
+        public static final int action_settings=0x7f080015;
+        public static final int app_name=0x7f080000;
+        public static final int atualizar=0x7f080008;
+        public static final int btn_adicionar=0x7f080028;
+        public static final int btn_cancelar=0x7f080027;
+        public static final int btn_local=0x7f080029;
         /**  BOTOES 
          */
-        public static final int btn_ok=0x7f070025;
-        public static final int btn_remota=0x7f07002b;
-        public static final int btn_salvar=0x7f070026;
-        public static final int btn_voltar=0x7f070027;
-        public static final int cadastro_de_clientes=0x7f07000f;
-        public static final int clientes=0x7f07000c;
+        public static final int btn_ok=0x7f080024;
+        public static final int btn_remota=0x7f08002a;
+        public static final int btn_salvar=0x7f080025;
+        public static final int btn_voltar=0x7f080026;
+        public static final int cadastro_de_clientes=0x7f08000e;
+        public static final int clientes=0x7f08000b;
         /**  PEDIDO PRODUTOS GRID HEADERS 
          */
-        public static final int colheaderCodigo=0x7f070020;
-        public static final int colheaderDescricao=0x7f070021;
-        public static final int colheaderQuantidade=0x7f070022;
-        public static final int colheaderValor=0x7f070023;
-        public static final int colheaderValorTotal=0x7f070024;
-        public static final int cpf_cnpj=0x7f070011;
-        public static final int description_img_splashscreen=0x7f070004;
-        public static final int description_img_splashscreen2=0x7f070005;
-        public static final int hello_world=0x7f070002;
+        public static final int colheaderCodigo=0x7f08001f;
+        public static final int colheaderDescricao=0x7f080020;
+        public static final int colheaderQuantidade=0x7f080021;
+        public static final int colheaderValor=0x7f080022;
+        public static final int colheaderValorTotal=0x7f080023;
+        public static final int cpf_cnpj=0x7f080010;
+        public static final int description_img_splashscreen=0x7f080003;
+        public static final int description_img_splashscreen2=0x7f080004;
+        public static final int hello_world=0x7f080001;
         /**  LABELS PEDIDOS DETALHES 
          */
-        public static final int lblCliente=0x7f07001a;
-        public static final int lblFormaPagamento=0x7f07001d;
-        public static final int lblItens=0x7f07001c;
-        public static final int lblNotaFiscalEletronica=0x7f07001e;
-        public static final int lblObservacoesPedido=0x7f07001f;
-        public static final int lblTotal=0x7f07001b;
-        public static final int listar_cliente=0x7f07000e;
+        public static final int lblCliente=0x7f080019;
+        public static final int lblFormaPagamento=0x7f08001c;
+        public static final int lblItens=0x7f08001b;
+        public static final int lblNotaFiscalEletronica=0x7f08001d;
+        public static final int lblObservacoesPedido=0x7f08001e;
+        public static final int lblTotal=0x7f08001a;
+        public static final int listar_cliente=0x7f08000d;
         /**  Menu PEDIDOS 
          */
-        public static final int menu_excluir_pedido=0x7f070018;
-        public static final int menu_finalizar_pedido=0x7f070019;
+        public static final int menu_excluir_pedido=0x7f080017;
+        public static final int menu_finalizar_pedido=0x7f080018;
         /**  Menu MainActivity 
          */
-        public static final int menu_settings=0x7f070008;
-        public static final int no=0x7f070007;
-        public static final int nome_razao_social=0x7f070010;
-        public static final int novo_cliente=0x7f07000d;
-        public static final int novo_pedido=0x7f07000b;
-        public static final int powered_by=0x7f070003;
-        public static final int rbtCartaoCredito=0x7f07002e;
-        public static final int rbtCheque=0x7f07002f;
+        public static final int menu_settings=0x7f080007;
+        public static final int no=0x7f080006;
+        public static final int nome_razao_social=0x7f08000f;
+        public static final int novo_cliente=0x7f08000c;
+        public static final int novo_pedido=0x7f08000a;
+        public static final int powered_by=0x7f080002;
+        public static final int rbtCartaoCredito=0x7f08002d;
+        public static final int rbtCheque=0x7f08002e;
         /**  RADIO BUTTONS 
          */
-        public static final int rbtDinheiro=0x7f07002d;
-        public static final int rg_ie=0x7f070012;
-        public static final int sair=0x7f07000a;
-        public static final int selecione_cliente=0x7f070017;
-        public static final int semConexaoDescricao=0x7f070031;
+        public static final int rbtDinheiro=0x7f08002c;
+        public static final int rg_ie=0x7f080011;
+        public static final int sair=0x7f080009;
+        public static final int selecione_cliente=0x7f080016;
+        public static final int semConexaoDescricao=0x7f080030;
         /**  ATUALIZACAO 
          */
-        public static final int semConexaoTitulo=0x7f070030;
-        public static final int setting_category_servidor=0x7f070035;
-        public static final int setting_servidor_localhost=0x7f070036;
-        public static final int setting_servidor_localhost_summary=0x7f070037;
-        public static final int setting_servidor_remotahost=0x7f070038;
-        public static final int setting_servidor_remotahost_summary=0x7f070039;
+        public static final int semConexaoTitulo=0x7f08002f;
+        public static final int setting_category_servidor=0x7f080034;
+        public static final int setting_servidor_localhost=0x7f080035;
+        public static final int setting_servidor_localhost_summary=0x7f080036;
+        public static final int setting_servidor_remotahost=0x7f080037;
+        public static final int setting_servidor_remotahost_summary=0x7f080038;
         /**  CONFIGURACAO 
          */
-        public static final int setting_title=0x7f070034;
-        public static final int telefone_fixo=0x7f070013;
-        public static final int telefone_movel=0x7f070014;
-        public static final int tipoConexaoDescricao=0x7f070033;
-        public static final int tipoConexaoTitulo=0x7f070032;
-        public static final int title_activity_cliente_search=0x7f07002c;
-        public static final int title_activity_pedido_aberto=0x7f070015;
-        public static final int yes=0x7f070006;
+        public static final int setting_title=0x7f080033;
+        public static final int telefone_fixo=0x7f080012;
+        public static final int telefone_movel=0x7f080013;
+        public static final int tipoConexaoDescricao=0x7f080032;
+        public static final int tipoConexaoTitulo=0x7f080031;
+        public static final int title_activity_cliente_search=0x7f08002b;
+        public static final int title_activity_pedido_aberto=0x7f080014;
+        public static final int yes=0x7f080005;
     }
     public static final class style {
         /** 
