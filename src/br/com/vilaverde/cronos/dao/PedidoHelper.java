@@ -1,14 +1,16 @@
 package br.com.vilaverde.cronos.dao;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import br.com.vilaverde.cronos.model.Pedido;
@@ -27,6 +29,7 @@ public class PedidoHelper extends DataHelper{
 	private final static String CNT_LOG = "PedidoHelper";
 	private final static String TABELA = "pedidos";
 	
+
 	private Pedido pedidoAEnviar  = null;
 	private Context context = null;
 	
@@ -159,10 +162,20 @@ public class PedidoHelper extends DataHelper{
 		
 		long linhasInseridas = 0;
 		
+		// Id do Usuario = Vendedor
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String id_usuario = sharedPrefs.getString("settingVendedorId", "NULL");
+		
+		// Data do Pedido
+		Date now = new Date();
+		SimpleDateFormat  df = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+		
+		String dt_inclusao = df.format(now);
+		
 		this.Open();
 		
 		ContentValues valores = new ContentValues();
-		valores.put("id_usuario", pedido.getId_usuario());
+		valores.put("id_usuario", id_usuario);
 		valores.put("id_cliente", pedido.getId_cliente());
 		valores.put("status", pedido.getStatus());
 		valores.put("qtd_itens", pedido.getQtd_itens());
@@ -170,7 +183,7 @@ public class PedidoHelper extends DataHelper{
 		valores.put("finalizadora", pedido.getFinalizadora());
 		valores.put("parcelamento", pedido.getParcelamento());
 		valores.put("nfe", pedido.getNfe());
-		valores.put("dt_inclusao", pedido.getDt_inclusao());
+		valores.put("dt_inclusao", dt_inclusao);
 		valores.put("dt_envio", pedido.getDt_envio());
 		valores.put("observacao", pedido.getObservacao());
 
@@ -295,19 +308,19 @@ public class PedidoHelper extends DataHelper{
     	}
     }
     
-    public Boolean fechar() {
+    public Boolean fechar(Pedido aberto) {
     	Log.v(CNT_LOG, "fechar()");
 
     	// Atualizo os Valores do Pedido
     	atualizarPedido();
     	
     	// Recuperar o Pedido Aberto
-    	Pedido pedido = getPedidoAberto();
+    	//Pedido pedido = getPedidoAberto();
     	// Alterar o Status Para Fechado
-    	pedido.setStatus(1); // Fechado
-    	    	
+    	//pedido.setStatus(1); // Fechado
+    	aberto.setStatus(1);  	
 		// Update no Pedido 
-    	if (Alterar(pedido) > -1){
+    	if (Alterar(aberto) > -1){
     		return true;	
     	}
     	else {

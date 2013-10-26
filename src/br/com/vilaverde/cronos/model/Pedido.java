@@ -3,27 +3,14 @@ package br.com.vilaverde.cronos.model;
 import java.io.Serializable;
 import java.util.List;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 public class Pedido implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	private int id ;
-	public int getId_servidor() {
-		return id_servidor;
-	}
-
-
-
-
-
-	public void setId_servidor(int id_servidor) {
-		this.id_servidor = id_servidor;
-	}
-
-
-
-
-
 	private int id_servidor = 0;		
 	private String id_usuario = "";		
 	private String id_cliente = "";		
@@ -39,42 +26,31 @@ public class Pedido implements Serializable{
 	private List<PedidoProduto> produtos = null;
 	private String jsonString = "";
 		
-
-
-
 	// Will be used by the ArrayAdapter in the ListView
     @Override
     public String toString() {
        return "id";
     }
 
-
-
-
-
 	public int getId() {
 		return id;
 	}
-
-
-
-
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	public int getId_servidor() {
+		return id_servidor;
+	}
 
-
-
+	public void setId_servidor(int id_servidor) {
+		this.id_servidor = id_servidor;
+	}
 
 	public String getId_usuario() {
 		return id_usuario;
 	}
-
-
-
-
 
 	public void setId_usuario(String id_usuario) {
 		this.id_usuario = id_usuario;

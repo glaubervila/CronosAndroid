@@ -3,14 +3,18 @@ package br.com.vilaverde.cronos.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import br.com.vilaverde.cronos.model.Cliente;
+import br.com.vilaverde.cronos.model.Vendedor;
 
 public class ClienteHelper extends DataHelper{
 
@@ -18,11 +22,12 @@ public class ClienteHelper extends DataHelper{
 	private final static String TABELA = "clientes";
 	
 	//private static final int VERSAO_SCHEMA = 63;
+	private Context context = null;
 	
 	public ClienteHelper(Context context) {
 		//super(context, VERSAO_SCHEMA);
 		super(context);
-
+		this.context = context;
 	}
 
 	public long inserir(Cliente cliente){
@@ -62,18 +67,43 @@ public class ClienteHelper extends DataHelper{
 		    	  valores.put("rg", "");
 		    	  
 		      }
+		      
+            // Vendedor | Responsavel
+			// Id do Usuario = Vendedor
+		      SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+			  String id_usuario = sharedPrefs.getString("settingVendedorId", "NULL");
+		      
+			  valores.put("responsavel", id_usuario);
 		      valores.put("status_servidor", "0");
 		      valores.put("id_servidor", cliente.getId_servidor());
       try {
-		      linhasInseridas = db.insert(TABELA, null, valores);
+
+//          Cursor c;
+//    	  // TODO: Testar se o Cliente Existe
+//    	  if (cliente.getTipo()==1){
+//	    	  String where = "cpf = '?'";
+//	    	  String[] selectionArgs = new String[] {cliente.getCpf()};
+//	          c = db.query(TABELA, null, where, selectionArgs, null, null, "nome");
+//      	  }
+//          else{
+//	    	  String where = "cnpj = '?'";
+//	    	  String[] selectionArgs = new String[] {cliente.getCnpj()};
+//	          c = db.query(TABELA, null, where, selectionArgs, null, null, "nome");
+//          }
+//
+//		if (c.getCount() > 0){
+//        	  Log.v(CNT_LOG,"Cliente ja cadastrado fazer Update");
+//        	  linhasInseridas = Alterar(cliente);
+//          }
+//          else {
+//        	  Log.v(CNT_LOG,"Cliente NAO cadastrado fazer Insert");
+//    	      linhasInseridas = db.insert(TABELA, null, valores);        	  
+//          }
+//		  c.close();
+	      linhasInseridas = db.insert(TABELA, null, valores);
+	      //getWritableDatabase().insert(TABELA, null, valores);      
+	      Log.v(CNT_LOG, "Linhas Inseridas ["+linhasInseridas+"]");
 		      
-		      //getWritableDatabase().insert(TABELA, null, valores);      
-		      Log.v(CNT_LOG, "Linhas Inseridas ["+linhasInseridas+"]");
-		      
-//		      if (linhasInseridas < 0 ){
-//		    	  // Erro no Insert
-//		    	  throw new Exception("Registro não Inserido");
-//		      }
 	    }
 	    catch (Exception error){
 	    	Log.e(CNT_LOG, "Falha ao Inserir Cliente");
@@ -85,6 +115,76 @@ public class ClienteHelper extends DataHelper{
 	    return linhasInseridas;
 	 }
 
+	public Boolean inserirClientesJson(JSONObject json){
+		Log.v(CNT_LOG, "inserirClientesJson");
+		int count = 0;
+		int erros = 0;	
+		// Fazer o parse para array
+		try {
+			
+			JSONArray arrayClientes = (JSONArray) json.get("rows");
+
+			if (arrayClientes.length() > 0){
+				Log.v(CNT_LOG, "Clientes a Atualizar ["+arrayClientes.length()+"]");
+			
+				for (int i = 0; i < arrayClientes.length(); i++) {
+	        	
+		        	JSONObject clienteItem = arrayClientes.getJSONObject(i);        
+		            
+		        	// Criando objetos Vendedor
+		        	Cliente cliente = new Cliente();
+		        	//cliente.setId(clienteItem.getInt("id_usuario"));
+		        	cliente.setId_servidor(clienteItem.getInt("id_servidor"));
+		        	cliente.setId_usuario(clienteItem.getString("id_usuario"));
+		        	cliente.setTipo(clienteItem.getInt("tipo"));
+      	        	cliente.setNome(clienteItem.getString("nome"));
+      	        	cliente.setCpf(clienteItem.getString("cpf"));
+      	        	cliente.setCnpj(clienteItem.getString("cnpj"));
+      	        	cliente.setRg(clienteItem.getString("rg"));
+      	        	cliente.setInscricao_estadual(clienteItem.getString("inscricao_estadual"));
+      	        	cliente.setTelefoneFixo(clienteItem.getString("telefone_fixo"));
+      	        	cliente.setTelefoneMovel(clienteItem.getString("telefone_movel"));
+      	        	cliente.setEmail(clienteItem.getString("email"));
+      	        	cliente.setStatus_servidor(clienteItem.getString("status_servidor"));
+      	        	cliente.setResponsavel(clienteItem.getString("responsavel"));
+      	        	cliente.setDt_inclusao(clienteItem.getString("dt_inclusao"));
+      	        	cliente.setObservacao(clienteItem.getString("observacoes"));
+      	        	
+      	        	cliente.setRua(clienteItem.getString("rua"));
+      	        	cliente.setNumero(clienteItem.getString("numero"));
+      	        	cliente.setBairro(clienteItem.getString("bairro"));
+      	        	cliente.setCidade(clienteItem.getString("cidade"));
+      	        	cliente.setUf(clienteItem.getInt("uf"));
+      	        	cliente.setCep(clienteItem.getString("cep"));
+      	        	
+		        	if (inserir(cliente) < 0){
+		        		erros++;
+		        	}
+		        	else {
+						count++;					
+		        	}
+				}
+	        }
+			else {
+		        Log.v(CNT_LOG, "Nenhum Cliente a Atualizar");
+			}
+			
+	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
+	        if (erros == 0){
+	        	return true;
+	        }
+	        else {
+	        	return false;
+	        }
+		} 	
+		catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	
 	
 	public List<Cliente> getListaClientes(){
 		Log.v(CNT_LOG, "Listando Clientes");
@@ -160,6 +260,7 @@ public class ClienteHelper extends DataHelper{
 
 	      	// SOMENTE PARA DEBUG
 		    //valores.put("status_servidor", "0");
+	        valores.put("responsavel", cliente.getResponsavel());
 	        valores.put("status_servidor", cliente.getStatus_servidor());
 	        valores.put("id_servidor", cliente.getId_servidor());
 		    

@@ -2,6 +2,7 @@ package br.com.vilaverde.cronos.httpclient;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -9,6 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -24,6 +26,13 @@ public class HttpGetTask extends AsyncTask<String, Void, String>
 	private AsyncTaskCompleteListener<String> callback;
     
 	private  ArrayList<NameValuePair> parametros;
+	
+	//user supplied variables
+    private String host = "maguideposito.servehttp.com";
+    private int port = 80;
+    private String path = "cronos/main.php";
+    private String scheme = "http";
+	
 	
 	public ArrayList<NameValuePair> getParametros() {
 		return parametros;
@@ -52,10 +61,22 @@ public class HttpGetTask extends AsyncTask<String, Void, String>
 			
 			Log.v(CNT_LOG, "1 - Recuperando a Conexao HttpClient");
 	        HttpClient httpClient = new DefaultHttpClient();
-	          
-	        
-        	//HttpPost httpPost = new HttpPost("http://192.168.0.200/cronos/main.php?classe=ClientAndroid&action=getVendedores");
-	        HttpPost httpPost = new HttpPost(strings[0].toString());
+	                  
+	        // Testar se o Host tem porta, se tiver divide o host no : o primeiro indice e o host o outro e a porta
+	        if (strings[0].toString().contains(":")) {
+		        String s[] = strings[0].toString().split(":");
+		        host = s[0];
+		        port = Integer.parseInt(s[1]);
+	        }
+	        else {
+	        	host = strings[0].toString();
+	        }
+	        URI uri = URIUtils.createURI(scheme, host, port, path, null, null);
+	        Log.w(CNT_LOG, "URI    [ "+uri.toString()+" ]");
+
+        
+	        HttpPost httpPost = new HttpPost(uri);       
+	        //HttpPost httpPost = new HttpPost(strings[0].toString());
 	
 	        Log.v(CNT_LOG, "2 - Montando os Parametros do Post");
 	        httpPost.setEntity(new UrlEncodedFormEntity(parametros, "UTF-8"));

@@ -10,4 +10,9 @@
             android:summary="@string/setting_servidor_remotahost_summary"
             android:title="@string/setting_servidor_remotahost" />
     </PreferenceCategory>
+    <EditTextPreference 
+	    android:key="settingVendedorId"
+	    android:summary="@string/setting_vendedor_id_summary"
+	    android:title="@string/setting_vendedor_id" />
+ 
 </PreferenceScreen>

@@ -425,16 +425,22 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		Log.v(CNT_LOG,"pullClientes()");
 		// recuperar os Clientes para um Vendedor		
 		// Seta os parametros e executa o metodo que vai enviar
-		progressDialog.setMessage("Recebendo Clientes");
+		// Id do Usuario = Vendedor
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		String id_usuario = sharedPrefs.getString("settingVendedorId", "NULL");
+		
+		progressDialog.setMessage("Recebendo Clientes Para o Vendedor ["+id_usuario+"]");
 
 		JSONObject data = new JSONObject();
 		try {
-		    data.put("id_vendedor", 1);
+		    data.put("id_vendedor", id_usuario);
 		}
 		catch (JSONException e) {
 		    e.printStackTrace();
 		}
-
+		
+		//fields	["pk_id_cliente","nome","cpf","cnpj","telefone_fixo","telefone_movel"]
+		
 		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
 		params.add(new BasicNameValuePair("classe", "ClientAndroid"));
 		params.add(new BasicNameValuePair("action", "getClientes"));
@@ -446,20 +452,18 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 	public void pushClientes(JSONObject json){
 		Log.v(CNT_LOG,"pushClientes()");
 		
-//		progressDialog.setMessage("Atualizando Clientes");
-//		ProdutosHelper produtosHelper = new ProdutosHelper(this);
-//		Boolean r = produtosHelper.inserirProdutosJson(json);
-//		Log.v(CNT_LOG, "RESULT [ "+r+"]");
-//		if (r){
-//			String msg ="Registros Atualizados.";
-//			progressDialog.setMessage(msg);
-//			// Executa o pull da proxima entidade
-//			entidade = "fotos";
-//			pull();
-//		}
-//		else {			
-//			onFailure("Falha ao Atualizar os Registros de clientes");
-//		}
+		progressDialog.setMessage("Atualizando Clientes");
+		ClienteHelper clientesHelper = new ClienteHelper(this);
+		Boolean r = clientesHelper.inserirClientesJson(json);
+		Log.v(CNT_LOG, "RESULT [ "+r+"]");
+		if (r){
+			String msg ="Registros Atualizados.";
+			progressDialog.dismiss();
+			finish();
+		}
+		else {			
+			onFailure("Falha ao Atualizar os Registros de clientes");
+		}
 	}
 	
 
@@ -492,7 +496,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		}
 	}
 	public void setRemota(){
-		if (setServerHost(sharedPrefs.getString("settingRemotaHost", "NULL")))
+		if (setServerHost(sharedPrefs.getString("settingRemoteHost", "NULL")))
 		{
 			sincronizar();
 		}

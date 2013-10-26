@@ -252,7 +252,7 @@ public class PedidoAberto extends Activity {
 	protected void fechar() {
 		Log.v(CNT_LOG,"fechar()");
 		
-		if (this.helper.fechar()){
+		if (this.helper.fechar(aberto)){
 			this.finish();
 		}
 	}

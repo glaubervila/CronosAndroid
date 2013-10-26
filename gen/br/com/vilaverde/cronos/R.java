@@ -293,6 +293,8 @@ public final class R {
         /**  CONFIGURACAO 
          */
         public static final int setting_title=0x7f080033;
+        public static final int setting_vendedor_id=0x7f080039;
+        public static final int setting_vendedor_id_summary=0x7f08003a;
         public static final int telefone_fixo=0x7f080012;
         public static final int telefone_movel=0x7f080013;
         public static final int tipoConexaoDescricao=0x7f080032;

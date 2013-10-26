@@ -82,6 +82,8 @@
     <string name="setting_servidor_localhost_summary">Host para conexão local com o servidor.\nEx: 192.168.0.200</string>
     <string name="setting_servidor_remotahost">Host Remoto</string>
     <string name="setting_servidor_remotahost_summary">Host para conexão remota com o servidor.\nEx: dominioservidor.com:8081</string>
+    <string name="setting_vendedor_id">Código Vendedor</string>
+    <string name="setting_vendedor_id_summary">Código Interndo do Vendedor, de acordo com o que está cadastrado no servidor.</string>
 
 
 

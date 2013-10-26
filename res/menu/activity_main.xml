@@ -6,7 +6,6 @@
           android:showAsAction="ifRoom|withText" >
     </item>
     <item android:id="@+id/menu_novo_pedido"
-          android:icon="@drawable/ic_menu_lista_clientes"
           android:title="Pedido"
           android:showAsAction="ifRoom|withText" >
     </item>    
