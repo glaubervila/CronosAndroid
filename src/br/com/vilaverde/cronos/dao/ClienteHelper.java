@@ -78,7 +78,7 @@ public class ClienteHelper extends DataHelper{
 			  String id_usuario = sharedPrefs.getString("settingVendedorId", "NULL");
 		      
 			  valores.put("responsavel", id_usuario);
-		      valores.put("status_servidor", "0");
+		      valores.put("status_servidor", cliente.getStatus_servidor());
 		      valores.put("id_servidor", cliente.getId_servidor());
       try {
 
