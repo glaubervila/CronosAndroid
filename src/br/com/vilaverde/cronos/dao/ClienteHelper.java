@@ -23,11 +23,15 @@ public class ClienteHelper extends DataHelper{
 	
 	//private static final int VERSAO_SCHEMA = 63;
 	private Context context = null;
+	private String id_usuario = null;
 	
 	public ClienteHelper(Context context) {
 		//super(context, VERSAO_SCHEMA);
 		super(context);
 		this.context = context;
+		
+	      SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		  id_usuario = sharedPrefs.getString("settingVendedorId", "NULL");
 	}
 
 	public long inserir(Cliente cliente){
@@ -145,7 +149,8 @@ public class ClienteHelper extends DataHelper{
       	        	cliente.setTelefoneFixo(clienteItem.getString("telefone_fixo"));
       	        	cliente.setTelefoneMovel(clienteItem.getString("telefone_movel"));
       	        	cliente.setEmail(clienteItem.getString("email"));
-      	        	cliente.setStatus_servidor(clienteItem.getString("status_servidor"));
+      	        	//cliente.setStatus_servidor(clienteItem.getString("status_servidor"));
+      	        	cliente.setStatus_servidor("1");
       	        	cliente.setResponsavel(clienteItem.getString("responsavel"));
       	        	cliente.setDt_inclusao(clienteItem.getString("dt_inclusao"));
       	        	cliente.setObservacao(clienteItem.getString("observacoes"));
@@ -213,6 +218,30 @@ public class ClienteHelper extends DataHelper{
 		//return db.rawQuery("select _id, nome FROM clientes ORDER BY nome", null);
 		
 		return c;
+	}
+
+	public int count() {
+		this.Open();
+		int total = 0;		
+		String where = "responsavel = ?";
+		String[] selectionArgs = new String[] {id_usuario};
+		
+		String[] cols = new String[1];
+		cols[0] = "COUNT(*) as total";
+		try { 
+			Cursor c = db.query(TABELA, cols , where, selectionArgs, null, null, null);
+			c.moveToFirst();
+			total = c.getInt(c.getColumnIndex("total"));
+			c.close();
+		}
+		catch (Exception e){
+			Log.e(CNT_LOG, "coutClientes - Error ["+e.getMessage()+"]");
+		}
+		finally {
+			this.Close();
+		}
+		Log.v(CNT_LOG, "Count [ "+total+" ]");
+		return total;
 	}
 
 	
@@ -544,3 +573,5 @@ public class ClienteHelper extends DataHelper{
 //
 //this.onCreate(db);
 //}
+
+	

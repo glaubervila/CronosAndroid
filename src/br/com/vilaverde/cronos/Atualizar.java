@@ -429,11 +429,15 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String id_usuario = sharedPrefs.getString("settingVendedorId", "NULL");
 		
-		progressDialog.setMessage("Recebendo Clientes Para o Vendedor ["+id_usuario+"]");
+		progressDialog.setMessage("Recebendo Clientes Para o Vendedor");
 
+		ClienteHelper clientesHelper = new ClienteHelper(this);
+		int total = clientesHelper.count();
+		
 		JSONObject data = new JSONObject();
 		try {
 		    data.put("id_vendedor", id_usuario);
+		    data.put("total_clientes", total);
 		}
 		catch (JSONException e) {
 		    e.printStackTrace();
