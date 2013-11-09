@@ -82,28 +82,6 @@ public class ClienteHelper extends DataHelper{
 		      valores.put("id_servidor", cliente.getId_servidor());
       try {
 
-//          Cursor c;
-//    	  // TODO: Testar se o Cliente Existe
-//    	  if (cliente.getTipo()==1){
-//	    	  String where = "cpf = '?'";
-//	    	  String[] selectionArgs = new String[] {cliente.getCpf()};
-//	          c = db.query(TABELA, null, where, selectionArgs, null, null, "nome");
-//      	  }
-//          else{
-//	    	  String where = "cnpj = '?'";
-//	    	  String[] selectionArgs = new String[] {cliente.getCnpj()};
-//	          c = db.query(TABELA, null, where, selectionArgs, null, null, "nome");
-//          }
-//
-//		if (c.getCount() > 0){
-//        	  Log.v(CNT_LOG,"Cliente ja cadastrado fazer Update");
-//        	  linhasInseridas = Alterar(cliente);
-//          }
-//          else {
-//        	  Log.v(CNT_LOG,"Cliente NAO cadastrado fazer Insert");
-//    	      linhasInseridas = db.insert(TABELA, null, valores);        	  
-//          }
-//		  c.close();
 	      linhasInseridas = db.insert(TABELA, null, valores);
 	      //getWritableDatabase().insert(TABELA, null, valores);      
 	      Log.v(CNT_LOG, "Linhas Inseridas ["+linhasInseridas+"]");

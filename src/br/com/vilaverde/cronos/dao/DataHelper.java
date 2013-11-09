@@ -13,7 +13,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	protected static  String NOME_BANCO = "cronos.db";
 	
 	private final static String TABELA = "pedidos";
-	protected static int VERSAO_SCHEMA = 66;
+	protected static int VERSAO_SCHEMA = 70;
 	
 	public Boolean REMOTE = false;
 		
@@ -71,22 +71,22 @@ public class DataHelper extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 
-		//this.onCreateTableClientes(db);
-		//this.onCreateTableProdutos(db);
-		//this.onCreateTablePedidos(db);
-		//this.onCreateTablePedidoProdutos(db);
-//		this.onCreateTableVendedor(db);
+		this.onCreateTableClientes(db);
+		this.onCreateTableProdutos(db);
+		this.onCreateTablePedidos(db);
+		this.onCreateTablePedidoProdutos(db);
+		this.onCreateTableVendedor(db);
 		this.onCreateTableDepartamentos(db);	
 	}
 
 	//@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
-		//this.onUpgradeTableClientes(db, oldVersion, newVersion);
-		//this.onUpgradeTableProdutos(db, oldVersion, newVersion);
-		//this.onUpgradeTablePedidos(db, oldVersion, newVersion);
-		//this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
-		//this.onUpgradeTableVendedor(db, oldVersion, newVersion);
+		this.onUpgradeTableClientes(db, oldVersion, newVersion);
+		this.onUpgradeTableProdutos(db, oldVersion, newVersion);
+		this.onUpgradeTablePedidos(db, oldVersion, newVersion);
+		this.onUpgradeTablePedidoProdutos(db, oldVersion, newVersion);
+		this.onUpgradeTableVendedor(db, oldVersion, newVersion);
 		this.onUpgradeTableDepartamentos(db, oldVersion, newVersion);
 		
 	}
@@ -223,12 +223,18 @@ public class DataHelper extends SQLiteOpenHelper{
 			" image_path TEXT," +
 			" image_size TEXT," +
 			" image_id INTEGER," +
-			" image_status INTEGER" +
+			" image_status INTEGER DEFAULT 0" +
 		");";
-		
-		db.execSQL(sql);
-		
-		Log.v(CNT_LOG, "Tabela [ produtos ] Criada com Sucesso!");
+		try {		
+			db.execSQL(sql);
+			Log.v(CNT_LOG, "Tabela [ produtos ] Criada com Sucesso!");
+			db.execSQL("INSERT INTO produtos (_id,status,codigo,descricao_curta,preco,categoria_id)VALUES (1,1,'-1','Produto de Teste','0,00','1')");
+			Log.v(CNT_LOG, "Inserindo Produto Teste");
+		}
+		catch (Exception error){
+			Log.e(CNT_LOG, "Falha Criacao Tabela [ produtos ] ERROR ["+error.getMessage()+"]");
+		}
+
     }
        
 	public void onUpgradeTableProdutos(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -265,7 +271,7 @@ public class DataHelper extends SQLiteOpenHelper{
 				");";
 		
 		db.execSQL(sql);
-		
+	
 		Log.v(CNT_LOG, "Tabela [ pedidos ] Criada com Sucesso!");
 	}
 
@@ -356,10 +362,16 @@ public class DataHelper extends SQLiteOpenHelper{
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
 					" departamento TEXT" +
 				");";
-		
-		db.execSQL(sql);
-		
-		Log.v(CNT_LOG, "Tabela [ departamentos ] Criada com Sucesso!");
+
+		try {		
+			db.execSQL(sql);
+			Log.v(CNT_LOG, "Tabela [ departamentos ] Criada com Sucesso!");
+			db.execSQL("INSERT INTO departamentos VALUES (1,'SEM PRODUTOS')");
+			Log.v(CNT_LOG, "Inserindo departamentos Teste");
+		}
+		catch (Exception error){
+			Log.e(CNT_LOG, "Falha Criacao Tabela [ departamentos ] ERROR ["+error.getMessage()+"]");
+		}
 	}
 		
 	public void onUpgradeTableDepartamentos(SQLiteDatabase db, int oldVersion, int newVersion) {

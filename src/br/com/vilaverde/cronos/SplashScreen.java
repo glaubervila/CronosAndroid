@@ -7,7 +7,7 @@ import android.os.Handler;
 
 public class SplashScreen extends Activity implements Runnable {
 
-	private static boolean SPLASH = false;
+	private static boolean SPLASH = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

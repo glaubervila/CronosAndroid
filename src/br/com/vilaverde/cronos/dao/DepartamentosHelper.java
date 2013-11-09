@@ -80,9 +80,8 @@ public class DepartamentosHelper extends DataHelper{
 
 	public List<Departamento> getDepartamentos(){
 		Log.v(CNT_LOG, "Recupera Todos os Departamentos.");
-			
+		// FIXME: ERRO NA INSTALACAO POR QUE NAO TEM DEPARTAMENTO, CRIAR UMA TELA PARA A PRIMEIRA ATUALIZACAO
 		this.Open();
-
 		Departamento departamento = new Departamento();
 		departamento.setId(-1);
 		departamento.setDepartamento("Sem Produtos");
@@ -92,25 +91,30 @@ public class DepartamentosHelper extends DataHelper{
 			//Trazer somentos os departamentos com produtos ativos	
 			String sql = "SELECT * FROM "+TABELA+" WHERE _id IN (SELECT DISTINCT(categoria_id) FROM produtos WHERE status = 1);";
 			Cursor c = db.rawQuery(sql, null);
-			
-			if (c.getCount() > 0) {
+			if(c != null && c.getCount()>0) {
 				Log.v(CNT_LOG, "Total Departamentos [ "+c.getCount()+" ].");
-				 departamentos = bindValues(c);
+				departamentos = bindValues(c);
 
 		        this.Close();
 		        c.close();
 			}
 			else {
+				Log.w(CNT_LOG, "Não TEM DEPARTAMENTOS");
 				departamentos.add(departamento);
+				return departamentos;
 			}
 	    }
 	    catch (Exception e){
 	    	Log.e(CNT_LOG, "Falha ao Listar Departamentos");
 	    	e.printStackTrace();
-			departamentos.add(departamento);
+//			Departamento departamento = new Departamento();
+			departamento.setId(1);
+			departamento.setDepartamento("Sem Produtos");
+	    	departamentos.add(departamento);
 			return departamentos;
 	    }
 		return departamentos;
+		 
 	}
 	
 	public List<Departamento> bindValues(Cursor c) {

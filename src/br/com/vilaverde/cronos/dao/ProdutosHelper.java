@@ -1,5 +1,6 @@
 package br.com.vilaverde.cronos.dao;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import br.com.vilaverde.cronos.model.Produto;
@@ -162,45 +164,45 @@ public class ProdutosHelper extends DataHelper{
 	        	// Tratamento das Imagens
 	        	produto.setImage_name(ProdutoItem.getString("image_name"));
 
-           		produto.setImage_id(0);
-           		produto.setImage_path("");
-           		produto.setImage_size("");
-	        	produto.setImage_status(0);
-	        	
-	        	// Procurar a Imagem Local
-	        	String path_images = this.getPathImages();
-	            String image_name  = produto.getImage_name();
-	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
+//           		produto.setImage_id(0);
+//           		produto.setImage_path("");
+//           		produto.setImage_size("");
+//	        	produto.setImage_status(0);
+//	        	
+//	        	// Procurar a Imagem Local
+//	        	String path_images = this.getPathImages();
+//	            String image_name  = produto.getImage_name();
+//	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
 
-	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-	           		new String[] {image_where},
-	           		null);
-	            
-	           	if (cursor != null) {
-	         	
-	           		if (cursor.getCount() > 0){
-		           		//Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
-		           		
-		           		cursor.moveToPosition(0);
-			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
-		           		
-		           		// Setando as variaveis de Imagem
-		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
-		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
-		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
-		           		produto.setImage_status(1);
-		           		
-		           		//Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
-//		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
-		           		//Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
-		           		
-	           		}
-	           		else {
-	           			produto.setImage_status(0);
-	           		}
-	           	}
-	        	cursor.close();
+//	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
+//	           		new String[] {image_where},
+//	           		null);
+//	            
+//	           	if (cursor != null) {
+//	         	
+//	           		if (cursor.getCount() > 0){
+//		           		//Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
+//		           		
+//		           		cursor.moveToPosition(0);
+//			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
+//		           		
+//		           		// Setando as variaveis de Imagem
+//		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
+//		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
+//		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
+//		           		produto.setImage_status(1);
+//		           		
+//		           		//Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
+////		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
+//		           		//Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
+//		           		
+//	           		}
+//	           		else {
+//	           			produto.setImage_status(0);
+//	           		}
+//	           	}
+//	        	cursor.close();
 	        	
 	        	ContentValues valores = new ContentValues();
 	        	valores.put("_id", produto.getId());
@@ -213,10 +215,10 @@ public class ProdutosHelper extends DataHelper{
 	        	valores.put("preco", produto.getPreco());
   
 	        	valores.put("image_name", produto.getImage_name());
-	        	valores.put("image_path", produto.getImage_path());
-	        	valores.put("image_size", produto.getImage_size());
-	        	valores.put("image_id", produto.getImage_id());
-	        	valores.put("image_status", produto.getImage_status());
+//	        	valores.put("image_path", produto.getImage_path());
+//	        	valores.put("image_size", produto.getImage_size());
+//	        	valores.put("image_id", produto.getImage_id());
+//	        	valores.put("image_status", produto.getImage_status());
 	        	
 	        	db.replace(TABELA, null, valores);
         		count++;
@@ -331,6 +333,27 @@ public class ProdutosHelper extends DataHelper{
 	    return lista;
 	 }
 
+	public List<Produto> getProdutosSemImagem(){
+		Log.v(CNT_LOG, "getProdutosSemImagem()");
+		
+		this.Open();
+		// Todos os Produtos com status = 1 (ativo) e com image_status = 0 (sem Imagem)
+
+		String where = "status = 1 AND image_status = 0";
+
+		Cursor c = db.query(TABELA, null, where, null,null , null, null);
+		
+		List<Produto> lista = bindValues(c);
+
+
+		this.Close();
+		
+		Log.v(CNT_LOG, "Produtos Sem Imagem, Total [ "+ lista.size()+" ]");
+		
+	    return lista;
+	 }
+
+	
 	public List<Produto> bindValues(Cursor c) {
 		Log.v(CNT_LOG, "bindValues.");
 
@@ -360,119 +383,89 @@ public class ProdutosHelper extends DataHelper{
 		return lista;
 	}
 
+	public boolean verificaImagem(Produto produto){
+		Log.v(CNT_LOG, "verificaImagem("+produto.getCodigo()+")");
+		
+		produto.setImage_id(0);
+		produto.setImage_path("");
+		produto.setImage_size("");
+		produto.setImage_status(0);
+		
+		// Procurar a Imagem Local
+		String path_images = this.getPathImages();
+	    String image_name  = produto.getImage_name();
+	    String image_where = "%"+path_images+"/"+image_name+"%";
+   
+	    
+        Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+				   		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
+				   		new String[] {image_where},
+				   		null);
+    
+        boolean result;
+        
+		if (cursor != null) {
+        	if (cursor.getCount() > 0){
+	       		cursor.moveToPosition(0);
+	       		//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
+	       		
+	      		// Setando as variaveis de Imagem
+	       		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
+	       		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
+	       		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
+	       		produto.setImage_status(1);
+	       		
+	    		if (updateImage(produto)){
+	    			result = true;
+	    		}
+	    		else {
+	    			result = false;
+	    		}
+	   		}
+	   		else {
+	   			Log.w(CNT_LOG, "NAO TEM IMAGEM");
+	   			result = false;
+	   		}
+        }
+        else {
+        	result = false;
+        }
+        cursor.close();
+        
+        return result;
+	}
 	
-//	public void getWSProdutos(){
-//		Log.v(CNT_LOG, "getWSProdutos()");
-//					
-//		// Parametros
-//		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//        nameValuePairs.add(new BasicNameValuePair("classe", "ClientAndroid"));
-//        nameValuePairs.add(new BasicNameValuePair("action", "getProdutos"));
-//		
-//        // Crio um Objeto TaskPost
-//    	HttpTaskPost httpPost = new getProdutosHttp();
-//    	// Passo os Parametros
-//    	httpPost.setParametros(nameValuePairs);
-//    	// Passo o Contexto para disparar erros
-//    	httpPost.setContext(this.context);
-//    	
-//    	// Primeito tentar Remoto
-//    	if (this.REMOTE == true){ 	
-//	    	String urlRemoto = this.getServerHostRemote();
-//	    	Log.v(CNT_LOG, "UrlRemoto = "+urlRemoto);
-//			httpPost.execute(urlRemoto);
-//    	}
-//    	else {
-//    		// Se falhar no Remoto Tentar no Local
-//	    	String urlLocal = this.getServerHostLocal();
-//	    	Log.v(CNT_LOG, "UrlLocal = "+urlLocal);
-//			httpPost.execute(urlLocal);    		
-//    	}
-//    	
-//	}
-//	
-	
-//	public class getProdutosHttp extends HttpTaskPost {
-//	
-//	
-//		protected void onPostExecute(String[] resultado) {
-//			Log.v(CNT_LOG, "onPostExecute");
-//
-//			if (resultado[0] == "success"){
-//				// Passando a string para o metodo que vai inserir
-//				taskSuccess(resultado[1]);
-//			}
-//			else {
-//				taskFailed(resultado);
-//			}
-//		}	
-//	}
-
-//	protected void taskSuccess(String strJson){
-//	
-//		JSONObject json = null;
-//	
-//		try {
-//			json = new JSONObject(strJson);
-//			
-//			// Saber se a Resposta do Json Foi de Sucesso
-//			Boolean success =  (Boolean) json.get("success");
-//
-//			if (success){
-//				
-//				// recuperar os objetos na resposta
-//				JSONArray arrayObjetos = (JSONArray) json.get("rows");
-//				
-//				
-//				//inserir(arrayObjetos);
-//
-//				LongOperation MyTask= new LongOperation();
-//		        MyTask.execute(arrayObjetos);
-//			}
-//			else {			
-//				// No servidor se nao houver resultados na query retorna success=false
-//				Log.e(CNT_LOG, "Nenhuma Alteraçao a ser Feita.");
-//				Messages.showSuccessToast(this.context, "Nenhum Produto a ser Alterado");
-//			}
-//		}
-//		catch(JSONException e){
-//			Log.e(CNT_LOG, "Error parsing Json "+e.toString());
-//			Messages.showErrorAlert(this.context, "Houve um erro na Resposta do Servidor.");
-//		}           
-//		
-//		// Teste de mensagem de sucesso
-//		//Messages.showSuccessToast(this.context, "Produtos Atualizados");
-//	}
-//	
-//	protected void taskFailed(String[] resultado){
-//		Log.v(CNT_LOG, "taskFailed");
-//		
-//		// Se a flag REMOTE estiver true significa que ta na 1 tentativa
-//		//virar a flag para false para a segunda tentativa se nao conseguir mostrar erro
-//		if (this.REMOTE == true){
-//			this.REMOTE = false;
-//			getWSProdutos();
-//		}
-//		else {
-//			// Se tiver dado falha nas 2 tentativas retorna mensagem de erro 
-//			Messages.showErrorAlert(this.context, resultado[1].toString());
-//		}
-//	}
-//	
-//	
-//	private class LongOperation extends AsyncTask<JSONArray, Void, String> {
-//		@Override
-//		protected String doInBackground(JSONArray... params) {
-//
-//			inserir(params[0]);
-//			return null;
-//		}
-//		protected void onPostExecute(String result) {
-//			Log.v(CNT_LOG,"Fim da Importacao");
-//	    }		
-//	}
-
-
+	public boolean updateImage(Produto produto){
+		Log.v(CNT_LOG, "updateImage("+produto.getCodigo()+","+produto.getImage_id()+")");
+		
+		int linhaAlterada = 0;
+		
+    	ContentValues valores = new ContentValues();
+    	valores.put("_id", produto.getId());
+		
+    	valores.put("image_path", produto.getImage_path());
+    	valores.put("image_size", produto.getImage_size());
+    	valores.put("image_id", produto.getImage_id());
+    	valores.put("image_status", produto.getImage_status());
+    	
+		this.Open();
+        try {
+    		 linhaAlterada = db.update(TABELA, valores, "_id = " + produto.getId(), null);  		      
+  	    }
+  	    catch (Exception error){
+  	    	Log.e(CNT_LOG, "Falha ao fazer update na Imagem do produto");
+  	    }
+  	    finally {
+  	        this.Close();
+  	    }		
+        
+        if (linhaAlterada > 0){
+        	return true;
+        }
+        else {
+        	return false;
+        }
+	}
 
 }
 

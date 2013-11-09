@@ -170,7 +170,7 @@ public final class R {
         public static final int produtos_listrow_tvDescricao=0x7f0b004f;
         public static final int produtos_listrow_tvPreco=0x7f0b0050;
         public static final int produtos_search_action_search=0x7f0b0068;
-        public static final int progressBar1=0x7f0b0005;
+        public static final int progress_bar_image=0x7f0b0005;
         public static final int rd_forma_pagamento0=0x7f0b0032;
         public static final int rd_forma_pagamento1=0x7f0b0033;
         public static final int rd_forma_pagamento2=0x7f0b0034;

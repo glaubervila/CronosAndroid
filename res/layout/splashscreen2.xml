@@ -36,6 +36,13 @@
         android:layout_marginBottom="73dp"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
+
+        <ProgressBar
+            android:id="@+id/progress_bar_image"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="58dp" />
+
     </LinearLayout>
 
     <ImageView
