@@ -13,7 +13,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	protected static  String NOME_BANCO = "cronos.db";
 	
 	private final static String TABELA = "pedidos";
-	protected static int VERSAO_SCHEMA = 70;
+	protected static int VERSAO_SCHEMA = 71;
 	
 	public Boolean REMOTE = false;
 		
@@ -228,7 +228,7 @@ public class DataHelper extends SQLiteOpenHelper{
 		try {		
 			db.execSQL(sql);
 			Log.v(CNT_LOG, "Tabela [ produtos ] Criada com Sucesso!");
-			db.execSQL("INSERT INTO produtos (_id,status,codigo,descricao_curta,preco,categoria_id)VALUES (1,1,'-1','Produto de Teste','0,00','1')");
+			db.execSQL("INSERT INTO produtos (_id,status,codigo,descricao_curta,preco,categoria_id,image_name,image_status)VALUES (1,1,'-1','Produto de Teste','0,00','1','000000',1)");
 			Log.v(CNT_LOG, "Inserindo Produto Teste");
 		}
 		catch (Exception error){

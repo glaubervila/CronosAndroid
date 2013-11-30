@@ -298,8 +298,31 @@ public class ProdutosFragment extends Fragment {
 	           Bundle bundle = new Bundle ();
 	           bundle.putInt("codigo", produto.getCodigo());
 	           bundle.putInt("position", position);
-	           bundle.putLong("image_id", produto.getImage_id());
-				
+	           
+	           long image_id = produto.getImage_id();
+	           
+	           if (image_id > 0) {
+	        	   bundle.putLong("image_id", produto.getImage_id());   
+	           }
+	           else {
+	           		String path = produto.getImage_path();
+	        		
+	           		Cursor c = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
+		                				new String[] { MediaStore.MediaColumns._ID },
+		                				MediaStore.MediaColumns.DATA + "=?", 
+		                				new String[] {path},
+		                				null);
+	           		
+	       		    if (c != null && c.moveToFirst()) {
+	       		        int id = c.getInt(c.getColumnIndex(MediaStore.MediaColumns._ID));
+	       		        c.close();
+	       		        produto.setImage_id(id);        
+	       		        Log.i(CNT_LOG, "IMAGEID = "+id);
+		       		    bundle.putLong("image_id", id);
+	       		    }
+	       		    c.close();
+	           }
+	           
 	           // Carregando a Imagem
 	           new LoadImage().execute(bundle);
 	           			

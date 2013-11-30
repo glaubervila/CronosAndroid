@@ -1,6 +1,16 @@
 package br.com.vilaverde.cronos.dao;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +18,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.R.bool;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import br.com.vilaverde.cronos.model.Produto;
@@ -129,6 +143,8 @@ public class ProdutosHelper extends DataHelper{
 	public Boolean inserirProdutosJson(JSONObject json){
 		Log.v(CNT_LOG, "inserirProdutosJson()");
 		int count = 0;
+		int countUpdates = 0;
+		int countReplaces = 0;
 		int auxCount = 0;
 		int erros = 0;
 		
@@ -138,9 +154,14 @@ public class ProdutosHelper extends DataHelper{
 			
 			// Primeiro Setar Todos os Produtos para NAO ATIVOS
 			Log.v(CNT_LOG,"Setando TODOS os produtos para inativos");
-			db.execSQL("UPDATE "+TABELA+" SET status = -1");
 			
+			db.execSQL("UPDATE "+TABELA+" SET status = -1");
+						
 			JSONArray arrayProdutos = (JSONArray) json.get("rows");
+			
+            int notExists = 0;
+            int imagemAlterada = 0;
+			
 			// Para Cada Item no array transformar em um objeto
 			for (int i = 0; i < arrayProdutos.length(); i++) {
 	
@@ -149,8 +170,7 @@ public class ProdutosHelper extends DataHelper{
 				ProdutoItem = arrayProdutos.getJSONObject(i);
 				
 	        	Produto produto = new Produto();
-	        	
-	        	produto.setStatus(1);	        	
+	        	        	
 	        	produto.setId(ProdutoItem.getInt("_id"));
 	        	produto.setCodigo(ProdutoItem.getInt("codigo"));
 	        	produto.setCategoria_id(ProdutoItem.getInt("categoria_id"));
@@ -158,51 +178,58 @@ public class ProdutosHelper extends DataHelper{
 	        	produto.setDescricao(ProdutoItem.getString("descricao"));
 	        	produto.setQuantidade(ProdutoItem.getInt("quantidade"));
 	        	produto.setPreco(ProdutoItem.getDouble("preco"));
+	        	
 	        	// SETANDO O PRODUTO COMO ATIVO
 	        	produto.setStatus(1);
+        	
+	        	// Saber se o Produto Ja Existe
+	        	boolean update = false;
+	    		String where = "_id = ?";
+	            String[] selectionArgs = {""+produto.getId()};
+	    		Cursor cExist = db.query(TABELA, null, where, selectionArgs, null , null, null);
+	    		
+	    		if (cExist.moveToFirst()) {
+	    			update = true;
+	    		}
+	        	
 	        	
 	        	// Tratamento das Imagens
 	        	produto.setImage_name(ProdutoItem.getString("image_name"));
+        	
+	        	// Procurar a Imagem Local
+	        	String path_images = this.getPathImages();
+	            String image_name  = produto.getImage_name();
+	            String image_where = path_images+"/"+image_name+".JPG";
 
-//           		produto.setImage_id(0);
-//           		produto.setImage_path("");
-//           		produto.setImage_size("");
-//	        	produto.setImage_status(0);
-//	        	
-//	        	// Procurar a Imagem Local
-//	        	String path_images = this.getPathImages();
-//	            String image_name  = produto.getImage_name();
-//	            String image_where = "%"+path_images+"/"+image_name+"%"; 	       
-
-//	            Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//	           		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-//	           		new String[] {image_where},
-//	           		null);
-//	            
-//	           	if (cursor != null) {
-//	         	
-//	           		if (cursor.getCount() > 0){
-//		           		//Log.v(CNT_LOG,"Tem "+cursor.getCount()+" imagem(s) " );
-//		           		
-//		           		cursor.moveToPosition(0);
-//			        	//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
-//		           		
-//		           		// Setando as variaveis de Imagem
-//		           		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
-//		           		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
-//		           		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
-//		           		produto.setImage_status(1);
-//		           		
-//		           		//Log.v(CNT_LOG,"DATA ="+cursor.getString(cursor.getColumnIndex("_data")) );
-////		           		Log.v(CNT_LOG,"DISPLAY_NAME ="+cursor.getString(cursor.getColumnIndex("_display_name")) );
-//		           		//Log.v(CNT_LOG,"IMAGE_ID ="+produto.getImage_id());
-//		           		
-//	           		}
-//	           		else {
-//	           			produto.setImage_status(0);
-//	           		}
-//	           	}
-//	        	cursor.close();
+	            File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+	            
+	            String image_path = pictures_dir +"/"+ image_where;
+	            	            
+	            File file = new File(image_path);
+	            // Verificar se o arquivo de imagem existe
+	            if(file.exists()){      
+	            	// se existir verificar se o tamanho e igual ao do arquivo	
+	            	Log.i(CNT_LOG, "IMAGE = "+image_path+ " SIZE = "+file.length());
+	            	long local_size = file.length();
+            		int remote_size = ProdutoItem.getInt("image_size");
+	            	
+            		if (remote_size != local_size){
+            			// Imagem alterada no Servidor
+            			produto.setImage_status(0);
+            			imagemAlterada++;
+            		}
+            		else {
+            			// Imagem esta igual no servidor
+            			produto.setImage_status(1);
+            			produto.setImage_size(""+remote_size);
+                		produto.setImage_path(file.getPath());                		 
+            		}
+	            }
+	            else {
+	            	Log.w(CNT_LOG, "IMAGE = "+image_path);
+		        	produto.setImage_status(0);
+	            	notExists++;
+	            }
 	        	
 	        	ContentValues valores = new ContentValues();
 	        	valores.put("_id", produto.getId());
@@ -214,26 +241,43 @@ public class ProdutosHelper extends DataHelper{
 	        	valores.put("quantidade", produto.getQuantidade());
 	        	valores.put("preco", produto.getPreco());
   
+	        	
 	        	valores.put("image_name", produto.getImage_name());
-//	        	valores.put("image_path", produto.getImage_path());
-//	        	valores.put("image_size", produto.getImage_size());
+	        	valores.put("image_path", produto.getImage_path());
+	        	valores.put("image_size", produto.getImage_size());
 //	        	valores.put("image_id", produto.getImage_id());
 //	        	valores.put("image_status", produto.getImage_status());
+
 	        	
-	        	db.replace(TABELA, null, valores);
+	        	if ((update) && (produto.getImage_status() == 1)){
+	        		countUpdates++;
+		        	valores.put("image_status", 1);
+	        		db.update(TABELA, valores, "_id = " + produto.getId(), null);
+	        	}
+	        	else {
+	        		valores.put("image_status", 2);
+		        	db.replace(TABELA, null, valores);
+		        	countReplaces++;
+		        	Log.v(CNT_LOG, "REPLACE - Codigo = "+produto.getCodigo()+" Produto = "+produto.getDescricao_curta());
+	        	}
+	        	
         		count++;
         		auxCount++;
-
-	        	Log.v(CNT_LOG, "REPLACE - Codigo = "+produto.getCodigo()+" Produto = "+produto.getDescricao_curta());        	
-//	        	// Garbage Colector
+	        	        	
+	        	// Garbage Colector
 	        	if (auxCount == 100){
 	        		Log.w(CNT_LOG, "DISPARANDO GARBAGE COLECTOR");
 	        		System.gc();
 	        		auxCount = 0;
 	        	}
 	        }
+			
 	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
+	        Log.v(CNT_LOG, "Update["+countUpdates+"] Replace["+countReplaces+"]");
         	db.setTransactionSuccessful();
+        	
+            Log.v(CNT_LOG, "IMAGE NOT EXIST  = "+notExists);
+            Log.v(CNT_LOG, "IMAGE ALTERADA   = "+imagemAlterada);
         	return true;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -254,10 +298,8 @@ public class ProdutosHelper extends DataHelper{
 		this.Open();
 		
 		Cursor c = db.query(TABELA, null, null, null, null, null, null);
-
 		
 		Log.w(CNT_LOG, "Total Registros = "+c.getCount());
-		////return db.rawQuery("select _id, nome FROM clientes ORDER BY nome", null);
 		this.Close();		
 		return c;
 	} 
@@ -316,9 +358,9 @@ public class ProdutosHelper extends DataHelper{
 		Log.v(CNT_LOG, "getProdutos. Depart [ "+departamento_id+" ]");
 		
 		this.Open();
-		// So retornar os produtos com status diferente de inativo (-1)		
+		// So retornar os produtos com status diferente de inativo (-1)	e que tem imagem	
 		String depart_id = Integer.toString(departamento_id) ;
-		String where = "categoria_id = ? AND status = 1";
+		String where = "categoria_id = ? AND status = 1 AND image_status = 1";
         String[] selectionArgs = {depart_id};
 
 		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, null);
@@ -339,9 +381,9 @@ public class ProdutosHelper extends DataHelper{
 		this.Open();
 		// Todos os Produtos com status = 1 (ativo) e com image_status = 0 (sem Imagem)
 
-		String where = "status = 1 AND image_status = 0";
+		String where = "status = 1 AND image_status <> 1";
 
-		Cursor c = db.query(TABELA, null, where, null,null , null, null);
+		Cursor c = db.query(TABELA, null, where, null, null , null, null);
 		
 		List<Produto> lista = bindValues(c);
 
@@ -385,53 +427,89 @@ public class ProdutosHelper extends DataHelper{
 
 	public boolean verificaImagem(Produto produto){
 		Log.v(CNT_LOG, "verificaImagem("+produto.getCodigo()+")");
-		
-		produto.setImage_id(0);
-		produto.setImage_path("");
-		produto.setImage_size("");
-		produto.setImage_status(0);
-		
-		// Procurar a Imagem Local
-		String path_images = this.getPathImages();
-	    String image_name  = produto.getImage_name();
-	    String image_where = "%"+path_images+"/"+image_name+"%";
-   
+
+        boolean result = false;
+        
+        
+		if (produto.getCodigo() > 0){
+			produto.setImage_id(0);
+			produto.setImage_path("");
+			produto.setImage_size("");
+			
+			// Procurar a Imagem Local
+			String path_images = this.getPathImages();
+		    String image_name  = produto.getImage_name();
+		    String image_where = "%"+path_images+"/"+image_name+"%";
+	   
+		    
+	        Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+					   		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
+					   		new String[] {image_where},
+					   		null);
 	    
-        Cursor cursor = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				   		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-				   		new String[] {image_where},
-				   		null);
-    
-        boolean result;
-        
-		if (cursor != null) {
-        	if (cursor.getCount() > 0){
-	       		cursor.moveToPosition(0);
-	       		//TODO: Testar o tamanho da imagem pra ver se e do mesmo tamanho
-	       		
-	      		// Setando as variaveis de Imagem
-	       		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
-	       		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
-	       		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
-	       		produto.setImage_status(1);
-	       		
-	    		if (updateImage(produto)){
-	    			result = true;
-	    		}
-	    		else {
-	    			result = false;
-	    		}
-	   		}
-	   		else {
-	   			Log.w(CNT_LOG, "NAO TEM IMAGEM");
-	   			result = false;
-	   		}
-        }
-        else {
-        	result = false;
-        }
-        cursor.close();
-        
+	        
+			if (cursor != null) {
+	        	if (cursor.getCount() > 0){
+		       		cursor.moveToPosition(0);
+		
+		      		// Setando as variaveis de Imagem
+		       		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
+		       		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
+		       		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
+		       		
+		       		if (produto.getImage_status() == 2){
+		       			Log.v(CNT_LOG, "Imagem atualizada no servidor fazer DOWNLOAD");
+			   			if (download_imagem(produto)){
+		 	    			Log.w(CNT_LOG, "Fez o Download");
+		 	    			produto.setImage_status(1);
+		 	    			
+				    		if (updateImage(produto)){
+				    			Log.w(CNT_LOG, "Atualizou a Imagem");
+				    			result = true;
+				    		}
+				    		else {
+				    			Log.w(CNT_LOG, "Fez o Download Nao Atualizou");
+				    			result = false;
+				    		}	   				
+			   			}
+		       		}
+		       		else {	       			
+		       			
+		       			produto.setImage_status(1);
+		       			
+			    		if (updateImage(produto)){
+			    			result = true;
+			    		}
+			    		else {
+			    			result = false;
+			    		}
+		       		}
+		   		}
+		   		else {
+		   			Log.w(CNT_LOG, "NAO TEM IMAGEM");
+		   			if (download_imagem(produto)){
+	 	    			Log.w(CNT_LOG, "Fez o Download");
+			    		if (updateImage(produto)){
+			    			Log.w(CNT_LOG, "Atualizou a Imagem");
+			    			result = true;
+			    		}
+			    		else {
+			    			Log.w(CNT_LOG, "Fez o Download Nao Atualizou");
+			    			result = false;
+			    		}	   				
+		   			}
+		   			else {
+		   				Log.w(CNT_LOG, "NAO Fez o Download");
+		   				result = false;
+		   			}
+		   			result = false;
+		   		}
+	        }
+	        else {
+	        	result = false;
+	        }
+	        cursor.close();
+		}
         return result;
 	}
 	
@@ -446,7 +524,7 @@ public class ProdutosHelper extends DataHelper{
     	valores.put("image_path", produto.getImage_path());
     	valores.put("image_size", produto.getImage_size());
     	valores.put("image_id", produto.getImage_id());
-    	valores.put("image_status", produto.getImage_status());
+    	valores.put("image_status", 1);
     	
 		this.Open();
         try {
@@ -467,5 +545,113 @@ public class ProdutosHelper extends DataHelper{
         }
 	}
 
+  private boolean download_imagem(Produto produto){
+  
+  	Log.v(CNT_LOG, "Fazendo Download da Imagem ["+produto.getCodigo()+"]");
+  	
+  	boolean result = false;
+  	
+    File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    String sd_path = pictures_dir +"/Produtos/";
+    	            
+  	
+  	Log.v(CNT_LOG, "SD_PATH = "+sd_path);
+  	
+  	if (produto.getImage_name() != null){
+	  	String imageName = produto.getImage_name()+".JPG";
+
+	  	// TODO: SABER SE ESTA LOCAL OU REMOTO
+	  	String fileUrl = "http://192.168.0.69/imagens_produtos/"+imageName;
+	  	Log.v(CNT_LOG, "Url = "+fileUrl);
+	  	
+	  	File file = new File(sd_path, imageName); // imageName == nome da tua imagem
+	  	
+	  	Log.v(CNT_LOG, "Absolute Path = "+file.getAbsolutePath());
+	  	Log.v(CNT_LOG, "Image Path    = "+file.getPath());
+	  	
+	  	Bitmap bmImg = null;
+	  	URL myFileUrl = null;
+	  	Bitmap image = null;
+	      
+	  	try {
+	  		//http://magui.servehttp.com:6980/imagens_produtos/000239.JPG
+	  	    myFileUrl = new URL(fileUrl); // fileUrl == url para a tua imagem
+	  	}
+	  	catch (MalformedURLException e) {
+	  	    // TODO Auto-generated catch block
+	  	    e.printStackTrace();
+	  	}
+	
+	  	
+	  	try {
+	  	    HttpURLConnection conn = (HttpURLConnection)myFileUrl.openConnection();
+	  	    
+	  	    Log.v(CNT_LOG, "HttpUrlConnection ");
+	  	    
+	  	    conn.setDoInput(true);
+	  	    conn.connect();
+	  	    Log.v(CNT_LOG, "Connectado");
+	
+	  	    // Bufered
+	        BufferedInputStream buf;
+	  	    InputStream is = conn.getInputStream();
+	        buf = new BufferedInputStream(is);
+	  	    bmImg = BitmapFactory.decodeStream(buf);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
+	  	    
+//	  	    InputStream is = conn.getInputStream();
+//	  	    Log.v(CNT_LOG, "ImputStream ");
+//	  	    bmImg = BitmapFactory.decodeStream(is);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
+	  	    
+	 	    
+	  	    Log.v(CNT_LOG, "Bitmap Factory ");
+	  	    if (bmImg != null) {
+	  	    	  	    	
+	  	        // Gravar a imagem no SD
+	  	    	Log.v(CNT_LOG, "Gravando Imagem ");
+	  	        try {
+	
+	  	            OutputStream fOut = null;
+	                //File file = new File(sd_path,imageName);
+	                fOut = new FileOutputStream(file);
+	                
+	                bmImg.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+	                fOut.flush();
+	                fOut.close();
+	
+	                  //MediaStore.Images.Media.insertImage(this.context.getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
+					  //MediaStore.Images.Media.insertImage(this.context.getContentResolver(), bmImg,file.getName(), file.getName());
+	
+	          	    Log.v(CNT_LOG, "Media Store");
+	                  
+	          	    Log.v(CNT_LOG, "File Exists = "+file.exists());
+	
+	          	    //TODO: Descobrir por que nao esta gravando na pasta que deveria
+	          	    result = file.exists();
+
+	  	        } catch (Exception e) {  	
+	  	            e.printStackTrace();
+	  	            result = false;
+	  	        }
+	  	    }
+	  	    else {
+	  	        // A imagem não é válida.
+	  	    	Log.v(CNT_LOG, "Imagem não é Valida ");
+	  	    	result = false;
+	  	    }
+	
+	  	}
+	  	catch (IOException e) {
+	  	    // TODO Auto-generated catch block
+	  		Log.v(CNT_LOG, "Imagem não encontrada ");
+	  	    //e.printStackTrace();
+	  	    result = false;
+	  	}
+  	}
+  	return result;
+  } 
+	
 }
+
+	
+
 

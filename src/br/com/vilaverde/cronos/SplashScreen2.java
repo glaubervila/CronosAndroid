@@ -45,13 +45,15 @@ public class SplashScreen2 extends Activity {
 
 		// Verificar os Produtos que estao ativos e sem Imagem
 		Log.v(CNT_LOG,"Verificar Produtos Ativos Sem Imagem");
-		
-		
+			
 		produtos = helper.getProdutosSemImagem();
+		
 		
 		if (produtos.size() > 0){
 		
 			total_produtos = produtos.size();
+			
+			//total_produtos = 1;
 			
 			mProgress = (ProgressBar) findViewById(R.id.progress_bar_image);
 			mProgress.setMax(total_produtos);
@@ -59,9 +61,7 @@ public class SplashScreen2 extends Activity {
 	        // Start lengthy operation in a background thread
 	        Thread thread = new Thread(new Runnable() {
 	            public void run() {
-	                while (mProgressStatus < total_produtos) {
-	            	//while (mProgressStatus < 20) {
-	                	
+	                while (mProgressStatus < total_produtos) {                	
 	            		// recupera o produto
 	            		Produto produto = produtos.get(mProgressStatus);
 	 
@@ -75,8 +75,6 @@ public class SplashScreen2 extends Activity {
 	            			mProgress.setProgress(mProgressStatus);
 	            			mProgressStatus = mProgressStatus +1;
 	            		}
-	                	// Executa a tarefa
-	                    //mProgressStatus = doWork(produto);
 	
 	                    // Update the progress bar
 	                    mHandler.post(new Runnable() {
@@ -102,19 +100,12 @@ public class SplashScreen2 extends Activity {
 	        // Startando a thread
 	        thread.start();        
 		}
+		else {
+			startNewActivity();
+		}
 
 	}
-
-//	public int doWork(Produto produto){
-//		Log.v(CNT_LOG, "doWork("+mProgressStatus+")");
-//		
-//		helper.verificaImagem(produto);
-//		
-//		int posAtual = mProgressStatus + 1;
-//		return posAtual ;
-//	}
 	
-		
 	public void startNewActivity() {
 		Log.v(CNT_LOG,"startNewActivity()");
 		
