@@ -39,4 +39,7 @@
     <color name="row_impar">#F0F0F0</color>
     <color name="label_color">#C0C0C0</color>
     <color name="produto_preco">#4682B4</color>
+    <color name="branco">#FFFFFF</color>
+    <color name="firebrick2">#EE2C2C</color>
+    <color name="deepskyblue2">#00B2EE</color>
 </resources>        

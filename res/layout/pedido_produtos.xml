@@ -21,7 +21,7 @@
             style="@style/GridHeader"
             android:layout_weight="1"
             android:text="@string/colheaderDescricao" />
-
+        
         <TextView
             android:id="@+id/textView3"
             style="@style/GridHeader"
@@ -39,6 +39,17 @@
             style="@style/GridHeader"
             android:layout_width="150dp"
             android:text="@string/colheaderValorTotal" />
+
+        <TextView
+            android:id="@+id/textView7"
+            style="@style/GridHeader"
+            android:layout_width="70dp" />
+        
+        <TextView
+            android:id="@+id/textView8"
+       	    android:layout_width="match_parent"
+            style="@style/GridHeader" />
+       	
     </TableRow>
 
 <!--     <TableRow -->

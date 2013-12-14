@@ -14,17 +14,33 @@
         <TextView
             android:id="@+id/produtos_listrow_tvDescricao"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:hint="Descrição do Produto"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/produtos_listrow_tvPreco"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:hint="R$ 9999.99"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+<!--         <ImageButton -->
+<!--             android:id="@+id/btn_produto_edit" -->
+<!--             style="@style/GridCell" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:src="@drawable/ic_edit_light" /> -->
+
+<!--         <ImageButton -->
+<!--             android:id="@+id/btn_produto_discard" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:src="@drawable/ic_discard_light" /> -->
 
     </LinearLayout>
         

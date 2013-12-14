@@ -157,6 +157,7 @@ public class PedidoHelper extends DataHelper{
 
 		return lista;
 	}
+	
 	public long inserir(Pedido pedido){
 		Log.v(CNT_LOG, "Inserindo Cliente. Nome ["+pedido.getId_cliente().toString()+"]");
 		

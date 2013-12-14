@@ -8,6 +8,8 @@
     <string name="description_img_splashscreen2">Imagem Logo Cliente.</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">OK</string>
 
     <!-- Menu MainActivity -->
     <string name="menu_settings">Configurações</string>

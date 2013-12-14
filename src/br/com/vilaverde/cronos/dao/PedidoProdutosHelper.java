@@ -1,5 +1,6 @@
 package br.com.vilaverde.cronos.dao;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,6 +169,86 @@ public class PedidoProdutosHelper extends DataHelper{
 	    return linhasInseridas;
 	 }
 
+	public long alterar(PedidoProduto produto){
+		Log.v(CNT_LOG, "Alterar Produto no Pedido. Id ["+produto.getId_pedido()+"] Produto ["+produto.getId_produto()+"]");
+		
+		long linhasInseridas = 0;
+
+		ContentValues valores = new ContentValues();
+		valores.put("id_pedido", produto.getId_pedido());
+		valores.put("id_produto", produto.getId_produto());
+		valores.put("valor", produto.getValor());
+		valores.put("observacao", produto.getObservacao());
+		valores.put("quantidade", produto.getQuantidade());
+
+
+		double valorTotal = (produto.getQuantidade() * produto.getValor());
+	
+		valores.put("valor_total", valorTotal);
+	
+		this.Open();
+
+		try {
+			
+			// FIXME: Usar Transacao Para Atualizar o Pedido
+			linhasInseridas = db.update(TABELA, valores,"_id = " + produto.getId(), null);
+			
+			Log.v(CNT_LOG, "Linhas Alteradas ["+linhasInseridas+"]");
+			
+			// Atualizar o Pedido
+			PedidoHelper pedidoHelper = new PedidoHelper(context);
+			if (pedidoHelper.atualizarPedido() == true) {
+				return linhasInseridas;
+			}
+			else {
+				Log.e(CNT_LOG, "Falha ao Atualizar o pedido mas o produto foi alterado");
+			}
+		}
+		catch (Exception error){
+			Log.e(CNT_LOG, "Falha ao Alterar Produto");
+			return -1;
+		}
+		finally {
+		    this.Close();
+		}
+	    
+	    return linhasInseridas;
+	 }
+
+
+	public boolean deleteProduto(PedidoProduto produto) {
+		Log.v(CNT_LOG, "deleteProduto("+produto.getId()+")");
+		
+		long id_produto = produto.getId();
+
+		this.Open();
+	
+		try { 
+			//Exclui o registro com base no ID
+			db.delete(TABELA, "_id = " + id_produto, null);
+			
+			// Atualizar o Pedido
+			PedidoHelper pedidoHelper = new PedidoHelper(context);
+			if (pedidoHelper.atualizarPedido() == true) {
+				return true;
+			}
+			else {
+				Log.e(CNT_LOG, "Falha ao Atualizar o pedido mas o produto foi removido");
+				// Retorno true pq nao estou usando transacao
+				return true;
+			}
+		}
+		catch (Exception e){
+			Log.e(CNT_LOG, "Excluir - Error ["+e.getMessage()+"]");
+			e.printStackTrace();
+			return false;
+		}
+		finally {
+			this.Close();
+		}
+	}
+
+	
 	public PedidoProduto getPedidoProdutoById(PedidoProduto produto){
 		Log.v(CNT_LOG, "getPedidoProdutoById("+produto.getId_produto()+")");
 		
@@ -203,6 +284,7 @@ public class PedidoProdutosHelper extends DataHelper{
 	    }
 	}
 
+	
 	public boolean deleteProdutos(Pedido pedido) {
 		Log.v(CNT_LOG, "deleteProdutos("+pedido.getId()+")");
 		
