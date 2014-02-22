@@ -19,12 +19,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.R.bool;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -144,10 +146,10 @@ public class ProdutosHelper extends DataHelper{
 		Log.v(CNT_LOG, "inserirProdutosJson()");
 		int count = 0;
 		int countUpdates = 0;
-		int countReplaces = 0;
+		int countInserts = 0;
 		int auxCount = 0;
 		int erros = 0;
-		
+    	
 		this.Open();
 		db.beginTransaction();
 		try {
@@ -201,10 +203,13 @@ public class ProdutosHelper extends DataHelper{
 	            String image_name  = produto.getImage_name();
 	            String image_where = path_images+"/"+image_name+".JPG";
 
-	            File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+	            //File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+	            String pictures_dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 	            
 	            String image_path = pictures_dir +"/"+ image_where;
-	            	            
+
+	            Log.i(CNT_LOG, "IMAGE = "+image_path);
+	            
 	            File file = new File(image_path);
 	            // Verificar se o arquivo de imagem existe
 	            if(file.exists()){      
@@ -213,22 +218,30 @@ public class ProdutosHelper extends DataHelper{
 	            	long local_size = file.length();
             		int remote_size = ProdutoItem.getInt("image_size");
 	            	
-            		if (remote_size != local_size){
+            		if (remote_size != (int)local_size){
             			// Imagem alterada no Servidor
             			produto.setImage_status(0);
-            			imagemAlterada++;
+            			
+            			// Apagar a Imagem Que ja existe
+            			//boolean deleted = file.delete();
+            			//Log.v(CNT_LOG, "Deleted["+deleted+"] File["+file.getPath()+"] LSize["+local_size+"]");
+            			//Log.v(CNT_LOG, "Deleted["+deleted+"] RSize["+remote_size+"] LSize["+local_size+"]");
+            			Log.i(CNT_LOG, "Produto imagem Alterada");
+        				imagemAlterada++;
             		}
             		else {
             			// Imagem esta igual no servidor
             			produto.setImage_status(1);
             			produto.setImage_size(""+remote_size);
-                		produto.setImage_path(file.getPath());                		 
+                		produto.setImage_path(file.getPath());
+                		Log.i(CNT_LOG, "Produto imagem Igual");
             		}
 	            }
 	            else {
-	            	Log.w(CNT_LOG, "IMAGE = "+image_path);
+	            	// Produto Sem Imagem
 		        	produto.setImage_status(0);
-	            	notExists++;
+		        	Log.i(CNT_LOG, "Produto sem imagem");	
+    				notExists++;       			
 	            }
 	        	
 	        	ContentValues valores = new ContentValues();
@@ -246,21 +259,34 @@ public class ProdutosHelper extends DataHelper{
 	        	valores.put("image_path", produto.getImage_path());
 	        	valores.put("image_size", produto.getImage_size());
 //	        	valores.put("image_id", produto.getImage_id());
-//	        	valores.put("image_status", produto.getImage_status());
+	        	valores.put("image_status", produto.getImage_status());
+
 
 	        	
-	        	if ((update) && (produto.getImage_status() == 1)){
-	        		countUpdates++;
-		        	valores.put("image_status", 1);
+	        	if (update) {
+	        		// Produto Ja Existia
+        			// Testa se a imagem foi alterada
+	        		//if (produto.getImage_status() == 1) {
+	        			// Imagem nao alterada
+			        	//valores.put("image_status", 1);
+			    
+	        		//}
+	        		//else {
+	        			// Imagem Alterada
+			        	//valores.put("image_status", 0);
+	        		//}
+
+	        		countUpdates++;        		
 	        		db.update(TABELA, valores, "_id = " + produto.getId(), null);
 	        	}
 	        	else {
-	        		valores.put("image_status", 2);
-		        	db.replace(TABELA, null, valores);
-		        	countReplaces++;
-		        	Log.v(CNT_LOG, "REPLACE - Codigo = "+produto.getCodigo()+" Produto = "+produto.getDescricao_curta());
+	        		// Produto nao existe fazer insert
+	        		valores.put("image_status", 0);
+	        		
+	        		db.insert(TABELA, null, valores);
 	        	}
 	        	
+  	
         		count++;
         		auxCount++;
 	        	        	
@@ -273,7 +299,9 @@ public class ProdutosHelper extends DataHelper{
 	        }
 			
 	        Log.v(CNT_LOG, "Count["+count+"] Erros["+erros+"]");
-	        Log.v(CNT_LOG, "Update["+countUpdates+"] Replace["+countReplaces+"]");
+	        Log.v(CNT_LOG, "Update["+countUpdates+"]");
+	        Log.v(CNT_LOG, "Insert["+countInserts+"]");
+	        
         	db.setTransactionSuccessful();
         	
             Log.v(CNT_LOG, "IMAGE NOT EXIST  = "+notExists);
@@ -375,14 +403,16 @@ public class ProdutosHelper extends DataHelper{
 	    return lista;
 	 }
 
-	public List<Produto> getProdutosSemImagem(){
+	public List<Produto> getProdutosSemImagem(int status){
 		Log.v(CNT_LOG, "getProdutosSemImagem()");
 		
 		this.Open();
-		// Todos os Produtos com status = 1 (ativo) e com image_status = 0 (sem Imagem)
-
-		String where = "status = 1 AND image_status <> 1";
-
+		// Todos os Produtos com status = 1 (ativo) e com image_status = 0 (sem Imagem) 2 download
+		
+		String where = "";
+		
+		where = "status = 1 AND image_status = "+status;
+		
 		Cursor c = db.query(TABELA, null, where, null, null , null, null);
 		
 		List<Produto> lista = bindValues(c);
@@ -425,16 +455,16 @@ public class ProdutosHelper extends DataHelper{
 		return lista;
 	}
 
-	public boolean verificaImagem(Produto produto){
+	public boolean verificaImagem(Produto produto,Boolean downloadImagem){
 		Log.v(CNT_LOG, "verificaImagem("+produto.getCodigo()+")");
 
         boolean result = false;
         
         
 		if (produto.getCodigo() > 0){
-			produto.setImage_id(0);
-			produto.setImage_path("");
-			produto.setImage_size("");
+			//produto.setImage_id(0);
+			//produto.setImage_path("");
+			//produto.setImage_size("");
 			
 			// Procurar a Imagem Local
 			String path_images = this.getPathImages();
@@ -456,56 +486,43 @@ public class ProdutosHelper extends DataHelper{
 		       		produto.setImage_id(cursor.getLong(cursor.getColumnIndex("_id")));
 		       		produto.setImage_path(cursor.getString(cursor.getColumnIndex("_data")));
 		       		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
-		       		
-		       		if (produto.getImage_status() == 2){
-		       			Log.v(CNT_LOG, "Imagem atualizada no servidor fazer DOWNLOAD");
-			   			if (download_imagem(produto)){
-		 	    			Log.w(CNT_LOG, "Fez o Download");
-		 	    			produto.setImage_status(1);
-		 	    			
+		       		       			
+	       			produto.setImage_status(1);
+	       			
+		    		if (updateImage(produto)){
+		    			result = true;
+		    		}
+		    		else {
+		    			result = false;
+		    		}
+		   		}
+	        	else {
+		   			Log.e(CNT_LOG, "NAO TEM IMAGEM");
+	        		if (downloadImagem){
+	        			if (download_imagem(produto)){
+			   				produto.setImage_status(2);
+		 	    			Log.v(CNT_LOG, "Fez o Download");
 				    		if (updateImage(produto)){
-				    			Log.w(CNT_LOG, "Atualizou a Imagem");
+				    			Log.v(CNT_LOG, "Atualizou a Imagem");
 				    			result = true;
 				    		}
 				    		else {
-				    			Log.w(CNT_LOG, "Fez o Download Nao Atualizou");
+				    			Log.e(CNT_LOG, "Fez o Download Nao Atualizou");
 				    			result = false;
 				    		}	   				
+	        			}
+			   			else {
+			   				Log.e(CNT_LOG, "NAO Fez o Download");
+			   				result = false;
 			   			}
-		       		}
-		       		else {	       			
-		       			
-		       			produto.setImage_status(1);
-		       			
-			    		if (updateImage(produto)){
-			    			result = true;
-			    		}
-			    		else {
-			    			result = false;
-			    		}
-		       		}
-		   		}
-		   		else {
-		   			Log.w(CNT_LOG, "NAO TEM IMAGEM");
-		   			if (download_imagem(produto)){
-	 	    			Log.w(CNT_LOG, "Fez o Download");
-			    		if (updateImage(produto)){
-			    			Log.w(CNT_LOG, "Atualizou a Imagem");
-			    			result = true;
-			    		}
-			    		else {
-			    			Log.w(CNT_LOG, "Fez o Download Nao Atualizou");
-			    			result = false;
-			    		}	   				
-		   			}
-		   			else {
-		   				Log.w(CNT_LOG, "NAO Fez o Download");
-		   				result = false;
-		   			}
-		   			result = false;
-		   		}
+	        		}
+	        		else {
+	        			result = false;
+	        		}
+	        	}
 	        }
 	        else {
+	    		Log.w(CNT_LOG, "JA TEM IMAGEM");
 	        	result = false;
 	        }
 	        cursor.close();
@@ -523,9 +540,18 @@ public class ProdutosHelper extends DataHelper{
 		
     	valores.put("image_path", produto.getImage_path());
     	valores.put("image_size", produto.getImage_size());
-    	valores.put("image_id", produto.getImage_id());
-    	valores.put("image_status", 1);
-    	
+    	if (produto.getImage_id() > 0) {
+	    	valores.put("image_id", produto.getImage_id());
+	    	valores.put("image_status", 1);
+    	}
+    	else {
+    		if (produto.getImage_status() == 2){
+    			valores.put("image_status", 2);	
+    		}
+    		else {   			
+    			valores.put("image_status", 0);
+    		}
+    	}
 		this.Open();
         try {
     		 linhaAlterada = db.update(TABELA, valores, "_id = " + produto.getId(), null);  		      
@@ -545,110 +571,240 @@ public class ProdutosHelper extends DataHelper{
         }
 	}
 
-  private boolean download_imagem(Produto produto){
-  
-  	Log.v(CNT_LOG, "Fazendo Download da Imagem ["+produto.getCodigo()+"]");
-  	
-  	boolean result = false;
-  	
-    File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-    String sd_path = pictures_dir +"/Produtos/";
-    	            
-  	
-  	Log.v(CNT_LOG, "SD_PATH = "+sd_path);
-  	
-  	if (produto.getImage_name() != null){
-	  	String imageName = produto.getImage_name()+".JPG";
+	
+    private boolean download_imagem(Produto produto){
+		  
+	  	Log.v(CNT_LOG, "Fazendo Download da Imagem ["+produto.getCodigo()+"]");
+	  	
+	  	boolean result = false;
 
-	  	// TODO: SABER SE ESTA LOCAL OU REMOTO
-	  	String fileUrl = "http://192.168.0.69/imagens_produtos/"+imageName;
-	  	Log.v(CNT_LOG, "Url = "+fileUrl);
+	  	// Gravar Imagem
+		//String fullPath =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Produtos/"; 
+	  	String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cronos/Produtos/";
 	  	
-	  	File file = new File(sd_path, imageName); // imageName == nome da tua imagem
+	  	// Fazer o Download
+	  	if (produto.getImage_name() != null){
+		  	String imageName = produto.getImage_name()+".JPG";
 	  	
-	  	Log.v(CNT_LOG, "Absolute Path = "+file.getAbsolutePath());
-	  	Log.v(CNT_LOG, "Image Path    = "+file.getPath());
-	  	
-	  	Bitmap bmImg = null;
-	  	URL myFileUrl = null;
-	  	Bitmap image = null;
-	      
-	  	try {
-	  		//http://magui.servehttp.com:6980/imagens_produtos/000239.JPG
-	  	    myFileUrl = new URL(fileUrl); // fileUrl == url para a tua imagem
-	  	}
-	  	catch (MalformedURLException e) {
-	  	    // TODO Auto-generated catch block
-	  	    e.printStackTrace();
-	  	}
+		  	// TODO: SABER SE ESTA LOCAL OU REMOTO
+		  	String fileUrl = "http://192.168.0.69/imagens_produtos/"+imageName;
+		  	Log.v(CNT_LOG, "Url = "+fileUrl);
+
+		  	Bitmap bmImg = null;
+		  	URL myFileUrl = null;
+		  	Bitmap image = null;
+		      
+		  	try {
+		  		//http://magui.servehttp.com:6980/imagens_produtos/000239.JPG
+		  	    myFileUrl = new URL(fileUrl); // fileUrl == url para a tua imagem
+		  	}
+		  	catch (MalformedURLException e) {
 	
+		  	    e.printStackTrace();
+		  	    
+		  	    result = false;
+		  	}
+
+		  	try {
+		  	    HttpURLConnection conn = (HttpURLConnection)myFileUrl.openConnection();
+		  	    
+		  	    conn.setDoInput(true);
+		  	    conn.connect();
+		
+		  	    // Bufered
+		        BufferedInputStream buf;
+		  	    InputStream is = conn.getInputStream();
+		        buf = new BufferedInputStream(is);
+		  	    bmImg = BitmapFactory.decodeStream(buf);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
+
+		  	    if (bmImg != null) {
+
+		  	    	// Gravar Imagem
+						
+		  	    	File dir = new File(fullPath);
+		  	    	if (!dir.exists()){
+		  	    		dir.mkdirs();
+		  	    		Log.v(CNT_LOG, "DIR NOT Exist: "+dir.getAbsolutePath());
+		  	    	}
+		  	    	else {
+		  	    		Log.v(CNT_LOG, "DIR Exist: "+dir.getAbsolutePath());
+		  	    	}
+		  	    	
+		  	    
+		  	    	OutputStream fOut = null;
+		  	    	File file = new File(fullPath, imageName);
+		  	    	file.createNewFile();
+		  	    	fOut = new FileOutputStream(file);
+		  	    	
+		  	    	Log.v(CNT_LOG, "File: "+file.getAbsolutePath());
+		  	    	
+		  	    	Log.v(CNT_LOG, "Arquivo de Imagem criado");
+		  	    	
+		  	    	// 100 means no compression, the lower you go, the stronger the compression
+		  	    	bmImg.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+		  	    	
+		  	    	Log.v(CNT_LOG, "Compress");
+		  	    	fOut.flush();
+		  	    	fOut.close();
+		  	    	Log.v(CNT_LOG, "Bitmap adiconado ao file");
+		  	    	
+		  	    	String teste = MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+		  	    	//Log.d(CNT_LOG, "MEDIA STORE: "+teste);
+		  	    	
+		  	    	
+            		MediaScannerConnection.scanFile(context,
+            				new String[] {file.toString()},
+            				null,
+            				new MediaScannerConnection.OnScanCompletedListener() {
+								
+								@Override
+								public void onScanCompleted(String path, Uri uri) {
+									Log.v(CNT_LOG, "ScanComplete : "+path);
+									
+								}
+							});
+		  	    	Log.v(CNT_LOG, "Media inserted");
+//		  	    	420051
+		  	    	//623
+		  	    	//585
+		  	    	teste = null;
+		  	    	bmImg = null;
+		  	    	file = null;
+		
+		  	    	System.gc();
+		  	    	result =  true;
+		  	    }
+			}
+		  	catch (IOException e) {
+		  	    // TODO Auto-generated catch block
+		  		Log.v(CNT_LOG, "Imagem não encontrada ");
+		  	    //e.printStackTrace();
+		  	    result = false;
+		  	}
+			catch (Exception e){
+				Log.e("download_imagem()", e.getMessage());
+				result = false;
+			}	    	            
+	  	}
 	  	
-	  	try {
-	  	    HttpURLConnection conn = (HttpURLConnection)myFileUrl.openConnection();
-	  	    
-	  	    Log.v(CNT_LOG, "HttpUrlConnection ");
-	  	    
-	  	    conn.setDoInput(true);
-	  	    conn.connect();
-	  	    Log.v(CNT_LOG, "Connectado");
-	
-	  	    // Bufered
-	        BufferedInputStream buf;
-	  	    InputStream is = conn.getInputStream();
-	        buf = new BufferedInputStream(is);
-	  	    bmImg = BitmapFactory.decodeStream(buf);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
-	  	    
+		Log.w(CNT_LOG, "DISPARANDO GARBAGE COLECTOR");
+		System.gc();
+		
+	  	return result;
+    }
+//  private boolean download_imagem(Produto produto){
+//  
+//  	Log.v(CNT_LOG, "Fazendo Download da Imagem ["+produto.getCodigo()+"]");
+//  	
+//  	boolean result = false;
+//  	
+//    File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//    String sd_path = pictures_dir +"/Produtos/";
+//    	            
+//  	
+//  	Log.v(CNT_LOG, "SD_PATH = "+sd_path);
+//  	
+//  	if (produto.getImage_name() != null){
+//	  	String imageName = produto.getImage_name()+".JPG";
+//
+//	  	// TODO: SABER SE ESTA LOCAL OU REMOTO
+//	  	String fileUrl = "http://192.168.0.69/imagens_produtos/"+imageName;
+//	  	Log.v(CNT_LOG, "Url = "+fileUrl);
+//	  	
+//	  	File file = new File(sd_path, imageName); // imageName == nome da tua imagem
+//	  	try {
+//			file.createNewFile();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//	  	Log.v(CNT_LOG, "Absolute Path = "+file.getAbsolutePath());
+//	  	Log.v(CNT_LOG, "Image Path    = "+file.getPath());
+//	  	
+//	  	Bitmap bmImg = null;
+//	  	URL myFileUrl = null;
+//	  	Bitmap image = null;
+//	      
+//	  	try {
+//	  		//http://magui.servehttp.com:6980/imagens_produtos/000239.JPG
+//	  	    myFileUrl = new URL(fileUrl); // fileUrl == url para a tua imagem
+//	  	}
+//	  	catch (MalformedURLException e) {
+//	  	    // TODO Auto-generated catch block
+//	  	    e.printStackTrace();
+//	  	}
+//	
+//	  	
+//	  	try {
+//	  	    HttpURLConnection conn = (HttpURLConnection)myFileUrl.openConnection();
+//	  	    
+//	  	    Log.v(CNT_LOG, "HttpUrlConnection ");
+//	  	    
+//	  	    conn.setDoInput(true);
+//	  	    conn.connect();
+//	  	    Log.v(CNT_LOG, "Connectado");
+//	
+//	  	    // Bufered
+//	        BufferedInputStream buf;
 //	  	    InputStream is = conn.getInputStream();
-//	  	    Log.v(CNT_LOG, "ImputStream ");
-//	  	    bmImg = BitmapFactory.decodeStream(is);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
-	  	    
-	 	    
-	  	    Log.v(CNT_LOG, "Bitmap Factory ");
-	  	    if (bmImg != null) {
-	  	    	  	    	
-	  	        // Gravar a imagem no SD
-	  	    	Log.v(CNT_LOG, "Gravando Imagem ");
-	  	        try {
-	
-	  	            OutputStream fOut = null;
-	                //File file = new File(sd_path,imageName);
-	                fOut = new FileOutputStream(file);
-	                
-	                bmImg.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-	                fOut.flush();
-	                fOut.close();
-	
-	                  //MediaStore.Images.Media.insertImage(this.context.getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
-					  //MediaStore.Images.Media.insertImage(this.context.getContentResolver(), bmImg,file.getName(), file.getName());
-	
-	          	    Log.v(CNT_LOG, "Media Store");
-	                  
-	          	    Log.v(CNT_LOG, "File Exists = "+file.exists());
-	
-	          	    //TODO: Descobrir por que nao esta gravando na pasta que deveria
-	          	    result = file.exists();
-
-	  	        } catch (Exception e) {  	
-	  	            e.printStackTrace();
-	  	            result = false;
-	  	        }
-	  	    }
-	  	    else {
-	  	        // A imagem não é válida.
-	  	    	Log.v(CNT_LOG, "Imagem não é Valida ");
-	  	    	result = false;
-	  	    }
-	
-	  	}
-	  	catch (IOException e) {
-	  	    // TODO Auto-generated catch block
-	  		Log.v(CNT_LOG, "Imagem não encontrada ");
-	  	    //e.printStackTrace();
-	  	    result = false;
-	  	}
-  	}
-  	return result;
-  } 
+//	        buf = new BufferedInputStream(is);
+//	  	    bmImg = BitmapFactory.decodeStream(buf);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
+//	  	    
+////	  	    InputStream is = conn.getInputStream();
+////	  	    Log.v(CNT_LOG, "ImputStream ");
+////	  	    bmImg = BitmapFactory.decodeStream(is);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
+//	  	    
+//	 	    
+//	  	    Log.v(CNT_LOG, "Bitmap Factory ");
+//	  	    if (bmImg != null) {
+//	  	    	  	    	
+//	  	        // Gravar a imagem no SD
+//	  	    	Log.v(CNT_LOG, "Gravando Imagem ");
+//	  	        try {
+//	
+//	  	            OutputStream fOut = null;
+//	                File file2 = new File(sd_path,imageName);
+//	                file.createNewFile();
+//	                fOut = new FileOutputStream(file2);
+//	                
+//	                bmImg.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+//	                fOut.flush();
+//	                fOut.close();
+//
+//	          	    Log.v(CNT_LOG, "Media Store");
+//	          	    Log.v(CNT_LOG, "TESTE = "+ file.getAbsolutePath());
+//
+//	          	    MediaStore.Images.Media.insertImage(this.context.getContentResolver(), sd_path, imageName, imageName);
+//	                //MediaStore.Images.Media.insertImage(this.context.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+//					//MediaStore.Images.Media.insertImage(this.context.getContentResolver(), bmImg,file.getName(), file.getName());
+//	
+//	                  
+//	          	    Log.v(CNT_LOG, "File Exists = "+file.exists());
+//	
+//	          	    //TODO: Descobrir por que nao esta gravando na pasta que deveria
+//	          	    result = file.exists();
+//
+//	  	        } catch (Exception e) {  	
+//	  	            e.printStackTrace();
+//	  	            result = false;
+//	  	        }
+//	  	    }
+//	  	    else {
+//	  	        // A imagem não é válida.
+//	  	    	Log.v(CNT_LOG, "Imagem não é Valida ");
+//	  	    	result = false;
+//	  	    }
+//	
+//	  	}
+//	  	catch (IOException e) {
+//	  	    // TODO Auto-generated catch block
+//	  		Log.v(CNT_LOG, "Imagem não encontrada ");
+//	  	    //e.printStackTrace();
+//	  	    result = false;
+//	  	}
+//  	}
+//  	return result;
+//  } 
 	
 }
 

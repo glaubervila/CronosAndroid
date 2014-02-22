@@ -13,8 +13,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,6 +34,7 @@ import br.com.vilaverde.cronos.httpclient.HttpGetTask;
 import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Pedido;
 import br.com.vilaverde.cronos.model.PedidoProduto;
+import br.com.vilaverde.cronos.model.Produto;
 
 public class Atualizar extends Activity  implements AsyncTaskCompleteListener<String>{
 
@@ -43,6 +49,14 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
     //public Handler handler = new Handler();  
 	ProgressDialog progressDialog = null;
 	//AlertDialog dialog = null;
+	
+    private int mProgressStatus = 0;
+    private int total_produtos = 0;	
+    private Handler mHandler = new Handler();
+    private Handler handler = new Handler();
+
+    private int atualizadas = 0;
+    private int nao_atualizadas = 0;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
@@ -128,6 +142,10 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		else if (entidade.equalsIgnoreCase("clientes")){	
 			pullClientes();						
 		}
+		else if (entidade.equalsIgnoreCase("images")){	
+			pullImagens();						
+		}
+
 	}
 
 	// ---------------------------------------< PUSH >-----------------------------------------
@@ -461,15 +479,98 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		Boolean r = clientesHelper.inserirClientesJson(json);
 		Log.v(CNT_LOG, "RESULT [ "+r+"]");
 		if (r){
-			String msg ="Registros Atualizados.";
-			progressDialog.dismiss();
-			finish();
+			task = "pull";
+			entidade = "images";
+			sincronizar();
+		
+//			String msg ="Registros Atualizados.";
+//			progressDialog.dismiss();
+//			finish();
 		}
 		else {			
 			onFailure("Falha ao Atualizar os Registros de clientes");
 		}
 	}
 	
+	public void pullImagens(){
+		Log.v(CNT_LOG,"pullImagens()");
+		
+		progressDialog.dismiss();
+		progressDialog = null;
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setProgress(0);
+		progressDialog.setTitle("Download Imagens");
+		progressDialog.show();
+		
+		final ProdutosHelper produtosHelper = new ProdutosHelper(this);
+		
+		final List<Produto> produtos = produtosHelper.getProdutosSemImagem(0);
+		
+		if (produtos.size() > 0){
+			
+			total_produtos = produtos.size();
+			progressDialog.setMax(total_produtos);
+			
+						
+	        Thread thread = new Thread(new Runnable() {
+	            public void run() {
+	                while (mProgressStatus < total_produtos) {                	
+	            		// recupera o produto
+	            		Produto produto = produtos.get(mProgressStatus);
+	 
+	            		if(produtosHelper.verificaImagem(produto,true)){
+	            			atualizadas = atualizadas + 1;
+	            			progressDialog.setProgress(mProgressStatus);
+	            			mProgressStatus = mProgressStatus +1;
+	            		}
+	            		else {
+	            			nao_atualizadas = nao_atualizadas +1;
+	            			progressDialog.setProgress(mProgressStatus);
+	            			mProgressStatus = mProgressStatus +1;
+	            		}
+	 	            		
+	                    // Update the progress bar
+	                    mHandler.post(new Runnable() {
+	                        public void run() {
+	                        	progressDialog.setProgress(mProgressStatus);
+	                        }
+	                    });
+	                }
+	                Log.v(CNT_LOG, "Saiu do While");
+	                	                
+	                handler.post(new Runnable() {
+						@Override
+						public void run() {
+							Log.v(CNT_LOG, "Criar a Intent Activity aki");
+							Log.v(CNT_LOG, "TOTAL DE IMAGENS A ATUALIZAR     = "+total_produtos);
+							Log.v(CNT_LOG, "TOTAL DE IMAGENS ATUALIZADAS     = "+atualizadas);
+							Log.w(CNT_LOG, "TOTAL DE IMAGENS NAO ATUALIZADAS = "+nao_atualizadas);
+							
+		            		// Simular que o o sd foi montado para forcar o scam
+							sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+						            + Environment.getExternalStorageDirectory())));
+							
+							String msg ="Registros Atualizados.";
+							progressDialog.dismiss();
+							finish();
+						}
+					});
+	            }	            
+	        });
+	        
+	        // Startando a thread
+	        thread.start();
+		}
+		else {
+			String msg ="Registros Atualizados.";
+			progressDialog.dismiss();
+			finish();
+
+		}
+		
+	}
+
 
 	
 //------------------------------ < SELEÇÃO DO TIPO DE CONEXAO > ------------------------------	
@@ -592,9 +693,10 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 				else if (entidade.equalsIgnoreCase("pullclientes")){
 					pushClientes(json);
 				}
-//				else if (entidade.equalsIgnoreCase("fotos")){
+				else if (entidade.equalsIgnoreCase("images")){
+					pullImagens();
 //					pushFotos(json);
-//				}
+				}
 				else {
 					Log.v(CNT_LOG,"NENHUM");
 				}	

@@ -91,6 +91,9 @@ public class ProdutoDetalhesForm extends Fragment {
 			
 						if(pedidoProdutoHelper.inserir(pedidoProduto) > -1){
 							Toast.makeText(context, "Produto Adicionado ao Pedido", Toast.LENGTH_LONG).show();					
+							
+							Log.v(CNT_LOG, "FEchar Activity");
+							this.getActivity().finish();
 						}
 						else {
 							Log.v(CNT_LOG,"Erro na Inclusao do Produto");

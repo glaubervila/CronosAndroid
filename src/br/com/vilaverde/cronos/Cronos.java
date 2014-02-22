@@ -1,7 +1,11 @@
 package br.com.vilaverde.cronos;
 
+import java.io.File;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -25,7 +29,7 @@ public class Cronos extends FragmentActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cronos);
-
+       
        
         // Chamando o data Helper para forcar a criacao das tabelas
         DataHelper helper = new DataHelper(this);
@@ -85,6 +89,11 @@ public class Cronos extends FragmentActivity
 	        case R.id.menu_produtos:          
 	    		startActivity(new Intent(this,ProdutosList.class));
 	            return true;	            
+
+	        case R.id.menu_enviar_pedido:          
+	    		
+	            return enviar();	            
+
 	            
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -123,6 +132,15 @@ public class Cronos extends FragmentActivity
             // Commit the transaction
             transaction.commit();
         }
+    }
+    
+    public boolean enviar(){
+    	
+    	Enviar e = new Enviar(this);
+    	
+    	e.enviar();
+    	
+    	return true;
     }
     
 }

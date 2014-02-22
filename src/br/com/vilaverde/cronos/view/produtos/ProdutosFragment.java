@@ -75,14 +75,14 @@ public class ProdutosFragment extends Fragment {
 		produtosHelper = new ProdutosHelper(this.getActivity().getBaseContext()) ;
 
     
-		Cursor cursor = view.getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-    		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-    		new String[] {image_default},
-    		null);
-		cursor.moveToFirst();
-		
-		Log.v(CNT_LOG,"DefaultImageID ="+cursor.getString(cursor.getColumnIndex("_id")) );
-		image_default_id = cursor.getLong(cursor.getColumnIndex("_id"));
+//		Cursor cursor = view.getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//    		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
+//    		new String[] {image_default},
+//    		null);
+//		cursor.moveToFirst();
+//		
+//		Log.v(CNT_LOG,"DefaultImageID ="+cursor.getString(cursor.getColumnIndex("_id")) );
+//		image_default_id = cursor.getLong(cursor.getColumnIndex("_id"));
 		
 		// Setando o Bitmap da imagem default      			
 //		image_default_bitmap = MediaStore.Images.Thumbnails.getThumbnail(
@@ -92,8 +92,7 @@ public class ProdutosFragment extends Fragment {
 		image_default_bitmap  = BitmapFactory.decodeResource(getResources(), R.drawable.ic_camera);
 
 		
-		cursor.close();
-		
+//		cursor.close();
 		
 		// Executar a query
 		lstProdutos = (ArrayList<Produto>) produtosHelper.ListProdutosByDepartamentos(0);
@@ -304,9 +303,11 @@ public class ProdutosFragment extends Fragment {
 	           if (image_id > 0) {
 	        	   bundle.putLong("image_id", produto.getImage_id());   
 	           }
-	           else {
+	           else {	        	
 	           		String path = produto.getImage_path();
 	        		
+	           		Log.v(CNT_LOG,"Path: "+path);
+	           		
 	           		Cursor c = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
 		                				new String[] { MediaStore.MediaColumns._ID },
 		                				MediaStore.MediaColumns.DATA + "=?", 
@@ -319,6 +320,10 @@ public class ProdutosFragment extends Fragment {
 	       		        produto.setImage_id(id);        
 	       		        Log.i(CNT_LOG, "IMAGEID = "+id);
 		       		    bundle.putLong("image_id", id);
+		       		   Log.v(CNT_LOG,"TESTE");
+	       		    }
+	       		    else {
+	       		    	Log.w(CNT_LOG,"Nao encontrou no mediaStore");
 	       		    }
 	       		    c.close();
 	           }

@@ -46,7 +46,7 @@ public class DepartamentosFragment extends ListFragment {
         
         // Recuperar o Array de Departamentos no DB
         lstDepartamentos = helper.getDepartamentos();
-        Log.v(CNT_LOG, "CHEGOU AKI");
+
         // Instanciar o Adapter e passar o array clientes
         adapter = new DepartamentoAdapter(this.getActivity(), lstDepartamentos);
         

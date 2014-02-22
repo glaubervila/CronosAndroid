@@ -13,7 +13,10 @@
           android:title="Produtos"
           android:showAsAction="ifRoom|withText" >
     </item>        
-    
+    <item android:id="@+id/menu_enviar_pedido"
+          android:title="Enviar Pedidos"
+          android:showAsAction="ifRoom|withText" >
+    </item>        
     <item android:id="@+id/novo_pedido" android:title="@string/novo_pedido"></item>
     <item android:id="@+id/clientes" android:title="@string/clientes"></item>
     <item android:id="@+id/menu_atualizar" android:title="@string/atualizar"></item>

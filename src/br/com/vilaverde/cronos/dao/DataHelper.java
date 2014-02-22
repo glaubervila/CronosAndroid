@@ -38,7 +38,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	static String SERVER_HOST_REMOTE = "";
 	
 	// Path Padrao para imagens 
-	static String PATH_IMAGES = "Produtos";
+	static String PATH_IMAGES = "Cronos/Produtos";
 
 	public String getPathImages(){
 		return this.PATH_IMAGES;
