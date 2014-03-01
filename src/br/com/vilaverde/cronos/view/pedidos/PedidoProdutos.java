@@ -1,5 +1,6 @@
 package br.com.vilaverde.cronos.view.pedidos;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -122,12 +123,19 @@ public class PedidoProdutos extends Fragment {
 			// Quantidade
 			TextView quantidade = createCell(""+produto.getStrQuantidade(),2, background,0);
 			row.addView(quantidade);
+			
 			// Valor
-			TextView valor = createCell(""+produto.getStrValor(),3, background,0);
+	        float vValor = (float) produto.getValor();
+			String strValor = NumberFormat.getCurrencyInstance().format(vValor);
+			//TextView valor = createCell(""+produto.getStrValor(),3, background,0);
+			TextView valor = createCell(strValor,3, background,0);
 			row.addView(valor);
 			
 			// Valor Total
-			TextView valor_total = createCell(""+produto.getStrValorTotal(),4, background,0);
+	        float vValorTotal = (float) produto.getValor_total();
+			String strValorTotal = NumberFormat.getCurrencyInstance().format(vValorTotal);
+			//TextView valor_total = createCell(""+produto.getStrValorTotal(),4, background,0);
+			TextView valor_total = createCell(strValorTotal,4, background,0);
 			row.addView(valor_total);
 
 

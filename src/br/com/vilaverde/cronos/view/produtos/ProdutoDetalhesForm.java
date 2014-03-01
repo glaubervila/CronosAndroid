@@ -70,15 +70,18 @@ public class ProdutoDetalhesForm extends Fragment {
 							
 					// Recuperar a Quantidade
 					EditText vQuantidade = (EditText)view.findViewById(R.id.produto_detalhe_quantidade);
+					EditText vObservacao = (EditText)view.findViewById(R.id.produto_detalhe_observacao);
+					
 					Log.v(CNT_LOG,"TAMANHO DA QUANTIDEDE = "+vQuantidade.getText().length());
 					if (vQuantidade.getText().length() > 0) {
 
-						float quantidade = Float.parseFloat(vQuantidade.getText().toString());
+						float quantidade  = Float.parseFloat(vQuantidade.getText().toString());
+						String observacao  = vObservacao.getText().toString();
 						
 						// Calcular Valor Total
 						float valor_total = (float) (quantidade * selectedProduto.getPreco());
 						
-						Log.v(CNT_LOG, "Adicionando Produto = "+selectedProduto.getDescricao()+" Quantidade = "+quantidade);
+						Log.v(CNT_LOG, "Adicionando Produto = "+selectedProduto.getDescricao()+" Quantidade = "+quantidade+" Observacao = "+observacao );
 						
 						
 						pedidoProduto = new PedidoProduto();
@@ -87,7 +90,7 @@ public class ProdutoDetalhesForm extends Fragment {
 						pedidoProduto.setQuantidade(quantidade);
 						pedidoProduto.setValor(selectedProduto.getPreco());
 						pedidoProduto.setValor_total(valor_total);
-						pedidoProduto.setObservacao("teste de observacao");
+						pedidoProduto.setObservacao(observacao);
 			
 						if(pedidoProdutoHelper.inserir(pedidoProduto) > -1){
 							Toast.makeText(context, "Produto Adicionado ao Pedido", Toast.LENGTH_LONG).show();					

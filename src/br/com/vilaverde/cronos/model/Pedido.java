@@ -1,6 +1,8 @@
 package br.com.vilaverde.cronos.model;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import android.content.SharedPreferences;
@@ -109,6 +111,8 @@ public class Pedido implements Serializable{
 
 
 	public float getValor_total() {
+		//String teste = NumberFormat.getCurrencyInstance().format(valor_total);
+		//return Float.parseFloat(teste);
 		return valor_total;
 	}
 

@@ -1,5 +1,7 @@
 package br.com.vilaverde.cronos.view.pedidos;
 
+import java.text.NumberFormat;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +40,11 @@ public class PedidoDetalhes extends Fragment {
 
 		// Valor Total
         TextView tvTotal = (TextView) view.findViewById(R.id.pedido_valor_total);
-        tvTotal.setText("R$ "+pedido.getValor_total());
+        
+        float total = pedido.getValor_total();
+		String strValorTotal = NumberFormat.getCurrencyInstance().format(total);
+        
+        tvTotal.setText(strValorTotal);
 
 		
 		// Cliente
