@@ -20,8 +20,8 @@
           android:icon="@drawable/ic_send"
           android:showAsAction="ifRoom|withText" >
     </item>        
-    <item android:id="@+id/novo_pedido" android:title="@string/novo_pedido"></item>
-    <item android:id="@+id/clientes" android:title="@string/clientes"></item>
+<!--     <item android:id="@+id/novo_pedido" android:title="@string/novo_pedido"></item> -->
+<!--     <item android:id="@+id/clientes" android:title="@string/clientes"></item> -->
     <item android:id="@+id/menu_atualizar" android:title="@string/atualizar"></item>
     <item android:id="@+id/menu_configuracao" android:title="@string/menu_settings"></item>
     <item android:id="@+id/sair" android:title="@string/sair"></item>

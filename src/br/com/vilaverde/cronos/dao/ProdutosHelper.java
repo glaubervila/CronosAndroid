@@ -163,15 +163,21 @@ public class ProdutosHelper extends DataHelper{
 			
             int notExists = 0;
             int imagemAlterada = 0;
+        	boolean update;
+        	
+            JSONObject ProdutoItem;
+        	Produto produto = new Produto();
+        	ContentValues valores = new ContentValues();
 			
+        	
 			// Para Cada Item no array transformar em um objeto
 			for (int i = 0; i < arrayProdutos.length(); i++) {
 	
-				JSONObject ProdutoItem;
+//				JSONObject ProdutoItem;
 
 				ProdutoItem = arrayProdutos.getJSONObject(i);
 				
-	        	Produto produto = new Produto();
+//	        	Produto produto = new Produto();
 	        	        	
 	        	produto.setId(ProdutoItem.getInt("_id"));
 	        	produto.setCodigo(ProdutoItem.getInt("codigo"));
@@ -185,7 +191,8 @@ public class ProdutosHelper extends DataHelper{
 	        	produto.setStatus(1);
         	
 	        	// Saber se o Produto Ja Existe
-	        	boolean update = false;
+	        	update = false;
+//	        	boolean update = false;
 	    		String where = "_id = ?";
 	            String[] selectionArgs = {""+produto.getId()};
 	    		Cursor cExist = db.query(TABELA, null, where, selectionArgs, null , null, null);
@@ -193,8 +200,9 @@ public class ProdutosHelper extends DataHelper{
 	    		if (cExist.moveToFirst()) {
 	    			update = true;
 	    		}
-	        	
-	        	
+	        		  
+	    		cExist.close();
+	    		
 	        	// Tratamento das Imagens
 	        	produto.setImage_name(ProdutoItem.getString("image_name"));
         	
@@ -203,7 +211,6 @@ public class ProdutosHelper extends DataHelper{
 	            String image_name  = produto.getImage_name();
 	            String image_where = path_images+"/"+image_name+".JPG";
 
-	            //File pictures_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 	            String pictures_dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 	            
 	            String image_path = pictures_dir +"/"+ image_where;
@@ -217,10 +224,19 @@ public class ProdutosHelper extends DataHelper{
 	            	Log.i(CNT_LOG, "IMAGE = "+image_path+ " SIZE = "+file.length());
 	            	long local_size = file.length();
             		int remote_size = ProdutoItem.getInt("image_size");
-	            	
+
+//            		Log.i(CNT_LOG, " Remote Size: "+remote_size);
+//            		Log.i(CNT_LOG, " Local  Size: "+local_size);
             		if (remote_size != (int)local_size){
             			// Imagem alterada no Servidor
-            			produto.setImage_status(0);
+            			//produto.setImage_status(0);
+            			
+            			produto.setImage_status(1);
+            			produto.setImage_size(""+remote_size);
+                		produto.setImage_path(file.getPath());
+            			
+            			// FIXIT: Imagem alterada nao esta funcionando filesize e diferente no servidor e no local
+            			// Por enquanto vou atualizar o size na tabela para 
             			
             			// Apagar a Imagem Que ja existe
             			//boolean deleted = file.delete();
@@ -244,7 +260,7 @@ public class ProdutosHelper extends DataHelper{
     				notExists++;       			
 	            }
 	        	
-	        	ContentValues valores = new ContentValues();
+//	        	ContentValues valores = new ContentValues();
 	        	valores.put("_id", produto.getId());
 	        	valores.put("status", produto.getStatus());
 	        	valores.put("codigo", produto.getCodigo());
@@ -254,28 +270,12 @@ public class ProdutosHelper extends DataHelper{
 	        	valores.put("quantidade", produto.getQuantidade());
 	        	valores.put("preco", produto.getPreco());
   
-	        	
 	        	valores.put("image_name", produto.getImage_name());
 	        	valores.put("image_path", produto.getImage_path());
 	        	valores.put("image_size", produto.getImage_size());
-//	        	valores.put("image_id", produto.getImage_id());
 	        	valores.put("image_status", produto.getImage_status());
-
-
 	        	
 	        	if (update) {
-	        		// Produto Ja Existia
-        			// Testa se a imagem foi alterada
-	        		//if (produto.getImage_status() == 1) {
-	        			// Imagem nao alterada
-			        	//valores.put("image_status", 1);
-			    
-	        		//}
-	        		//else {
-	        			// Imagem Alterada
-			        	//valores.put("image_status", 0);
-	        		//}
-
 	        		countUpdates++;        		
 	        		db.update(TABELA, valores, "_id = " + produto.getId(), null);
 	        	}
@@ -289,7 +289,12 @@ public class ProdutosHelper extends DataHelper{
   	
         		count++;
         		auxCount++;
-	        	        	
+	
+//        		ProdutoItem = null;
+//        		valores = null;
+	            file    = null;
+//        		produto = null;
+        		
 	        	// Garbage Colector
 	        	if (auxCount == 100){
 	        		Log.w(CNT_LOG, "DISPARANDO GARBAGE COLECTOR");
@@ -303,7 +308,7 @@ public class ProdutosHelper extends DataHelper{
 	        Log.v(CNT_LOG, "Insert["+countInserts+"]");
 	        
         	db.setTransactionSuccessful();
-        	
+        	//db.close();
             Log.v(CNT_LOG, "IMAGE NOT EXIST  = "+notExists);
             Log.v(CNT_LOG, "IMAGE ALTERADA   = "+imagemAlterada);
         	return true;
@@ -488,15 +493,18 @@ public class ProdutosHelper extends DataHelper{
 		       		produto.setImage_size(cursor.getString(cursor.getColumnIndex("_size")));
 		       		       			
 	       			produto.setImage_status(1);
-	       			
+	       	
+	       	
 		    		if (updateImage(produto)){
 		    			result = true;
 		    		}
 		    		else {
 		    			result = false;
 		    		}
+		    		//cursor.close();
 		   		}
 	        	else {
+	        		//cursor.close();
 		   			Log.e(CNT_LOG, "NAO TEM IMAGEM");
 	        		if (downloadImagem){
 	        			if (download_imagem(produto)){
@@ -525,8 +533,10 @@ public class ProdutosHelper extends DataHelper{
 	    		Log.w(CNT_LOG, "JA TEM IMAGEM");
 	        	result = false;
 	        }
-	        cursor.close();
+
+			cursor.close();
 		}
+
         return result;
 	}
 	
@@ -554,7 +564,7 @@ public class ProdutosHelper extends DataHelper{
     	}
 		this.Open();
         try {
-    		 linhaAlterada = db.update(TABELA, valores, "_id = " + produto.getId(), null);  		      
+    		 linhaAlterada = db.update(TABELA, valores, "_id = " + produto.getId(), null);
   	    }
   	    catch (Exception error){
   	    	Log.e(CNT_LOG, "Falha ao fazer update na Imagem do produto");
@@ -562,6 +572,7 @@ public class ProdutosHelper extends DataHelper{
   	    finally {
   	        this.Close();
   	    }		
+        
         
         if (linhaAlterada > 0){
         	return true;
@@ -619,8 +630,7 @@ public class ProdutosHelper extends DataHelper{
 
 		  	    if (bmImg != null) {
 
-		  	    	// Gravar Imagem
-						
+		  	    	// Gravar Imagem			
 		  	    	File dir = new File(fullPath);
 		  	    	if (!dir.exists()){
 		  	    		dir.mkdirs();
@@ -664,9 +674,7 @@ public class ProdutosHelper extends DataHelper{
 								}
 							});
 		  	    	Log.v(CNT_LOG, "Media inserted");
-//		  	    	420051
-		  	    	//623
-		  	    	//585
+
 		  	    	teste = null;
 		  	    	bmImg = null;
 		  	    	file = null;

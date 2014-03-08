@@ -16,7 +16,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-public class SplashScreen2 extends Activity {
+public class SplashScreen2 extends Activity implements Runnable {
 
 	private static String CNT_LOG = "SplashScreen2";
 	
@@ -107,7 +107,9 @@ public class SplashScreen2 extends Activity {
 	        thread.start();        
 		}
 		else {
-			startNewActivity();
+	        Handler h = new Handler();
+	        h.postDelayed(this, 2000); // Aqui está definido o tempo do splash em milesegundos
+		
 		}
 
 	}
@@ -129,6 +131,9 @@ public class SplashScreen2 extends Activity {
 
 	}
 
+	public void run() {
+		startNewActivity();
+	}
 	
 //	public class MediaScannerWrapper implements  
 //	MediaScannerConnection.MediaScannerConnectionClient {

@@ -506,7 +506,8 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 		final ProdutosHelper produtosHelper = new ProdutosHelper(this);
 		
 		final List<Produto> produtos = produtosHelper.getProdutosSemImagem(0);
-		
+
+		Log.v(CNT_LOG, "Produtos sem Imagens = "+produtos.size());
 		if (produtos.size() > 0){
 			
 			total_produtos = produtos.size();
@@ -515,9 +516,10 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 						
 	        Thread thread = new Thread(new Runnable() {
 	            public void run() {
+            		Produto produto;
 	                while (mProgressStatus < total_produtos) {                	
 	            		// recupera o produto
-	            		Produto produto = produtos.get(mProgressStatus);
+	                	produto = produtos.get(mProgressStatus);
 	 
 	            		if(produtosHelper.verificaImagem(produto,true)){
 	            			atualizadas = atualizadas + 1;
@@ -529,7 +531,11 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 	            			progressDialog.setProgress(mProgressStatus);
 	            			mProgressStatus = mProgressStatus +1;
 	            		}
-	 	            		
+	
+	            		if (nao_atualizadas == 5) {
+	            			mProgressStatus = total_produtos;
+	            		}
+	            		
 	                    // Update the progress bar
 	                    mHandler.post(new Runnable() {
 	                        public void run() {
@@ -553,13 +559,17 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 							
 							String msg ="Registros Atualizados.";
 							progressDialog.dismiss();
+							
+							if (nao_atualizadas == 5) {
+								Log.v(CNT_LOG, "TESTE");
+							}
 							finish();
 						}
 					});
 	            }	            
 	        });
 	        
-	        // Startando a thread
+//	         Startando a thread
 	        thread.start();
 		}
 		else {

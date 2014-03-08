@@ -18,7 +18,7 @@ public class SplashScreen extends Activity implements Runnable {
 		// Se a Variavel Splash estiver verdadeira exibe a janela de splash
 		if (SPLASH){
 	        Handler h = new Handler();
-	        h.postDelayed(this, 2000); // Aqui está definido o tempo do splash em milesegundos
+	        h.postDelayed(this, 4000); // Aqui está definido o tempo do splash em milesegundos
 	        //h.postDelayed(this, 100); // rapidao so pra piscar 			
 		}
 		else {

@@ -3,7 +3,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:background="@drawable/background_blue"
+   	android:background="@drawable/background_red"
     android:orientation="vertical"
     tools:context=".Cronos" >
 
@@ -46,13 +46,23 @@
         android:orientation="vertical" >
     </LinearLayout>
 
-    <ImageView
+<!--     <ImageView -->
+<!--         android:id="@+id/imageView1" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_centerVertical="true" -->
+<!--         android:contentDescription="@string/description_img_splashscreen" -->
+<!--         android:src="@drawable/logo_vilaverde" /> -->
+
+        <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:contentDescription="@string/description_img_splashscreen"
-        android:src="@drawable/logo_vilaverde" />
-
+        android:contentDescription="@string/description_img_splashscreen2"
+        android:src="@drawable/logo_cliente" />
+    
+    
 </RelativeLayout>
