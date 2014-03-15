@@ -295,37 +295,44 @@ public class ProdutosFragment extends Fragment {
 	                    			           		
 	           // Criando o Objeto Bundle com os parametros
 	           Bundle bundle = new Bundle ();
+	           bundle.putInt("id", produto.getId());
 	           bundle.putInt("codigo", produto.getCodigo());
 	           bundle.putInt("position", position);
+	           bundle.putString("path", produto.getImage_path());
 	           
 	           long image_id = produto.getImage_id();
 	           
 	           if (image_id > 0) {
-	        	   bundle.putLong("image_id", produto.getImage_id());   
+	        	   bundle.putLong("image_id", produto.getImage_id());
+	        	   //Log.v(CNT_LOG,"DEBUG: "+produto.getImage_id());
 	           }
 	           else {	        	
-	           		String path = produto.getImage_path();
-	        		
+	           		String path = produto.getImage_path();	        		
 	           		Log.v(CNT_LOG,"Path: "+path);
 	           		
-	           		Cursor c = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
-		                				new String[] { MediaStore.MediaColumns._ID },
-		                				MediaStore.MediaColumns.DATA + "=?", 
-		                				new String[] {path},
-		                				null);
-	           		
-	       		    if (c != null && c.moveToFirst()) {
-	       		        int id = c.getInt(c.getColumnIndex(MediaStore.MediaColumns._ID));
-	       		        c.close();
-	       		        produto.setImage_id(id);        
-	       		        Log.i(CNT_LOG, "IMAGEID = "+id);
-		       		    bundle.putLong("image_id", id);
-		       		   Log.v(CNT_LOG,"TESTE");
-	       		    }
+    				image_id = produtosHelper.markImageUpdate(produto.getId(), path);
+    				if (image_id > 0){
+	       		        produto.setImage_id(image_id);        
+		       		    bundle.putLong("image_id", image_id);
+    				}
 	       		    else {
 	       		    	Log.w(CNT_LOG,"Nao encontrou no mediaStore");
 	       		    }
-	       		    c.close();
+	           		
+//	           		Cursor c = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
+//		                				new String[] { MediaStore.MediaColumns._ID },
+//		                				MediaStore.MediaColumns.DATA + "=?", 
+//		                				new String[] {path},
+//		                				null);
+//	           		
+//	       		    if (c != null && c.moveToFirst()) {
+//	       		        int id = c.getInt(c.getColumnIndex(MediaStore.MediaColumns._ID));
+//	       		        c.close();   
+//	       		    }
+//	       		    else {
+//	       		    	Log.w(CNT_LOG,"Nao encontrou no mediaStore");
+//	       		    }
+//	       		    c.close();
 	           }
 	           
 	           // Carregando a Imagem
@@ -349,14 +356,28 @@ public class ProdutosFragment extends Fragment {
     			//Log.w("LoadImage", "doInBackground");
 
     			// Recuperando os Parametros do Bundle
+    			int id = bundle[0].getInt("id");
     			int position = bundle[0].getInt("position");
     			int codigo = bundle[0].getInt("codigo");
     			long image_id = bundle[0].getLong("image_id");
+    			String path = bundle[0].getString("path");
 
     			//Log.v("LoadImage", "Carregando Codigo = "+codigo+" Position: "+position+" ID: " +image_id);
 		
     			// Usando o Metodo fetchThumb passando o id da imagem original e recebendo o Thumbnail
     			Bitmap bitmap = fetchThumb(image_id);		         
+    			
+    			if (bitmap == null){
+    				//Log.v(CNT_LOG, "Nao encrontrou image Id");
+    				//Log.v(CNT_LOG,"Path: "+path);
+	           	    				
+    				// marcar a imagem para ser verificada
+    				image_id = produtosHelper.markImageUpdate(id, path);
+    				if (image_id > 0){
+    					bitmap = fetchThumb(image_id);
+    				}
+    			}
+    			
     			
     			// Crio outro Bundle agora acrescentando o bitmap
     			Bundle result = new Bundle();
@@ -370,8 +391,8 @@ public class ProdutosFragment extends Fragment {
 
     		}
     		
-    		
-    		protected void onPostExecute(Bundle result) {
+    	  					
+			protected void onPostExecute(Bundle result) {
     			super.onPostExecute(result);
     			//Log.w("LoadImage", "onPostExecute");
     			// No Metodo onPostExecute verifico se retornou o bitmap

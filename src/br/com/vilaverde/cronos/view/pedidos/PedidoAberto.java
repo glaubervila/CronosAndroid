@@ -139,7 +139,12 @@ public class PedidoAberto extends Activity {
 
 	        	excluirPedidoAberto();
 	            return true;	            
-	
+
+	        case R.id.menu_pedido_produtos:
+
+	        	finish();
+	            return true;	            
+	            
 	        case R.id.menu_finalizar_pedido:
 
 	        	finalizarPedido();

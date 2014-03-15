@@ -1,4 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item android:id="@+id/menu_pedido_produtos"
+      android:icon="@drawable/ic_cart"
+      android:title="Produtos"
+      android:showAsAction="ifRoom|withText" >
+    </item>
     <item android:id="@+id/menu_finalizar_pedido"
           android:title="@string/menu_finalizar_pedido"
           android:showAsAction="ifRoom|withText" >

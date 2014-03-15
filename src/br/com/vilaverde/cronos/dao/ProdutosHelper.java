@@ -22,6 +22,7 @@ import android.R.bool;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.graphics.Bitmap;
@@ -432,7 +433,7 @@ public class ProdutosHelper extends DataHelper{
 
 	
 	public List<Produto> bindValues(Cursor c) {
-		Log.v(CNT_LOG, "bindValues.");
+		//Log.v(CNT_LOG, "bindValues.");
 
 		List<Produto> lista = new ArrayList<Produto>();
 	      
@@ -460,7 +461,7 @@ public class ProdutosHelper extends DataHelper{
 		return lista;
 	}
 
-	public boolean verificaImagem(Produto produto,Boolean downloadImagem){
+	public boolean verificaImagem(Produto produto,Boolean downloadImagem, String serverHost){
 		Log.v(CNT_LOG, "verificaImagem("+produto.getCodigo()+")");
 
         boolean result = false;
@@ -505,22 +506,22 @@ public class ProdutosHelper extends DataHelper{
 		   		}
 	        	else {
 	        		//cursor.close();
-		   			Log.e(CNT_LOG, "NAO TEM IMAGEM");
+		   			//Log.e(CNT_LOG, "NAO TEM IMAGEM");
 	        		if (downloadImagem){
-	        			if (download_imagem(produto)){
+	        			if (download_imagem(produto, serverHost)){
 			   				produto.setImage_status(2);
-		 	    			Log.v(CNT_LOG, "Fez o Download");
+		 	    			//Log.v(CNT_LOG, "Fez o Download");
 				    		if (updateImage(produto)){
-				    			Log.v(CNT_LOG, "Atualizou a Imagem");
+				    			//Log.v(CNT_LOG, "Atualizou a Imagem");
 				    			result = true;
 				    		}
 				    		else {
-				    			Log.e(CNT_LOG, "Fez o Download Nao Atualizou");
+				    			//Log.e(CNT_LOG, "Fez o Download Nao Atualizou");
 				    			result = false;
 				    		}	   				
 	        			}
 			   			else {
-			   				Log.e(CNT_LOG, "NAO Fez o Download");
+			   				//Log.e(CNT_LOG, "NAO Fez o Download");
 			   				result = false;
 			   			}
 	        		}
@@ -530,7 +531,7 @@ public class ProdutosHelper extends DataHelper{
 	        	}
 	        }
 	        else {
-	    		Log.w(CNT_LOG, "JA TEM IMAGEM");
+	    		//Log.w(CNT_LOG, "JA TEM IMAGEM");
 	        	result = false;
 	        }
 
@@ -541,7 +542,7 @@ public class ProdutosHelper extends DataHelper{
 	}
 	
 	public boolean updateImage(Produto produto){
-		Log.v(CNT_LOG, "updateImage("+produto.getCodigo()+","+produto.getImage_id()+")");
+		//Log.v(CNT_LOG, "updateImage("+produto.getCodigo()+","+produto.getImage_id()+")");
 		
 		int linhaAlterada = 0;
 		
@@ -582,8 +583,58 @@ public class ProdutosHelper extends DataHelper{
         }
 	}
 
+	public int markImageUpdate(int id, String path){
+		Log.v(CNT_LOG, "markImageUpdate("+id+")");
+		
+		int linhaAlterada = 0;
+		int image_id = 0;
+    	ContentValues valores = new ContentValues();		
+		
+		// Recuperar o image_id
+   		Cursor c = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
+				new String[] { MediaStore.MediaColumns._ID },
+				MediaStore.MediaColumns.DATA + "=?", 
+				new String[] {path},
+				null);
+
+   		if (c != null && c.moveToFirst()) {
+			image_id = c.getInt(c.getColumnIndex(MediaStore.MediaColumns._ID));
+   			c.close();
+
+   			Log.i(CNT_LOG, "IMAGEID = "+image_id);
+	    	valores.put("image_id", image_id);
+	    	valores.put("image_status", 1);
+		}
+		else {
+			Log.w(CNT_LOG,"Nao encontrou no mediaStore");
+	    	valores.put("image_id", 0);
+	    	valores.put("image_status", 0);
+		}
+		c.close();
+		
+		// Imagem a ser atualizada localmente (update no image_id)
+		this.Open();
+        try {
+    		 linhaAlterada = db.update(TABELA, valores, "_id = " + id, null);
+  	    }
+  	    catch (Exception error){
+  	    	Log.e(CNT_LOG, "Falha ao marcar Imagem para update");
+  	    }
+  	    finally {
+  	        this.Close();
+  	    }		
+        
+        if (linhaAlterada > 0){
+        	return image_id;
+        }
+        else {
+        	return 0;
+        }
+	}
+
 	
-    private boolean download_imagem(Produto produto){
+	
+    private boolean download_imagem(Produto produto, String serverHost){
 		  
 	  	Log.v(CNT_LOG, "Fazendo Download da Imagem ["+produto.getCodigo()+"]");
 	  	
@@ -598,7 +649,8 @@ public class ProdutosHelper extends DataHelper{
 		  	String imageName = produto.getImage_name()+".JPG";
 	  	
 		  	// TODO: SABER SE ESTA LOCAL OU REMOTO
-		  	String fileUrl = "http://192.168.0.69/imagens_produtos/"+imageName;
+		  	//String fileUrl = "http://192.168.0.69/imagens_produtos/"+imageName;
+		  	String fileUrl = "http://"+serverHost+"/imagens_produtos/"+imageName;
 		  	Log.v(CNT_LOG, "Url = "+fileUrl);
 
 		  	Bitmap bmImg = null;
@@ -626,6 +678,9 @@ public class ProdutosHelper extends DataHelper{
 		        BufferedInputStream buf;
 		  	    InputStream is = conn.getInputStream();
 		        buf = new BufferedInputStream(is);
+		        
+//		        bmImg = decodeSampledBitmapFromResource(is, 100, 100);
+//		        Log.v(CNT_LOG, "TESTE");
 		  	    bmImg = BitmapFactory.decodeStream(buf);  // se a imagem for descodificada, é garantido que estás a obter uma imagem
 
 		  	    if (bmImg != null) {
@@ -676,7 +731,8 @@ public class ProdutosHelper extends DataHelper{
 		  	    	Log.v(CNT_LOG, "Media inserted");
 
 		  	    	teste = null;
-		  	    	bmImg = null;
+		  	    	bmImg.recycle();
+		  	    	//bmImg = null;
 		  	    	file = null;
 		
 		  	    	System.gc();
@@ -700,6 +756,48 @@ public class ProdutosHelper extends DataHelper{
 		
 	  	return result;
     }
+    
+    public static int calculateInSampleSize(
+        BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+	
+	    if (height > reqHeight || width > reqWidth) {
+	
+	        final int halfHeight = height / 2;
+	        final int halfWidth = width / 2;
+	
+	        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+	        // height and width larger than the requested height and width.
+	        while ((halfHeight / inSampleSize) > reqHeight
+	                && (halfWidth / inSampleSize) > reqWidth) {
+	            inSampleSize *= 2;
+	        }
+	    }
+	
+	    return inSampleSize;
+	}
+
+    public static Bitmap decodeSampledBitmapFromResource(InputStream is, 
+            int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        //BitmapFactory.decodeResource(res, resId, options);
+        BitmapFactory.decodeStream(is, null , options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeStream(is, null, options);
+//        return BitmapFactory.decodeResource(res, resId, options);
+    }
+    
 //  private boolean download_imagem(Produto produto){
 //  
 //  	Log.v(CNT_LOG, "Fazendo Download da Imagem ["+produto.getCodigo()+"]");

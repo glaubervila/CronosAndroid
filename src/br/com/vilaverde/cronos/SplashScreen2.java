@@ -70,7 +70,7 @@ public class SplashScreen2 extends Activity implements Runnable {
 	            		// recupera o produto
 	            		Produto produto = produtos.get(mProgressStatus);
 	 
-	            		if(helper.verificaImagem(produto, false)){
+	            		if(helper.verificaImagem(produto, false, null)){
 	            			atualizadas = atualizadas + 1;
 	            			mProgress.setProgress(mProgressStatus);
 	            			mProgressStatus = mProgressStatus +1;

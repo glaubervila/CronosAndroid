@@ -521,7 +521,7 @@ public class Atualizar extends Activity  implements AsyncTaskCompleteListener<St
 	            		// recupera o produto
 	                	produto = produtos.get(mProgressStatus);
 	 
-	            		if(produtosHelper.verificaImagem(produto,true)){
+	            		if(produtosHelper.verificaImagem(produto,true, serverHost)){
 	            			atualizadas = atualizadas + 1;
 	            			progressDialog.setProgress(mProgressStatus);
 	            			mProgressStatus = mProgressStatus +1;

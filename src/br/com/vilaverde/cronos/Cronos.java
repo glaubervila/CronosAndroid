@@ -2,12 +2,15 @@ package br.com.vilaverde.cronos;
 
 import java.io.File;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import br.com.vilaverde.cronos.dao.DataHelper;
@@ -141,6 +144,22 @@ public class Cronos extends FragmentActivity
     	e.enviar();
     	
     	return true;
+    }
+    
+    public void onBackPressed() {
+    	// Confirmar antes de sair
+    	new AlertDialog.Builder(this)
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle("Sair?")
+	        .setMessage("Você realmente deseja fechar o cronos?")
+	        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		        @Override
+		        public void onClick(DialogInterface dialog, int which) {
+		            finish();    
+		        }
+	        })
+		    .setNegativeButton("No", null)
+		    .show();
     }
     
 }
