@@ -152,13 +152,13 @@ public class Cronos extends FragmentActivity
 	        .setIcon(android.R.drawable.ic_dialog_alert)
 	        .setTitle("Sair?")
 	        .setMessage("Você realmente deseja fechar o cronos?")
-	        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 		        @Override
 		        public void onClick(DialogInterface dialog, int which) {
 		            finish();    
 		        }
 	        })
-		    .setNegativeButton("No", null)
+		    .setNegativeButton("Não", null)
 		    .show();
     }
     

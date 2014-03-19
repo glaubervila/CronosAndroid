@@ -380,7 +380,7 @@ public class ProdutosHelper extends DataHelper{
 		String where = "categoria_id = ? AND status = 1";
         String[] selectionArgs = {depart_id};
 	
-		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, null);
+		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, "descricao_curta");
 
 		Log.w(CNT_LOG, "Total Registros = "+c.getCount());
 
