@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -170,11 +171,58 @@ public class PedidoAberto extends Activity {
 	    builder.setView(finalizarView);
 	    
 	    // Recuperar os elementos da dialog
-	    // Radio Group
+	    // Radio Group Forma de Pagamento
     	final RadioGroup formaPagamento = (RadioGroup) finalizarView.findViewById(R.id.pedido_rg_forma_pagamento);
+    	
+	    // Radio Group Parcelamento Cartao
+    	final RadioGroup parcelamento = (RadioGroup) finalizarView.findViewById(R.id.pedido_rg_parcelamento);
+	    disableEnableParcelamento(parcelamento, false);
+	    
     	// Swicth
     	final Switch notaFiscal = (Switch) finalizarView.findViewById(R.id.pedido_sw_nota_fiscal);
+//    	final EditText parcelamento = (EditText) finalizarView.findViewById(R.id.pedido_et_parcelamento);
 	    final EditText observacoes = (EditText) finalizarView.findViewById(R.id.pedido_et_observacoes);
+	    
+
+	    
+	    formaPagamento.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+	        @Override
+	        public void onCheckedChanged(RadioGroup radioGroup, int i) {
+	        	int selected = radioGroup.getCheckedRadioButtonId();
+
+	        	// Gets a reference to our "selected" radio button
+	        	RadioButton rb = (RadioButton) formaPagamento.findViewById(selected);
+	        	int idx = formaPagamento.indexOfChild(rb);
+
+	        	Log.v(CNT_LOG, "SELECIONADO: "+idx);
+	        	switch (idx){
+	        		case 0: {
+		        		// Desabilitar o parcelamento No dinheiro
+	        			disableEnableParcelamento(parcelamento, false);
+	        			break;
+	        		}
+	        		case 1: {
+	        			// Cartao de Credito habilita o parcelamento
+	        			disableEnableParcelamento(parcelamento, true);
+	        			break;
+	        		}
+	        		case 2: {
+	        			// Cheque
+	        			disableEnableParcelamento(parcelamento, true);
+	        			break;
+	        		}
+	        		case 3: {
+	        			// Boleto
+	        			disableEnableParcelamento(parcelamento, true);
+	        			break;	
+	        		}	
+	        	}
+	        	
+	        	
+
+	        }
+	    });
+	    
 	    
 	    builder.setPositiveButton("Fechar Pedido", new DialogInterface.OnClickListener() {
 
@@ -189,6 +237,19 @@ public class PedidoAberto extends Activity {
 	        	// Gets a reference to our "selected" radio button
 	        	RadioButton rb = (RadioButton) formaPagamento.findViewById(selected);
 	        	int idx = formaPagamento.indexOfChild(rb);
+	        	
+	        	if (idx == 0){
+	        		Log.v(CNT_LOG, "aplicar desconto");
+	        	}
+	        	else {
+	        		// Recuperar Parcelamento
+		        	int parcela_id = parcelamento.getCheckedRadioButtonId();
+		        	RadioButton rbparcela = (RadioButton) parcelamento.findViewById(parcela_id);
+		        	int parcela = parcelamento.indexOfChild(rbparcela);
+		        	
+		        	aberto.setParcelamento(parcela+1);
+	        	}
+	        	
 	        	// Adiciono +1 por as finalizadoras sao 1,2,3
 	        	aberto.setFinalizadora(idx+1);
 
@@ -220,6 +281,12 @@ public class PedidoAberto extends Activity {
 	    alert.show();			
 	}
 
+
+	public void disableEnableParcelamento(RadioGroup radioGroup, Boolean enable){
+		for (int i = 0; i < radioGroup.getChildCount(); i++) {
+			radioGroup.getChildAt(i).setEnabled(enable);
+		}
+	}
 	
 	protected void fecharPedido() {
 		Log.v(CNT_LOG,"fecharPedido()");

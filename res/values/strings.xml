@@ -40,6 +40,7 @@
     <string name="lblFormaPagamento">Forma de Pagamento:</string>
     <string name="lblNotaFiscalEletronica">Nota Fiscal Eletronica?</string>
     <string name="lblObservacoesPedido">Observações</string>
+    <string name="lblParcelamento">Parcelamento</string>
 
     <!-- PEDIDO PRODUTOS GRID HEADERS -->
     <string name="colheaderCodigo">Código</string>
@@ -64,6 +65,13 @@
 	<string name="rbtDinheiro">Dinheiro</string>
 	<string name="rbtCartaoCredito">Cartão de Credito</string>
 	<string name="rbtCheque">Cheque</string>
+	<string name="rbtBoleto">Boleto</string>
+	
+	<string name="rbt1x">1x</string>
+	<string name="rbt2x">2x</string>
+	<string name="rbt3x">3x</string>
+	<string name="rbt4x">4x</string>
+	<string name="rbt5x">5x</string>
 	
 	
 	<!-- ATUALIZACAO -->

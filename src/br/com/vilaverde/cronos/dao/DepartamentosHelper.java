@@ -138,6 +138,7 @@ public class DepartamentosHelper extends DataHelper{
 			       	
 			Cursor produtos = helper.getProdutosByDepartamentos(departamento.getId());		
 			departamento.setTotal(produtos.getCount());
+			produtos.close();
 			
 			lista.add(departamento);
 		}

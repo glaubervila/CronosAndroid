@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="10dp" >
 
     <TextView
         android:layout_width="match_parent"
@@ -33,7 +34,61 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rbtCheque" />
+
+        <RadioButton
+            android:id="@+id/rd_forma_pagamento3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbtBoleto" />
+        
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/pedido_parcelamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lblParcelamento"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RadioGroup
+        android:id="@+id/pedido_rg_parcelamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_parcelamento_1x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/rbt1x" />
+
+        <RadioButton
+            android:id="@+id/rb_parcelamento_2x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbt2x" />
+
+        <RadioButton
+            android:id="@+id/rb_parcelamento_3x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbt3x" />
+
+        <RadioButton
+            android:id="@+id/rb_parcelamento_4x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbt4x" />
+        
+        <RadioButton
+            android:id="@+id/rb_parcelamento_5x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rbt5x" />        
+        
+    </RadioGroup>
+
 
     <Switch
         android:id="@+id/pedido_sw_nota_fiscal"
