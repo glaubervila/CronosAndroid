@@ -24,12 +24,16 @@ public class DepartamentosHelper extends DataHelper{
 	private final static String TABELA = "departamentos";
 	
 	private Context context = null;
+	
+	private ProdutosHelper helper = null;
 	//private static final int VERSAO_SCHEMA = 36;
 	
 	public DepartamentosHelper(Context context) {
 		//super(context, VERSAO_SCHEMA);
 		super(context);
 		this.context = context;
+		
+		 helper = new ProdutosHelper(context);
 	}
 
 	
@@ -93,10 +97,12 @@ public class DepartamentosHelper extends DataHelper{
 			Cursor c = db.rawQuery(sql, null);
 			if(c != null && c.getCount()>0) {
 				Log.v(CNT_LOG, "Total Departamentos [ "+c.getCount()+" ].");
-				departamentos = bindValues(c);
-
+				departamentos = bindValues(c);	
+				
 		        this.Close();
 		        c.close();
+		        
+
 			}
 			else {
 				Log.w(CNT_LOG, "Não TEM DEPARTAMENTOS");
@@ -128,6 +134,10 @@ public class DepartamentosHelper extends DataHelper{
 			
 			departamento.setId(c.getInt(c.getColumnIndex("_id")));
 			departamento.setDepartamento(c.getString(c.getColumnIndex("departamento")));
+			
+			       	
+			Cursor produtos = helper.getProdutosByDepartamentos(departamento.getId());		
+			departamento.setTotal(produtos.getCount());
 			
 			lista.add(departamento);
 		}

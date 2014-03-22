@@ -6,6 +6,7 @@ public class Departamento {
 	
 	private int id ;	
 	private String departamento;
+	private int total;
 	
 	public int getId() {
 		return id;
@@ -18,6 +19,12 @@ public class Departamento {
 	}
 	public void setDepartamento(String departamento) {
 		this.departamento = departamento;
+	}
+	public int getTotal() {
+		return total;
+	}
+	public void setTotal(int total) {
+		this.total = total;
 	}
 
 	

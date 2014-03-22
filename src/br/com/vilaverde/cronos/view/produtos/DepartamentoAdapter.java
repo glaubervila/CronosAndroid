@@ -81,7 +81,9 @@ public class DepartamentoAdapter extends BaseAdapter{
                holder = (ViewHolder) convertView.getTag();
            }
            
-           holder.tvDepartamento.setText(departamento.getDepartamento());
+           String label = departamento.getDepartamento()+ " ( "+departamento.getTotal()+" )";
+           holder.tvDepartamento.setText(label);
+           //holder.tvDepartamento.setText(departamento.getDepartamento());
            			           
            return convertView;           
             
