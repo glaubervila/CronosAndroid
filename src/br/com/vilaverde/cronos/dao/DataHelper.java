@@ -13,7 +13,7 @@ public class DataHelper extends SQLiteOpenHelper{
 	protected static  String NOME_BANCO = "cronos.db";
 	
 	private final static String TABELA = "pedidos";
-	protected static int VERSAO_SCHEMA = 71;
+	protected static int VERSAO_SCHEMA = 72;
 	
 	public Boolean REMOTE = false;
 		
@@ -262,6 +262,8 @@ public class DataHelper extends SQLiteOpenHelper{
 					" status INTEGER," +
 					" qtd_itens REAL," +
 					" valor_total REAL," +
+					" valor_pago REAL," +
+					" desconto REAL," +
 					" finalizadora INTEGER," +
 					" parcelamento INTEGER," +
 					" nfe INTEGER," +

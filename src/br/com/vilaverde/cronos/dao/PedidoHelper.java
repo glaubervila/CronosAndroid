@@ -143,6 +143,8 @@ public class PedidoHelper extends DataHelper{
 			pedido.setStatus(c.getInt(c.getColumnIndex("status")));
 			pedido.setQtd_itens(c.getFloat(c.getColumnIndex("qtd_itens")));
 			pedido.setValor_total(c.getFloat(c.getColumnIndex("valor_total")));
+			pedido.setValor_pago(c.getFloat(c.getColumnIndex("valor_pago")));
+			pedido.setDesconto(c.getFloat(c.getColumnIndex("desconto")));
 			pedido.setFinalizadora(c.getInt(c.getColumnIndex("finalizadora")));
 			pedido.setParcelamento(c.getInt(c.getColumnIndex("parcelamento")));
 			pedido.setNfe(c.getInt(c.getColumnIndex("nfe")));
@@ -181,6 +183,8 @@ public class PedidoHelper extends DataHelper{
 		valores.put("status", pedido.getStatus());
 		valores.put("qtd_itens", pedido.getQtd_itens());
 		valores.put("valor_total", pedido.getValor_total());
+		valores.put("valor_pago", pedido.getValor_pago());
+		valores.put("desconto", pedido.getDesconto());
 		valores.put("finalizadora", pedido.getFinalizadora());
 		valores.put("parcelamento", pedido.getParcelamento());
 		valores.put("nfe", pedido.getNfe());
@@ -258,6 +262,8 @@ public class PedidoHelper extends DataHelper{
 			valores.put("status", pedido.getStatus());
 			valores.put("qtd_itens", pedido.getQtd_itens());
 			valores.put("valor_total", pedido.getValor_total());
+			valores.put("valor_pago", pedido.getValor_pago());
+			valores.put("desconto", pedido.getDesconto());
 			valores.put("finalizadora", pedido.getFinalizadora());
 			valores.put("parcelamento", pedido.getParcelamento());
 			valores.put("nfe", pedido.getNfe());
@@ -297,6 +303,24 @@ public class PedidoHelper extends DataHelper{
 
     	float valor_total = pedidoProdutoHelper.getValorTotalItens(pedido);
     	Log.v(CNT_LOG, "VALORTOTAL ("+valor_total+")");
+    	
+    	// Saber se o pedido tem finalizadora Dinheiro
+    	if (pedido.getFinalizadora() == 1){
+    		
+    		// Aplicar Desconto  
+    		float percentual = 10;   
+    		  
+    		float valorPago = (float) (valor_total - ((percentual / 100.0) * valor_total));
+    		
+    		float desconto = valor_total - valorPago;
+    		
+    		pedido.setValor_pago(valorPago);
+    		pedido.setDesconto(desconto);
+
+    		Log.v(CNT_LOG, "DESCONTO   "+ desconto);
+    		Log.v(CNT_LOG, "VALORPAGO  "+ valorPago);    		
+    		
+    	}
     	
     	pedido.setQtd_itens(quantidade);
     	pedido.setValor_total(valor_total);
@@ -338,6 +362,8 @@ public class PedidoHelper extends DataHelper{
 		    object.put("status", pedido.getStatus());
 		    object.put("qtd_itens", pedido.getQtd_itens());
 		    object.put("valor_total", pedido.getValor_total());
+		    object.put("valor_pago", pedido.getValor_pago());
+		    object.put("desconto", pedido.getDesconto());
 		    object.put("finalizadora", pedido.getFinalizadora());
 		    object.put("parcelamento", pedido.getParcelamento());
 		    object.put("nfe", pedido.getNfe());

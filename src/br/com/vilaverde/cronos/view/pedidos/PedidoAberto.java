@@ -240,6 +240,17 @@ public class PedidoAberto extends Activity {
 	        	
 	        	if (idx == 0){
 	        		Log.v(CNT_LOG, "aplicar desconto");
+	        		
+	        		float valorTotal = aberto.getValor_total();  
+	        		float percentual = 10;   
+	        		  
+	        		float valorPago = (float) (valorTotal - ((percentual / 100.0) * valorTotal));
+	        		
+	        		float desconto = valorTotal - valorPago;
+	        		
+	        		aberto.setValor_pago(valorPago);
+	        		aberto.setDesconto(desconto);
+	        		
 	        	}
 	        	else {
 	        		// Recuperar Parcelamento
@@ -260,9 +271,7 @@ public class PedidoAberto extends Activity {
 	        	// Observacao
 	        	aberto.setObservacao(observacoes.getText().toString());
 
-	        	Log.v(CNT_LOG, "Finalizadora = "+aberto.getFinalizadora());
-	        	Log.v(CNT_LOG, "Nota Fiscal  = "+aberto.getNfe());
-	        	Log.v(CNT_LOG, "Observação  = "+aberto.getObservacao());
+
 	        	
 	        	fecharPedido();
 	            dialog.dismiss();
@@ -345,7 +354,7 @@ public class PedidoAberto extends Activity {
 		        public void onClick(DialogInterface dialog, int which) {
 		            // Do nothing but close the dialog
 		        	Log.v(CNT_LOG, "onDelete - Clicou no YES");
-		        	delete();		        	
+		        	//delete();		        	
 		            dialog.dismiss();
 		        }
 		    });

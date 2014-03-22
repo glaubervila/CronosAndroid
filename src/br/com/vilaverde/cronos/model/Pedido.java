@@ -18,7 +18,9 @@ public class Pedido implements Serializable{
 	private String id_cliente = "";		
 	private int status = 1;    			
 	private float qtd_itens = 0;			
-	private float valor_total = 0;		
+	private float valor_total = 0;
+	private float valor_pago = 0;
+	private float desconto = 0;
 	private int finalizadora = 1;
 	private int parcelamento = 1;
 	private int nfe = 1;
@@ -127,6 +129,22 @@ public class Pedido implements Serializable{
 
 
 
+
+	public float getValor_pago() {
+		return valor_pago;
+	}
+
+	public void setValor_pago(float valor_pago) {
+		this.valor_pago = valor_pago;
+	}
+
+	public float getDesconto() {
+		return desconto;
+	}
+
+	public void setDesconto(float desconto) {
+		this.desconto = desconto;
+	}
 
 	public int getFinalizadora() {
 		return finalizadora;
