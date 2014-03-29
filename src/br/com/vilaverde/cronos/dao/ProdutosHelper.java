@@ -397,7 +397,7 @@ public class ProdutosHelper extends DataHelper{
 		String where = "categoria_id = ? AND status = 1 AND image_status = 1";
         String[] selectionArgs = {depart_id};
 
-		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, null);
+		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, "descricao_curta");
 		
 		List<Produto> lista = bindValues(c);
 
