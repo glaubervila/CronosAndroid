@@ -33,6 +33,7 @@ public class PedidoAberto extends Activity {
 	public Cliente cliente = null;
 	public Pedido pedido = null;
 	public Pedido aberto = null;
+	public Pedido aberto2 = null;
 	public PedidoHelper helper = null;
 	
 	private static FragmentManager fragmentManager = null;
@@ -230,7 +231,8 @@ public class PedidoAberto extends Activity {
 	        	Log.v(CNT_LOG, "finalizarPedido - Clicou no SIM");
 	        	// Verificar se os campos estao preenchidos
 	        	
-        	
+	        	aberto2 = aberto;
+	        	
 	        	// Forma de Pagamento 
 	        	// Returns an integer which represents the selected radio button's ID
 	        	int selected = formaPagamento.getCheckedRadioButtonId();
@@ -241,38 +243,37 @@ public class PedidoAberto extends Activity {
 	        	if (idx == 0){
 	        		Log.v(CNT_LOG, "aplicar desconto");
 	        		
-	        		float valorTotal = aberto.getValor_total();  
+	        		float valorTotal = aberto2.getValor_total();  
 	        		float percentual = 10;   
 	        		  
 	        		float valorPago = (float) (valorTotal - ((percentual / 100.0) * valorTotal));
 	        		
 	        		float desconto = valorTotal - valorPago;
 	        		
-	        		aberto.setValor_pago(valorPago);
-	        		aberto.setDesconto(desconto);
+	        		aberto2.setValor_pago(valorPago);
+	        		aberto2.setDesconto(desconto);
 	        		
 	        	}
 	        	else {
+	        		Log.v(CNT_LOG, "NAO aplicar desconto");
 	        		// Recuperar Parcelamento
 		        	int parcela_id = parcelamento.getCheckedRadioButtonId();
 		        	RadioButton rbparcela = (RadioButton) parcelamento.findViewById(parcela_id);
 		        	int parcela = parcelamento.indexOfChild(rbparcela);
 		        	
-		        	aberto.setParcelamento(parcela+1);
+		        	aberto2.setParcelamento(parcela+1);
 	        	}
 	        	
 	        	// Adiciono +1 por as finalizadoras sao 1,2,3
-	        	aberto.setFinalizadora(idx+1);
+	        	aberto2.setFinalizadora(idx+1);
 
 	        	// Nota Fiscal Eletronica
 	        	boolean isChecked = notaFiscal.isChecked();
-	        	aberto.setNfe(isChecked ? 1 : 0);
+	        	aberto2.setNfe(isChecked ? 1 : 0);
 
 	        	// Observacao
-	        	aberto.setObservacao(observacoes.getText().toString());
+	        	aberto2.setObservacao(observacoes.getText().toString());
 
-
-	        	
 	        	fecharPedido();
 	            dialog.dismiss();
 	        }
@@ -280,8 +281,10 @@ public class PedidoAberto extends Activity {
 	    
 	    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) {
-	        	Log.v(CNT_LOG, "finalizarPedido - Clicou no SIM");
-	            // Do nothing
+	        	Log.v(CNT_LOG, "finalizarPedido - Clicou no NAO");
+	        	// Volta o pedido como estava 
+	        	aberto2 = null;
+	            
 	            dialog.dismiss();
 	        }
 	    });
@@ -319,7 +322,10 @@ public class PedidoAberto extends Activity {
 	        @Override
 	        public void onClick(DialogInterface dialog, int which) {
 	        	Log.v(CNT_LOG, "fecharPedido() - Clicou no No");
-	            // Do nothing
+
+	        	// Volta o pedido como estava 
+	        	aberto2 = null;
+	        	
 	            dialog.dismiss();
 	        }
 	    });
@@ -333,7 +339,7 @@ public class PedidoAberto extends Activity {
 	protected void fechar() {
 		Log.v(CNT_LOG,"fechar()");
 		
-		if (this.helper.fechar(aberto)){
+		if (this.helper.fechar(aberto2)){
 			this.finish();
 		}
 	}

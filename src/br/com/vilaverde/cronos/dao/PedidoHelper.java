@@ -289,11 +289,17 @@ public class PedidoHelper extends DataHelper{
 		return linhaAlterada;
 	}
 
-    public boolean atualizarPedido(){
+    public boolean atualizarPedido(Pedido aberto){
     	Log.v(CNT_LOG, "atualizarPedido()");
     	
-    	// Recuperar o Pedido Aberto
-    	Pedido pedido = getPedidoAberto();
+    	Pedido pedido = null;
+    	if (aberto == null){
+	    	// Recuperar o Pedido Aberto
+	    	pedido = getPedidoAberto();
+    	}
+    	else {
+    		pedido = aberto;
+    	}
     	
     	// Recuperar o Total de Itens
     	PedidoProdutosHelper pedidoProdutoHelper = new PedidoProdutosHelper(context);
@@ -321,6 +327,11 @@ public class PedidoHelper extends DataHelper{
     		Log.v(CNT_LOG, "VALORPAGO  "+ valorPago);    		
     		
     	}
+    	else {
+    		Log.v(CNT_LOG, "DEsfazer desconto");
+    		pedido.setValor_pago(valor_total);
+    		pedido.setDesconto(0);    		
+    	}
     	
     	pedido.setQtd_itens(quantidade);
     	pedido.setValor_total(valor_total);
@@ -337,7 +348,7 @@ public class PedidoHelper extends DataHelper{
     	Log.v(CNT_LOG, "fechar()");
 
     	// Atualizo os Valores do Pedido
-    	atualizarPedido();
+    	atualizarPedido(aberto);
     	
     	// Recuperar o Pedido Aberto
     	//Pedido pedido = getPedidoAberto();

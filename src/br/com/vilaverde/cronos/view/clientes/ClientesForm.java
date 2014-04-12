@@ -2,6 +2,11 @@ package br.com.vilaverde.cronos.view.clientes;
 
 
 
+import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.R.bool;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,10 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import br.com.vilaverde.cronos.Mask;
 import br.com.vilaverde.cronos.R;
+import br.com.vilaverde.cronos.ValidarDocumento;
 import br.com.vilaverde.cronos.dao.ClienteHelper;
 import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Estado;
+import br.com.vilaverde.cronos.model.Produto;
 
 public class ClientesForm extends Activity {
 
@@ -39,6 +47,8 @@ public class ClientesForm extends Activity {
 	Spinner  spUf;
 	RadioButton rbPessoaFisica;
 	RadioButton rbPessoaJuridica;
+	
+	ArrayList<EditText> obrigatorios;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +96,7 @@ public class ClientesForm extends Activity {
             
             rbPessoaFisica  = (RadioButton) findViewById(R.id.cliente_rb_pessoa_fisica);
             rbPessoaJuridica  = (RadioButton) findViewById(R.id.cliente_rb_pessoa_juridica);
-            
-                       
+                        
             // Setando os Valores
             etNome.setText(cliente.getNome());
             etTelFixo.setText(cliente.getTelefoneFixo());
@@ -99,10 +108,15 @@ public class ClientesForm extends Activity {
             etCidade.setText(cliente.getCidade());
             etCep.setText(cliente.getCep());
             etObservacao.setText(cliente.getObservacao());
+           
             
             // Verifico o tipo 
             if (cliente.getTipo() == 1){
             	// Pessoa Fisica
+            	// Mascara
+            	// etCpfCnpj.addTextChangedListener(Mask.insert("###.###.###-##", etCpfCnpj));
+            	
+            	
             	// Radio Button Tipo
             	rbPessoaFisica.setChecked(true);
             	// Setando o Cpf
@@ -121,7 +135,7 @@ public class ClientesForm extends Activity {
             	
             }
 
-            
+                        
             // Setando  Uf
             // aqui criamos um array adapter que irá popular o spinner o Estado.getEstados()
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Estado.getEstados());
@@ -130,6 +144,14 @@ public class ClientesForm extends Activity {
             // setando valor padrao para o spinner de estados
             spUf.setSelection(cliente.getUf());
 
+            
+          // Setando Campos Obrigatorios       
+          obrigatorios = new ArrayList<EditText>();
+          obrigatorios.add(etNome);
+          obrigatorios.add(etCpfCnpj);
+          obrigatorios.add(etRgIe);
+          obrigatorios.add(etLogradouro);
+          obrigatorios.add(etBairro);
             
 		 }catch (Exception e) {
 			Log.e(CNT_LOG, "onCreate - Error["+e.getMessage()+"]");
@@ -216,11 +238,37 @@ public class ClientesForm extends Activity {
 	            //Quando confirmar a inclusão ou alteração deve-se devolver
 	            //o registro com os dados preenchidos na tela e informar
 	            //o RESULT_OK e em seguida finalizar a Activity
-	                      
+			 	boolean flag = true; 
 	            Intent intent = new Intent();
+	            
+	            // Validar os campos obrigatorios
+//	            EditText primeiroInvalido = null;
+//	            for (int i = 0; i < obrigatorios.size() ; i++) {
+//					EditText campo = obrigatorios.get(i);
+//					if (!validarCampoObrigatorio(campo)){
+//						flag = false;
+//						if (primeiroInvalido == null){
+//							primeiroInvalido = campo;
+//						}
+//						//break; 
+//					}
+//				}
+//	            if (primeiroInvalido != null){
+//	            	primeiroInvalido.requestFocus();
+//	            }
+
+	            // Validar os campos obrigatorios
+	            for (int i = 0; i < obrigatorios.size() ; i++) {
+					EditText campo = obrigatorios.get(i);
+					if (!validarCampoObrigatorio(campo)){
+						flag = false;
+						break; 
+					}
+				}
 	            
 	            // Seta o Status Servidor para a Enviar
 	        	cliente.setStatus_servidor("0");
+
 	    		// Setando os valores na classe model
 	    		cliente.setNome(etNome.getText().toString());
 	    		cliente.setTelefoneFixo(etTelFixo.getText().toString());
@@ -238,62 +286,53 @@ public class ClientesForm extends Activity {
 	    		// Tratando pelo tipo
 	    		if (cliente.getTipo() == 1){
 	    			// Pessoa Fisica
-	    			// Setando o Cpf
-	    			cliente.setCpf(etCpfCnpj.getText().toString());    			
+	    			// validar o cpf
+	    			if (ValidarDocumento.check(etCpfCnpj.getText().toString())){
+		    			// Setando o Cpf
+	    				cliente.setCpf(etCpfCnpj.getText().toString());
+	    			}
+	    			else {
+	    				Log.v(CNT_LOG, "CPF INVALIDO");
+	    				flag = false;	    				
+	    				// retorna mensagem de erro
+	    				etCpfCnpj.setError("CPF Inválido!");
+	    				etCpfCnpj.requestFocus();
+	    			}
+	    			
 	    			// Setando o RG
 	    			cliente.setRg(etRgIe.getText().toString());
 	    		}
 	    		else {
 	    			// Pessoa Juridica
 	    			// Setando o CNPJ
-	    			cliente.setCnpj(etCpfCnpj.getText().toString());
+	    			if (ValidarDocumento.check(etCpfCnpj.getText().toString())){
+		    			cliente.setCnpj(etCpfCnpj.getText().toString());	    				
+	    			}
+	    			else {
+	    				Log.v(CNT_LOG, "CNPJ INVALIDO");
+	    				flag = false;
+	    				// retorna mensagem de erro
+	    				etCpfCnpj.setError("CNPJ Inválido!");
+	    				etCpfCnpj.requestFocus();
+	    			}
+
 	    			// Setando a Inscricao Estadual
 	    			cliente.setInscricao_estadual(etRgIe.getText().toString());
 	    		}
 	    		
-	    		
-	    		// Passando o Objeto Cliente pela Buble Intent
-	    		intent.putExtra("cliente", cliente);
-	            
-	            // Setando o Result como Ok 
-	            setResult(Activity.RESULT_OK, intent);
-	            
-	            finish();
+	    		if (flag){
+		    		// Passando o Objeto Cliente pela Buble Intent
+		    		intent.putExtra("cliente", cliente);
+		            
+		            // Setando o Result como Ok 
+		            setResult(Activity.RESULT_OK, intent);
+		            
+		            finish();
+	    		}
+
 	        }catch (Exception e) {
 				Log.e(CNT_LOG, "save - Error["+e.getMessage()+"]");
 	        }             
-		
-		// Recuperando os EditText
-//		EditText nome = (EditText) findViewById(R.id.cliente_fr_nome);
-//		EditText cpfcnpj = (EditText) findViewById(R.id.cliente_fr_cpf_cnpj);
-//		EditText rgie = (EditText) findViewById(R.id.cliente_fr_rg_ie);
-//		EditText telefoneFixo = (EditText) findViewById(R.id.cliente_fr_telefone_fixo);
-//		EditText telefoneMovel = (EditText) findViewById(R.id.cliente_fr_telefone_movel);
-
-//		// Setando os valores na classe model
-//		cliente.setNome(txtNome.getText().toString());
-//		cliente.setCpf(txtCpfCnpj.getText().toString());
-//		cliente.setRgie(rgie.getText().toString());
-//		cliente.setTelefoneFixo(telefoneFixo.getText().toString());
-//		cliente.setTelefoneMovel(telefoneMovel.getText().toString());
-
-		
-		// Mostrando Um toast so pra testar
-//		Toast.makeText(
-//				this,
-//				"Voce CLicou em Salvar o Cliente "
-//						+ cliente.getNome().toString(), Toast.LENGTH_SHORT)
-//				.show();
-		
-		
-		// O Registro Pode ser Salvo aki ou na Lista
-		// Criando Instancia Helper
-		//ClienteHelper helper = new ClienteHelper(ClientesForm.this);
-		
-		// Aqui seria o teste se e um insert ou um update
-		//helper.inserir(cliente);
-		
-
 	}
 
 	
@@ -371,72 +410,16 @@ public class ClientesForm extends Activity {
 	            break;
 	    }
 	}
-//	@Override
-//	public void onBackPressed() {
-//		Log.v("ClientesForm", "Clicou no Botão Voltar");
-//		
-//		Toast.makeText(this, "Voce Clicou no Botao Voltar Ainda tem que implementar a pergunta se deseja sair", Toast.LENGTH_SHORT).show();
-//		
-//		
-////		  Timer myTimer = new Timer();
-////		    myTimer.schedule(new TimerTask() {          
-////		        @Override
-////		        public void run() {
-////		            TimerMethod();
-////		        }
-////
-////		    }, 0, 1000);
-//
-//		
-//		
-//		return;
-//	}
-
-//    private void TimerMethod()
-//    {
-//    	Log.v("ClientesForm", "Entrou no Timer ");
-//        //This method is called directly by the timer
-//        //and runs in the same thread as the timer.
-//
-//        //We call the method that will work with the UI
-//        //through the runOnUiThread method.
-//    	//this.runOnUiThread(Timer_Tick);
-//    }
-
 	
-	
-//	ou 
-	
-	
-//    thread=  new Thread(){
-//        @Override
-//        public void run(){
-//            try {
-//                synchronized(this){
-//                    wait(3000);
-//                }
-//            }
-//            catch(InterruptedException ex){                    
-//            }
-//
-//            // TODO              
-//        }
-//    };
-//
-//    thread.start();     
-//    
-//    
-//    @Override
-//    public boolean onTouchEvent(MotionEvent evt)
-//    {
-//        if(evt.getAction() == MotionEvent.ACTION_DOWN)
-//        {
-//            synchronized(thread){
-//                thread.notifyAll();
-//            }
-//        }
-//        return true;
-//    }    
-	
-	
+	public boolean validarCampoObrigatorio(EditText editText) {
+        boolean retorno = true;
+       
+        if (editText.getText().toString().equals("")) {
+            editText.setError("Campo Obrigatório!");
+            editText.requestFocus();
+            retorno = false;
+        }
+                 
+        return retorno;
+    }
 }

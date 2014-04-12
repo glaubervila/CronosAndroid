@@ -151,7 +151,7 @@ public class PedidoProdutosHelper extends DataHelper{
 			
 			// Atualizar o Pedido
 			PedidoHelper pedidoHelper = new PedidoHelper(context);
-			if (pedidoHelper.atualizarPedido() == true) {
+			if (pedidoHelper.atualizarPedido(null) == true) {
 				return linhasInseridas;
 			}
 			else {
@@ -197,7 +197,7 @@ public class PedidoProdutosHelper extends DataHelper{
 			
 			// Atualizar o Pedido
 			PedidoHelper pedidoHelper = new PedidoHelper(context);
-			if (pedidoHelper.atualizarPedido() == true) {
+			if (pedidoHelper.atualizarPedido(null) == true) {
 				return linhasInseridas;
 			}
 			else {
@@ -229,7 +229,7 @@ public class PedidoProdutosHelper extends DataHelper{
 			
 			// Atualizar o Pedido
 			PedidoHelper pedidoHelper = new PedidoHelper(context);
-			if (pedidoHelper.atualizarPedido() == true) {
+			if (pedidoHelper.atualizarPedido(null) == true) {
 				return true;
 			}
 			else {

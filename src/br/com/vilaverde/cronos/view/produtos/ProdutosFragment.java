@@ -198,6 +198,9 @@ public class ProdutosFragment extends Fragment {
 		// Guarda a posicao de todas as imageView carregadas 
 		private HashMap<Integer, ImageView> imageViews;
 		
+		// TODO ME BASEAR NESSE TUTORIAL
+//		http://www.androidhub4you.com/2013/07/custom-grid-view-example-in-android.html
+		
 		public ProdutosImageAdapter(Context context, List<Produto> plistProdutos) {
 	        super();
 	        // Setando o context
@@ -211,6 +214,7 @@ public class ProdutosFragment extends Fragment {
 	        
 	        // instanciando o hash map para imageview
 	        imageViews = new HashMap<Integer, ImageView>();
+	        
 	    }
 		
 		public void addItem(final Produto item) {
@@ -248,7 +252,7 @@ public class ProdutosFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 	        try
-	        {	          			
+	        {	
 		       //Pega o registro da lista e trasnfere para o objeto 
 		       Produto produto = listProdutos.get(position);
 		        
@@ -318,28 +322,14 @@ public class ProdutosFragment extends Fragment {
 	       		    else {
 	       		    	Log.w(CNT_LOG,"Nao encontrou no mediaStore");
 	       		    }
-	           		
-//	           		Cursor c = this.context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
-//		                				new String[] { MediaStore.MediaColumns._ID },
-//		                				MediaStore.MediaColumns.DATA + "=?", 
-//		                				new String[] {path},
-//		                				null);
-//	           		
-//	       		    if (c != null && c.moveToFirst()) {
-//	       		        int id = c.getInt(c.getColumnIndex(MediaStore.MediaColumns._ID));
-//	       		        c.close();   
-//	       		    }
-//	       		    else {
-//	       		    	Log.w(CNT_LOG,"Nao encontrou no mediaStore");
-//	       		    }
-//	       		    c.close();
 	           }
 	           
 	           // Carregando a Imagem
 	           new LoadImage().execute(bundle);
-	           			
-	           return convertView;           
-	            
+	           	 
+	           return convertView;
+	          
+	           
 	       }catch (Exception e) {
 	    	   	if (e.getMessage() != null){
 	    	   		Log.e(CNT_LOG, "Erro getView - [ "+ e.getMessage()+ " ]");
