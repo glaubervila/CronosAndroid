@@ -63,22 +63,40 @@ SearchView.OnCloseListener {
 				
 				Produto produto = lstProdutos.get(position);
 				
-				ArrayList<Produto> arrayProdutos = (ArrayList<Produto>)lstProdutos; 
 				
-				Log.v(CNT_LOG, "Produto Descricao ["+produto.getDescricao_curta()+"] Index ["+index+"] Posicao ["+position+"]");
+				// TODO: Janela Detalhe Produto precisa buscar seu proximo e seu anterior 
+				// Isso aki foi uma correcao temporaria aparentemente nao pode passar uma lista muito grande de produtos
+				// Pelo intent, e atuamente nem e mais necessario pq a janela fecha ao incluir um produto.
+				// a solucao idal e colocar a tela de detalhes recuperando um registro seu proximo e seu antecessor
+//				List<Produto> produtos = new ArrayList<Produto>();
+				ArrayList<Produto> produtos = new ArrayList<Produto>();
+				produtos.add(produto);
+				
+//				List<Produto> produtos = new ArrayList<Produto>();
+//				produtos = (List<Produto>) helper.ListProdutosByDepartamentos(produto.getCategoria_id());
+
+				
+				ArrayList<Produto> arrayProdutos = (ArrayList<Produto>)produtos; 
 							
 				// Chamar a janela de Produtos Detalhes	  			        		
 				Intent intent = new Intent(getApplicationContext(), ProdutosDetalhe.class);
-				intent.putExtra("position", position);
+				//intent.putExtra("position", position);
+				intent.putExtra("position", 0);
 				intent.putExtra("codigo", produto.getCodigo());
 				intent.putExtra("image_path", produto.getImage_path());
 				intent.putExtra("produto",produto);
+				
+				
 				intent.putExtra("lstProdutos",arrayProdutos);
+				
+				Log.v(CNT_LOG, "Produto Descricao ["+produto.getDescricao_curta()+"] Index ["+index+"] Posicao ["+position+"]");
+				
 				startActivity(intent);
 
 				return false;
 			}
         	
+			
 		});
 	}
 
