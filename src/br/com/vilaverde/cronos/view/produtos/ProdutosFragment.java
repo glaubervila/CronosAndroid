@@ -100,6 +100,7 @@ public class ProdutosFragment extends Fragment {
         // Instanciar o Adapter e passar a listProdutos
 	 	adapter = new ProdutosImageAdapter(view.getContext(), lstProdutos); // uses the view to get the context instead of getActivity().
         
+	 	
         // Adicionar o Adapter a ListView       
 	 	gridView.setAdapter(adapter);    
         
@@ -123,7 +124,6 @@ public class ProdutosFragment extends Fragment {
 				
 			}
         });
-	 	
 	 	
         return view;
     }

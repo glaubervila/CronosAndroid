@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="fill_horizontal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/pedidos_listrow_tvStatus"
+            android:layout_width="113dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:gravity="center_vertical"
+            android:hint="Status"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/pedidos_listrow_tvData"
+            android:layout_width="145dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.01"
+            android:gravity="center_vertical"
+            android:hint="Data"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/pedidos_listrow_tvCliente"
+            android:layout_width="731dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:hint="Cliente"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/pedidos_listrow_tvTotal"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_weight="0.20"
+            android:gravity="left"
+            android:hint="R$ 9999.99"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <!-- <ImageButton -->
+        <!-- android:id="@+id/btn_produto_edit" -->
+        <!-- style="@style/GridCell" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="match_parent" -->
+        <!-- android:src="@drawable/ic_edit_light" /> -->
+
+
+        <!-- <ImageButton -->
+        <!-- android:id="@+id/btn_produto_discard" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="match_parent" -->
+        <!-- android:src="@drawable/ic_discard_light" /> -->
+
+    </LinearLayout>
+        
+</LinearLayout>

@@ -13,6 +13,7 @@
 
     <!-- Menu MainActivity -->
     <string name="menu_settings">Configurações</string>
+    <string name="menu_pedidos">Pedidos</string>
     <string name="atualizar">Atualizar</string>
     <string name="sair">Sair</string>
     <string name="novo_pedido">Novo Pedido</string>
@@ -60,6 +61,7 @@
     
     
     <string name="title_activity_cliente_search">Selecine um Cliente</string>
+    <string name="title_activity_pedidos_list">Lista de Pedidos</string>
     
 	<!-- RADIO BUTTONS -->
 	<string name="rbtDinheiro">Dinheiro</string>

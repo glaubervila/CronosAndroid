@@ -351,6 +351,7 @@ public class ProdutosHelper extends DataHelper{
 		
 		Log.v(CNT_LOG, "Produtos Count["+c.getCount()+"]");
 		List<Produto> lista = bindValues(c);
+		
 		return lista;
 	}
 
@@ -367,6 +368,9 @@ public class ProdutosHelper extends DataHelper{
 		
 		Log.v(CNT_LOG, "Produtos Count["+c.getCount()+"]");
 		List<Produto> lista = bindValues(c);
+		
+		this.Close();
+		
 		return lista;
 	}
 

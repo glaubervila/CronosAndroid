@@ -51,10 +51,12 @@ public class ProdutosDetalhe extends Activity {
                
         Intent intent = getIntent();
         int position = intent.getExtras().getInt("position");
+        
         lstProdutos = (ArrayList<Produto>) getIntent().getSerializableExtra("lstProdutos");
         
         Produto produto = lstProdutos.get(position);
        
+        
         Log.v(CNT_LOG, "Codigo = "+produto.getCodigo()+" Posisiton = "+position+ " Image_Path = "+produto.getImage_path());
         
         setProduto(produto);

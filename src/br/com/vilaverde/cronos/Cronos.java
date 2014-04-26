@@ -17,6 +17,7 @@ import br.com.vilaverde.cronos.dao.DataHelper;
 import br.com.vilaverde.cronos.settings.SettingsActivity;
 import br.com.vilaverde.cronos.view.clientes.ClientesList;
 import br.com.vilaverde.cronos.view.pedidos.PedidoAberto;
+import br.com.vilaverde.cronos.view.pedidos.PedidosList;
 import br.com.vilaverde.cronos.view.produtos.DepartamentosFragment;
 import br.com.vilaverde.cronos.view.produtos.ProdutosFragment;
 import br.com.vilaverde.cronos.view.produtos.ProdutosList;
@@ -76,7 +77,11 @@ public class Cronos extends FragmentActivity
 	            // app icon in action bar clicked;          
 	    		startActivity(new Intent(this,ClientesList.class));
 	            return true;	            
-	
+
+	        case R.id.menu_pedidos:          
+	    		startActivity(new Intent(this,PedidosList.class));
+	            return true;	            
+	            
 	        case R.id.menu_atualizar:          
 	    		startActivity(new Intent(this,Atualizar.class));
 	            return true;	            
@@ -97,6 +102,10 @@ public class Cronos extends FragmentActivity
 	    		
 	            return enviar();	            
 
+	        case R.id.sair:          
+	    		onBackPressed();
+	            return true;	            
+	            
 	            
 	        default:
 	            return super.onOptionsItemSelected(item);

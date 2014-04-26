@@ -386,12 +386,18 @@ public class ClienteHelper extends DataHelper{
         try { 
 
 			Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
-			List<Cliente> clientes = bindValues(c);
-			c.close();
-			
-			Log.v(CNT_LOG, "getCliente. Total [ "+ clientes.size()+" ]");
-			
-		    return clientes.get(0);
+			if (c.getCount() > 0){
+				List<Cliente> clientes = bindValues(c);
+				c.close();
+				
+				Log.v(CNT_LOG, "getCliente. Total [ "+ clientes.size()+" ]");
+				
+			    return clientes.get(0);
+			}
+			else {
+				Log.v(CNT_LOG, "Nenhum Cliente Encontrado ["+id+"]");
+				return null;
+			}
 		}
 		catch (Exception e){
 		 	Log.e(CNT_LOG, "getCliente - Error ["+e.getMessage()+"]");
@@ -402,6 +408,38 @@ public class ClienteHelper extends DataHelper{
 		}
 	 }
 
+	public Cliente getClienteServidor(int servidor_id){
+		Log.v(CNT_LOG, "Pesquisando Cliente. Servidor_Id [ "+servidor_id+" ]");
+		
+		this.Open();
+		
+		String where = "id_servidor = ?";
+        String[] selectionArgs = new String[] {String.valueOf(servidor_id)};
+
+        try { 
+
+			Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
+			if (c.getCount() > 0){
+				List<Cliente> clientes = bindValues(c);
+				c.close();
+				
+				Log.v(CNT_LOG, "getCliente. Total [ "+ clientes.size()+" ]");
+				
+			    return clientes.get(0);
+			}
+			else {
+				Log.v(CNT_LOG, "Nenhum Cliente Encontrado ["+servidor_id+"]");
+				return null;
+			}
+		}
+		catch (Exception e){
+		 	Log.e(CNT_LOG, "getCliente - Error ["+e.getMessage()+"]");
+		 	return null;
+		}
+		finally {
+		    this.Close();
+		}
+	 }
 	
 	
 	public List<Cliente> bindValues(Cursor c) {
