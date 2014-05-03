@@ -3,6 +3,8 @@ package br.com.vilaverde.cronos.view.clientes;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -144,5 +146,28 @@ SearchView.OnCloseListener {
         adapter = new ClienteAdapter(this, lstClientes);
         listView.setAdapter(adapter);
     	adapter.notifyDataSetChanged();
+    }
+    
+    public void onBackPressed() {
+    	// Confirmar antes de sair
+		// Chamar a janela de Pedido Aberto
+		Intent intent = new Intent();
+		 
+//		// Passando como Parametro um Flag  1 para alterar
+//		//intent.putExtra("tipo", ALTERAR);
+//		// Passando o Objeto Cliente  
+//        intent.putExtra("cliente", cliente);
+        
+        //chama a tela de Pedido
+        //startActivityForResult(intent,SELECIONADO);
+        // Setando o Result como Ok
+        setResult(Activity.RESULT_CANCELED, intent);
+        //startActivity(intent);
+        finish();
+
+    	
+    	
+        finish();    
+
     }
 }

@@ -66,7 +66,7 @@ public class PedidoAberto extends Activity {
 				Intent intent = new Intent(getApplicationContext(), ClienteSearch.class);
 				             
 	            //chama a tela de alteração
-	            startActivityForResult(intent,SELECIONAR); 
+	            startActivityForResult(intent, SELECIONAR); 
 
 			}
 		}
@@ -98,6 +98,14 @@ public class PedidoAberto extends Activity {
                 	onSelectCliente(cliente);
                 }
             }
+            if (resultCode == Activity.RESULT_CANCELED) {
+
+            	Log.v(CNT_LOG, "CANCELADO Novo Pedido");
+            	// Volta para a tela inicial
+            	finish();
+            }
+            
+            
         }
         catch (Exception e) {
         	Log.e(CNT_LOG, "onActivityResult - Error["+e.getMessage()+"]");
@@ -360,7 +368,7 @@ public class PedidoAberto extends Activity {
 		        public void onClick(DialogInterface dialog, int which) {
 		            // Do nothing but close the dialog
 		        	Log.v(CNT_LOG, "onDelete - Clicou no YES");
-		        	//delete();		        	
+		        	delete();		        	
 		            dialog.dismiss();
 		        }
 		    });
