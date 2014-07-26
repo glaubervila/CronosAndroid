@@ -61,13 +61,11 @@ public class PedidosProdutosAdapter extends BaseAdapter{
 			
 	        try
 	        {
-		          			
-	        	Log.v(CNT_LOG, "Position: ["+position+"]");
-	        	
+		          			        	
 		       //Pega o registro da lista e trasnfere para o objeto produto
 		       PedidoProduto produto = lstprodutos.get(position);
 		         
-	           Log.v(CNT_LOG, "Produto: ["+produto.getId()+"]");		       
+//	           Log.v(CNT_LOG, "Produto: ["+produto.getId()+"]");		       
 		       
 	           //O ViewHolder irá guardar a instâncias dos objetos do estado_row
 	           ViewHolder holder;

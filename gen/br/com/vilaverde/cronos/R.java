@@ -243,18 +243,19 @@ public final class R {
         public static final int pedido_produtos=0x7f030011;
         public static final int pedidos_list=0x7f030012;
         public static final int pedidos_list_row=0x7f030013;
-        public static final int pedidos_produtos_row=0x7f030014;
-        public static final int pedidoview=0x7f030015;
-        public static final int produtos_detalhe=0x7f030016;
-        public static final int produtos_detalhe_form=0x7f030017;
-        public static final int produtos_detalhe_imagem=0x7f030018;
-        public static final int produtos_grid_view=0x7f030019;
-        public static final int produtos_list=0x7f03001a;
-        public static final int produtos_list_row=0x7f03001b;
-        public static final int quantidade_prompt=0x7f03001c;
-        public static final int select_cliente_dialog=0x7f03001d;
-        public static final int splashscreen=0x7f03001e;
-        public static final int splashscreen2=0x7f03001f;
+        public static final int pedidos_produtos_header=0x7f030014;
+        public static final int pedidos_produtos_row=0x7f030015;
+        public static final int pedidoview=0x7f030016;
+        public static final int produtos_detalhe=0x7f030017;
+        public static final int produtos_detalhe_form=0x7f030018;
+        public static final int produtos_detalhe_imagem=0x7f030019;
+        public static final int produtos_grid_view=0x7f03001a;
+        public static final int produtos_list=0x7f03001b;
+        public static final int produtos_list_row=0x7f03001c;
+        public static final int quantidade_prompt=0x7f03001d;
+        public static final int select_cliente_dialog=0x7f03001e;
+        public static final int splashscreen=0x7f03001f;
+        public static final int splashscreen2=0x7f030020;
     }
     public static final class menu {
         public static final int activity_main=0x7f0a0000;
