@@ -48,6 +48,7 @@ public class PedidoProdutos extends Fragment {
 	
 	TableLayout table = null;
 	
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Setando o context 
 		context = this.getActivity().getApplicationContext();
@@ -63,19 +64,6 @@ public class PedidoProdutos extends Fragment {
 		// Recuperar o Table Layout
 		table = (TableLayout) view.findViewById(R.id.table_pedido_produtos);
 
-		
-//		table.setOnLongClickListener(new AdapterView.OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-//					int position, long index) {
-//								
-//					Log.v(CNT_LOG, "TESTE");
-//							
-//				return false;
-//			}
-//        	
-//		});
 		return view;
 	}
 	 
@@ -84,6 +72,7 @@ public class PedidoProdutos extends Fragment {
 		pedido = selectedPedido;
 		
 		if (pedido != null){
+					
 			// Buscar os Produtos desse pedido
 			produtos = pedidoProdutoHelper.getProdutos(pedido);		
 			if (produtos.size() > 0) {
@@ -139,15 +128,14 @@ public class PedidoProdutos extends Fragment {
 			row.addView(valor_total);
 
 
-			//float weigth = (float) 0.05;
+
 	        LayoutInflater layoutInflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	        View view = layoutInflater.inflate(R.layout.cell_button, container );        			
-			ImageButton btnEdit = (ImageButton) view.findViewById(R.id.cellButton);
+	        View view = layoutInflater.inflate(R.layout.cell_button, container );
+	        
 			// Button Edit
-			//final ImageButton btnEdit = new ImageButton(this.context);
-			//btnEdit.setBackgroundColor(getResources().getColor(R.color.branco));
+			ImageButton btnEdit = (ImageButton) view.findViewById(R.id.cellButton);
 			btnEdit.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_light));
-			//btnEdit.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+
 			LayoutParams cellLayout = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
 			cellLayout.column = 5;
 			btnEdit.setLayoutParams(cellLayout);
@@ -164,15 +152,7 @@ public class PedidoProdutos extends Fragment {
 	            }			
 	        });       
 	        row.addView(btnEdit);
-	        
-	        
-//			final ImageButton btnDelete = new ImageButton(this.context);
-//	        //button.setText("Delete");
-//			btnDelete.setBackgroundColor(getResources().getColor(R.color.branco));
-//			btnDelete.setImageDrawable(getResources().getDrawable(R.drawable.ic_discard_light));
-//			LayoutParams cellLayout2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-//			cellLayout.column = 6;
-//			btnDelete.setLayoutParams(cellLayout);
+	       
 	        
 	        // Button Delete
 	        LayoutInflater layoutInflater2 =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -193,16 +173,6 @@ public class PedidoProdutos extends Fragment {
 	            }			
 	        });
 			row.addView(btnDelete);
-
-//			row.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    int tableRowId = view.getId();
-//                    Log.v(CNT_LOG, "Long Click na row: "+tableRowId);
-////                	onCreateDialog(savedInstanceState);
-//                    return true;
-//                }
-//            });	
 			
 	 		table.addView(row);			       
 

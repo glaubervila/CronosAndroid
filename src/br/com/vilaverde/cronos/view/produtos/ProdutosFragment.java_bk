@@ -8,7 +8,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.FeatureInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -216,7 +215,6 @@ public class ProdutosFragment extends Fragment {
 	        // instanciando o hash map para imageview
 	        imageViews = new HashMap<Integer, ImageView>();
 	        
-	        
 	    }
 		
 		public void addItem(final Produto item) {
@@ -265,11 +263,11 @@ public class ProdutosFragment extends Fragment {
 	           //os objetos do XML, ele será nulo quando for a primeira vez que for carregado
 	           if (convertView == null) {
 
+	   	        	//Utiliza o XML _row para apresentar na tela
+	        	   	convertView = inflater.inflate(R.layout.lista_produtos_gridview_row, null);
+
 	   	        	//Cria o Viewholder e guarda a instância dos objetos
 	   	        	viewHolder = new ViewHolder();
-	        	   
-	        	    //Utiliza o XML _row para apresentar na tela
-	        	   	convertView = inflater.inflate(R.layout.lista_produtos_gridview_row, null);
 
 					// Setando no Holder o objeto imageview que esta no layout row
 		            viewHolder.imageViewProduto = (ImageView) convertView.findViewById(R.id.lista_produtos_imageViewProdutos);
@@ -281,7 +279,7 @@ public class ProdutosFragment extends Fragment {
 					// Debug mostrar a posicao do item
 					viewHolder.txtViewPosition = (TextView) convertView.findViewById(R.id.lista_produtos_textViewPosition);
 					
-										
+					
 	   	        	convertView.setTag(viewHolder);
 	   	        	
 	           } else {
@@ -294,9 +292,8 @@ public class ProdutosFragment extends Fragment {
 	           viewHolder.txtViewPreco.setText("R$ "+ produto.getStrPreco());
 	           
 	           // Mostrar a Position de uma Imagem
-	           //viewHolder.txtViewPosition.setText(""+position);		
-	           viewHolder.imageViewProduto.setImageBitmap(null);
-	           
+	           //viewHolder.txtViewPosition.setText(""+position);
+	           		
 	           // Guardo a ImageView e a sua posicao para usar quando a imagem estiver carregada
 	           imageViews.put(position, viewHolder.imageViewProduto);
 	                    			           		
@@ -311,7 +308,7 @@ public class ProdutosFragment extends Fragment {
 	           
 	           if (image_id > 0) {
 	        	   bundle.putLong("image_id", produto.getImage_id());
-
+	        	   //Log.v(CNT_LOG,"DEBUG: "+produto.getImage_id());
 	           }
 	           else {	        	
 	           		String path = produto.getImage_path();	        		
@@ -356,7 +353,7 @@ public class ProdutosFragment extends Fragment {
     			String path = bundle[0].getString("path");
 
     			//Log.v("LoadImage", "Carregando Codigo = "+codigo+" Position: "+position+" ID: " +image_id);
-    			
+		
     			// Usando o Metodo fetchThumb passando o id da imagem original e recebendo o Thumbnail
     			Bitmap bitmap = fetchThumb(image_id);		         
     			
@@ -417,9 +414,8 @@ public class ProdutosFragment extends Fragment {
     			else {
         			// Se nao tiver bitmap logar para verificar
     				//Log.e("LoadImage", "Imagem nao Carregada");
-//	    			imageView.setImageBitmap((Bitmap) image_default_bitmap);
-//	    			imageView.setScaleType(ScaleType.CENTER);
-    				imageView.setImageBitmap(null);
+	    			imageView.setImageBitmap((Bitmap) image_default_bitmap);
+	    			imageView.setScaleType(ScaleType.CENTER);
     			}
     		}
     		

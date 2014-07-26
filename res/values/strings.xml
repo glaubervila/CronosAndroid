@@ -62,6 +62,7 @@
     
     <string name="title_activity_cliente_search">Selecine um Cliente</string>
     <string name="title_activity_pedidos_list">Lista de Pedidos</string>
+    <string name="title_activity_pedidos_view">Pedido</string>
     
 	<!-- RADIO BUTTONS -->
 	<string name="rbtDinheiro">Dinheiro</string>

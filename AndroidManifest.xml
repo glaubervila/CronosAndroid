@@ -58,6 +58,10 @@
         <activity
             android:name="br.com.vilaverde.cronos.view.pedidos.PedidosList"
             android:label="@string/title_activity_pedidos_list" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.view.pedidos.PedidoView"
+            android:label="@string/title_activity_pedidos_view" >
         </activity>        
         <activity
             android:name="br.com.vilaverde.cronos.view.clientes.ClienteSearch"

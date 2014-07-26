@@ -48,11 +48,17 @@ public class PedidoDetalhes extends Fragment {
 
 		
 		// Cliente
+//		// FIXME AKI TEM UMA CONVERSAO NO ID CLIENTE DE INT PARA STRING
+//		Cliente cliente = clienteHelper.getCliente(Integer.parseInt(pedido.getId_cliente()));
+//		
+//        TextView tvCliente = (TextView) view.findViewById(R.id.pedido_nome_cliente);
+//        tvCliente.setText(cliente.getNome());
+
 		// FIXME AKI TEM UMA CONVERSAO NO ID CLIENTE DE INT PARA STRING
-		Cliente cliente = clienteHelper.getCliente(Integer.parseInt(pedido.getId_cliente()));
-		
+	
         TextView tvCliente = (TextView) view.findViewById(R.id.pedido_nome_cliente);
-        tvCliente.setText(cliente.getNome());
+        tvCliente.setText(pedido.getCliente());
+
         
 	 }
 }

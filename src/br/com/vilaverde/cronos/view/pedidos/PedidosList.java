@@ -57,49 +57,25 @@ SearchView.OnCloseListener {
         listView.setAdapter(adapter);
         
         
-//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-//					int position, long index) {
-//				
-//				Pedido pedido = lstPedidos.get(position);
-//				
-//				
-//				// TODO: Janela Detalhe Produto precisa buscar seu proximo e seu anterior 
-//				// Isso aki foi uma correcao temporaria aparentemente nao pode passar uma lista muito grande de produtos
-//				// Pelo intent, e atuamente nem e mais necessario pq a janela fecha ao incluir um produto.
-//				// a solucao idal e colocar a tela de detalhes recuperando um registro seu proximo e seu antecessor
-////				List<Produto> produtos = new ArrayList<Produto>();
-//				ArrayList<Pedido> pedidos = new ArrayList<Produto>();
-//				pedidos.add(produto);
-//				
-////				List<Produto> produtos = new ArrayList<Produto>();
-////				produtos = (List<Produto>) helper.ListProdutosByDepartamentos(produto.getCategoria_id());
-//
-//				
-//				ArrayList<Produto> arrayProdutos = (ArrayList<Produto>)produtos; 
-//							
-//				// Chamar a janela de Produtos Detalhes	  			        		
-//				Intent intent = new Intent(getApplicationContext(), ProdutosDetalhe.class);
-//				//intent.putExtra("position", position);
-//				intent.putExtra("position", 0);
-//				intent.putExtra("codigo", produto.getCodigo());
-//				intent.putExtra("image_path", produto.getImage_path());
-//				intent.putExtra("produto",produto);
-//				
-//				
-//				intent.putExtra("lstPedidos",arrayProdutos);
-//				
-//				Log.v(CNT_LOG, "Produto Descricao ["+produto.getDescricao_curta()+"] Index ["+index+"] Posicao ["+position+"]");
-//				
-//				startActivity(intent);
-//
-//				return false;
-//			}
-//        	
-//			
-//		});
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int position, long index) {
+				
+				Pedido pedido = lstPedidos.get(position);
+									
+				Log.v(CNT_LOG, "Pedido ["+pedido.getCliente()+"] Index ["+index+"] Posicao ["+position+"]");
+				// Chamar a janela de Detalhes do Pedido	  			        		
+				Intent intent = new Intent(getApplicationContext(), PedidoView.class);
+				intent.putExtra("position", position);
+				intent.putExtra("pedido", pedido);
+				
+				startActivity(intent);
+
+				return false;
+			}		
+		});
 	}
 
 	@Override
