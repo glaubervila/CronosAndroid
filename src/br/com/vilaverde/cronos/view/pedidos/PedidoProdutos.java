@@ -194,14 +194,20 @@ public class PedidoProdutos extends Fragment {
 	    
 	    final EditText input = (EditText) promptView.findViewById(R.id.quantidade_prompt_edtxt);
 	    
-//	    // Add action buttons
+	    // Add action buttons
 	    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	           @Override
-	           public void onClick(DialogInterface dialog, int id) {
+	           public void onClick(DialogInterface dialog, int id) {	        	   
 	               // Alterar quantidade do produto
-	        	   float quantidade = Float.parseFloat(input.getText().toString());
-	        	   Log.v(CNT_LOG, "ALTERAR O PRODUTO. Index: "+index+ " Quantidade: "+quantidade);
-	        	   alterarQuantidade(index, quantidade);
+	        	   if (input.getText().toString().length() > 0){
+
+		        	   float quantidade = Float.parseFloat(input.getText().toString());
+		        	   
+		        	   Log.v(CNT_LOG, "ALTERAR O PRODUTO. Index: "+index+ " Quantidade: "+quantidade);
+		        	   
+	        	       alterarQuantidade(index, quantidade);
+	        	   }
+	        	   
 	           }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -245,25 +251,7 @@ public class PedidoProdutos extends Fragment {
 	    alert.show();
 	}
 	
-//	private OnLongClickListener OnLongClickTableRow = new OnLongClickListener() {
-//
-//        @Override
-//        public boolean onLongClick(View v) {
-//             TableRow SelectedRow;
-//
-//             if(AlreadySelctedRow >= 0){
-//                 SelectedRow = (TableRow) findViewById(AlreadySelctedRow);
-//                 SelectedRow.setBackgroundColor(0xFFCCD0);
-//             }
-//             SelectedRow = (TableRow)v;
-//
-//             SelectedRow.setBackgroundColor(Color.WHITE);
-//             AlreadySelctedRow = v.getId();
-//            showPopupMenu(v);
-//            return false;
-//        }
-//    };
-	
+
 	public  TextView createCell(String value, int colIndex, Boolean background, int weight ){
 		
         LayoutInflater layoutInflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -277,11 +265,7 @@ public class PedidoProdutos extends Fragment {
         android.widget.TableRow.LayoutParams cellLayout = new android.widget.TableRow.LayoutParams();
         cellLayout.column = colIndex;
         cellLayout.weight = weight;
-       
-//        if ( !background ){ 
-//        	textView.setBackgroundResource(R.drawable.cell_shape_impar);	
-//		}
-       
+             
         textView.setLayoutParams(cellLayout);
         
 		return textView;
@@ -311,8 +295,7 @@ public class PedidoProdutos extends Fragment {
 		}
 		else {
 			Log.v(CNT_LOG, "Quantidade Igual nao Faz Nada");
-		}
-		
+		}	
 	}
 	
 	public void deletarProduto(int index, TableRow row){
@@ -332,6 +315,5 @@ public class PedidoProdutos extends Fragment {
 			Toast.makeText(context, "Produto Removido", Toast.LENGTH_SHORT).show();
 			// TODO: Altualizar o detalhe do Pedido
 		}	
-	}
-	
+	}	
 }
