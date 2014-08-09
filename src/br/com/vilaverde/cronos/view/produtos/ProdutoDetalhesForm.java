@@ -1,5 +1,7 @@
 package br.com.vilaverde.cronos.view.produtos;
 
+import java.text.NumberFormat;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;

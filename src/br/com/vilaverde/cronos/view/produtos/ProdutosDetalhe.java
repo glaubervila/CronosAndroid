@@ -1,5 +1,6 @@
 package br.com.vilaverde.cronos.view.produtos;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -238,7 +239,9 @@ public class ProdutosDetalhe extends Activity {
 		this.setTitle(title);
         //txtViewDescricao.setText(produto.getDescricao_curta());
 		txtViewDescricao.setText(produto.getDescricao());
-        txtViewPreco.setText("R$ "+ produto.getStrPreco());
+		
+		String strPreco = NumberFormat.getCurrencyInstance().format(produto.getPreco());
+        txtViewPreco.setText(strPreco);
 		
 		// Criar um Fragment Manager para recuperar os fragments
 		fragmentManager = getFragmentManager();

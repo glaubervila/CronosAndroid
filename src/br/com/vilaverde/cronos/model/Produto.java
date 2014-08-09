@@ -98,8 +98,7 @@ public class Produto implements Serializable{
 		return preco;
 	}
 	public String getStrPreco(){
-	    String strPreco = NumberFormat.getInstance().format(preco);
-	    //Log.v(CNT_LOG, "Preco = "+strPreco);
+	    String strPreco = NumberFormat.getCurrencyInstance().format(preco);
 	    return strPreco;
 	}
 	public void setPreco(double preco) {

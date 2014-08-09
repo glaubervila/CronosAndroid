@@ -1,5 +1,6 @@
 package br.com.vilaverde.cronos.view.produtos;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import android.content.Context;
@@ -82,7 +83,8 @@ public class ProdutosListAdapter extends BaseAdapter{
            }
            
            holder.tvDescricao.setText(produto.getDescricao());
-           holder.tvPreco.setText("R$ "+produto.getPreco());
+           String strPreco = NumberFormat.getCurrencyInstance().format(produto.getPreco());
+           holder.tvPreco.setText(strPreco);
            
            return convertView;           
             

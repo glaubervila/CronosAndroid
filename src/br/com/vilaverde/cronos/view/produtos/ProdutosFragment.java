@@ -2,6 +2,7 @@ package br.com.vilaverde.cronos.view.produtos;
 
 
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -291,7 +292,9 @@ public class ProdutosFragment extends Fragment {
 	           }
 	           
  	           viewHolder.txtViewDescricao.setText(produto.getDescricao_curta());
-	           viewHolder.txtViewPreco.setText("R$ "+ produto.getStrPreco());
+ 	           
+ 	           String strPreco = NumberFormat.getCurrencyInstance().format(produto.getPreco());
+	           viewHolder.txtViewPreco.setText(strPreco);
 	           
 	           // Mostrar a Position de uma Imagem
 	           //viewHolder.txtViewPosition.setText(""+position);		

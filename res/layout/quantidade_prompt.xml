@@ -5,13 +5,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:padding="10dp" >
-    
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TESTE"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
         android:id="@+id/quantidade_prompt_edtxt"

@@ -645,7 +645,6 @@ public class ProdutosHelper extends DataHelper{
 	  	boolean result = false;
 
 	  	// Gravar Imagem
-		//String fullPath =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Produtos/"; 
 	  	String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cronos/Produtos/";
 	  	
 	  	// Fazer o Download
@@ -717,7 +716,8 @@ public class ProdutosHelper extends DataHelper{
 		  	    	fOut.close();
 		  	    	Log.v(CNT_LOG, "Bitmap adiconado ao file");
 		  	    	
-		  	    	String teste = MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+		  	    	// Comentei para testar se é este comando que esta fazendo as imagens ir para a pasta da camera
+		  	    	//String teste = MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
 		  	    	//Log.d(CNT_LOG, "MEDIA STORE: "+teste);
 		  	    	
 		  	    	
@@ -734,7 +734,7 @@ public class ProdutosHelper extends DataHelper{
 							});
 		  	    	Log.v(CNT_LOG, "Media inserted");
 
-		  	    	teste = null;
+		  	    	//teste = null;
 		  	    	bmImg.recycle();
 		  	    	//bmImg = null;
 		  	    	file = null;

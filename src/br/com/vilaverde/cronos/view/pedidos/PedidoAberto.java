@@ -71,8 +71,7 @@ public class PedidoAberto extends Activity {
 			}
 		}
 		catch (Exception error){
-			Log.e("TESTE", error.getMessage());
-	    	Log.e("TESTE", "Falha ao Inserir Pedido");
+			Log.e(CNT_LOG, error.getMessage());
 	    }
 		
 		
