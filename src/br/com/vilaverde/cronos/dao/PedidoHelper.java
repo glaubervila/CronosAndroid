@@ -45,17 +45,19 @@ public class PedidoHelper extends DataHelper{
 	public List<Pedido> getPedidos(){
 		Log.v(CNT_LOG, "Recupera Todos os Pedidos.");
 			
+		List<Pedido> pedidos = null;
+		
 		this.Open();
 		Cursor c = db.query(TABELA, null, null, null, null, null, "dt_inclusao DESC");
 	   
 		if (c.getCount() > 0) {
 			Log.v(CNT_LOG, "Total Pedidos [ "+c.getCount()+" ].");
-			List<Pedido> pedidos = bindValues(c);
+			pedidos = bindValues(c);
 			    	  
 			return pedidos;
 		}
 		else {
-			return null;
+			return pedidos;
 		}
 	}
 	

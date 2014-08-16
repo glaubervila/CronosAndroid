@@ -63,7 +63,7 @@ public class PedidosListAdapter extends BaseAdapter{
 		
         try
         {
-	          			
+
 	       //Pega o registro da lista e trasnfere para o objeto produto
 	       Pedido pedido = lstPedidos.get(position);
 	         
@@ -106,8 +106,9 @@ public class PedidosListAdapter extends BaseAdapter{
            holder.tvTotal.setText(strTotal);
            
            return convertView;           
-            
-       }catch (Exception e) {
+
+       }
+       catch (Exception e) {
     	   	if (e.getMessage() != null){
     	   		Log.e(CNT_LOG, "Erro getView - [ "+ e.getMessage()+ " ]");
     	   	}

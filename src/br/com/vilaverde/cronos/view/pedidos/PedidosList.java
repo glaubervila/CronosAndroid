@@ -46,19 +46,18 @@ SearchView.OnCloseListener {
 		
         // Recuperar o Array de Clientes no DB
         lstPedidos = helper.getPedidos();
-//        String title = lstPedidos.size()+" Produtos";
-//        setTitle(title);
-
         
         // Instanciar o Adapter e passar o array
         adapter = new PedidosListAdapter(this, lstPedidos);
         
-        // Adicionar o Adapter a ListView
-        listView.setAdapter(adapter);
-        
+        if ((lstPedidos != null) && (lstPedidos.size() > 0 )) {
+	        // Adicionar o Adapter a ListView
+	        listView.setAdapter(adapter);
+	        	        
+        }
         
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
+        	
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int position, long index) {
@@ -76,6 +75,8 @@ SearchView.OnCloseListener {
 				return false;
 			}		
 		});
+
+        
 	}
 
 	@Override

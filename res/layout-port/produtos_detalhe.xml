@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
     <fragment
         android:id="@+id/fragment_produto_detalhes_imagem"
         android:name="br.com.vilaverde.cronos.view.produtos.ProdutoDetalhesImagem"
-        android:layout_width="689dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         tools:layout="@layout/produtos_detalhe_imagem" />
@@ -16,8 +16,9 @@
     <fragment
         android:id="@+id/fragment_produto_detalhes_form"
         android:name="br.com.vilaverde.cronos.view.produtos.ProdutoDetalhesForm"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         tools:layout="@layout/produtos_detalhe_form" />
 
 </LinearLayout>
