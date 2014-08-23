@@ -3,7 +3,11 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="10dp" >
+    android:minHeight="48dp"
+    android:gravity="center_vertical"
+    android:paddingRight="20dp"
+    android:paddingLeft="10dp"
+    android:background="@drawable/activable_indicator_background" >
 
         <TextView
             android:id="@+id/departamentos_ListRow_tvDepartamento"
@@ -17,3 +21,4 @@
             android:textStyle="bold" />
         
 </LinearLayout>
+
