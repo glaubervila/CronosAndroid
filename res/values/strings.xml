@@ -56,40 +56,31 @@
     <string name="btn_voltar">Voltar</string>
     <string name="btn_cancelar">Cancelar</string>
     <string name="btn_adicionar">Adicionar</string>
-	<string name="btn_local">Local</string>
+    <string name="btn_local">Local</string>
     <string name="btn_remota">Remota</string>
-    
-    
     <string name="title_activity_cliente_search">Selecine um Cliente</string>
     <string name="title_activity_pedidos_list">Lista de Pedidos</string>
     <string name="title_activity_pedidos_view">Pedido</string>
-    
-	<!-- RADIO BUTTONS -->
-	<string name="rbtDinheiro">Dinheiro</string>
-	<string name="rbtCartaoCredito">Cartão de Credito</string>
-	<string name="rbtCheque">Cheque</string>
-	<string name="rbtBoleto">Boleto</string>
-	
-	<string name="rbt1x">1x</string>
-	<string name="rbt2x">2x</string>
-	<string name="rbt3x">3x</string>
-	<string name="rbt4x">4x</string>
-	<string name="rbt5x">5x</string>
-	
-	
-	<!-- ATUALIZACAO -->
-	<string name="semConexaoTitulo">Não é possivel estabelecer conexão com o servidor</string>
-	<string name="semConexaoDescricao">Verifique sua conexão de rede e tente novamente.</string>
-	<string name="tipoConexaoTitulo">Tipo Conexão?</string>
-	<string name="tipoConexaoDescricao">
-	    <b>Local:</b> Apenas quando estiver na rede interna da empresa.\n
-	    <b>Remota:</b> Quando estiver usando 3G ou qualquer outra rede.\n\n
-	    <b>Dica:</b> Se estiver na rede local ela será mais rápida que a remota.
-    </string>
 
-        
-	<!-- CONFIGURACAO -->
-	<string name="setting_title">Configurações</string>
+    <!-- RADIO BUTTONS -->
+    <string name="rbtDinheiro">Dinheiro</string>
+    <string name="rbtCartaoCredito">Cartão de Credito</string>
+    <string name="rbtCheque">Cheque</string>
+    <string name="rbtBoleto">Boleto</string>
+    <string name="rbt1x">1x</string>
+    <string name="rbt2x">2x</string>
+    <string name="rbt3x">3x</string>
+    <string name="rbt4x">4x</string>
+    <string name="rbt5x">5x</string>
+
+    <!-- ATUALIZACAO -->
+    <string name="semConexaoTitulo">Não é possivel estabelecer conexão com o servidor</string>
+    <string name="semConexaoDescricao">Verifique sua conexão de rede e tente novamente.</string>
+    <string name="tipoConexaoTitulo">Tipo Conexão?</string>
+    <string name="tipoConexaoDescricao"><b>Local:</b> Apenas quando estiver na rede interna da empresa.\n<b>Remota:</b> Quando estiver usando 3G ou qualquer outra rede.\n\n<b>Dica:</b> Se estiver na rede local ela será mais rápida que a remota.</string>
+
+    <!-- CONFIGURACAO -->
+    <string name="setting_title">Configurações</string>
     <string name="setting_category_servidor">Servidor</string>
     <string name="setting_servidor_localhost">Host Local</string>
     <string name="setting_servidor_localhost_summary">Host para conexão local com o servidor.\nEx: 192.168.0.200</string>
@@ -97,9 +88,7 @@
     <string name="setting_servidor_remotahost_summary">Host para conexão remota com o servidor.\nEx: dominioservidor.com:8081</string>
     <string name="setting_vendedor_id">Código Vendedor</string>
     <string name="setting_vendedor_id_summary">Código Interndo do Vendedor, de acordo com o que está cadastrado no servidor.</string>
-
-
-
-	
+    <string name="title_produto_list">Produtos</string>
+    <string name="title_produto_detail">Produto Detail</string>
 
 </resources>

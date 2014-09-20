@@ -75,27 +75,10 @@ public class ProdutosFragment extends Fragment {
         
         // Crio o Helper Produtos
 		produtosHelper = new ProdutosHelper(this.getActivity().getBaseContext()) ;
-
-    
-//		Cursor cursor = view.getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//    		null, android.provider.MediaStore.Images.Media.DATA + " like ?", 
-//    		new String[] {image_default},
-//    		null);
-//		cursor.moveToFirst();
-//		
-//		Log.v(CNT_LOG,"DefaultImageID ="+cursor.getString(cursor.getColumnIndex("_id")) );
-//		image_default_id = cursor.getLong(cursor.getColumnIndex("_id"));
-		
-		// Setando o Bitmap da imagem default      			
-//		image_default_bitmap = MediaStore.Images.Thumbnails.getThumbnail(
-//                    view.getContext().getContentResolver(), image_default_id,
-//                    MediaStore.Images.Thumbnails.MINI_KIND, null);
-		
+	
 		image_default_bitmap  = BitmapFactory.decodeResource(getResources(), R.drawable.ic_camera);
 
-		
-//		cursor.close();
-		
+				
 		// Executar a query
 		lstProdutos = (ArrayList<Produto>) produtosHelper.ListProdutosByDepartamentos(0);
 		

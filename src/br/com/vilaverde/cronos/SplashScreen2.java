@@ -124,7 +124,8 @@ public class SplashScreen2 extends Activity implements Runnable {
 //		MediaScannerWrapper teste = new MediaScannerWrapper(this, sd_path , "image/jpeg");
 //		teste.scan();
 		
-		Intent it =  new Intent(this, Cronos.class);
+//		Intent it =  new Intent(this, Cronos.class);
+		Intent it =  new Intent(this, ProdutoListActivity.class);
 		startActivity(it);
 
 		finish();

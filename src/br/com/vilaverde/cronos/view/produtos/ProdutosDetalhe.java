@@ -2,6 +2,7 @@ package br.com.vilaverde.cronos.view.produtos;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -27,7 +28,8 @@ public class ProdutosDetalhe extends Activity {
 	private static FragmentManager fragmentManager = null;
 	
 	private ViewFlipper viewFlipper;
-	ArrayList<Produto> lstProdutos;
+//	ArrayList<Produto> lstProdutos;
+	List<Produto> lstProdutos = null;
 	
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -53,7 +55,8 @@ public class ProdutosDetalhe extends Activity {
         Intent intent = getIntent();
         int position = intent.getExtras().getInt("position");
         
-        lstProdutos = (ArrayList<Produto>) getIntent().getSerializableExtra("lstProdutos");
+//        lstProdutos = (ArrayList<Produto>) getIntent().getSerializableExtra("lstProdutos");
+        lstProdutos = (List<Produto>) getIntent().getSerializableExtra("lstProdutos");
         
         Produto produto = lstProdutos.get(position);
        

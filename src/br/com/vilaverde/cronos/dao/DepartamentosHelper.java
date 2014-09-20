@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.util.Log;
 import br.com.vilaverde.cronos.Messages;
 import br.com.vilaverde.cronos.httpclient.HttpTaskPost;
+import br.com.vilaverde.cronos.model.Cliente;
 import br.com.vilaverde.cronos.model.Departamento;
 
 public class DepartamentosHelper extends DataHelper{
@@ -82,6 +83,40 @@ public class DepartamentosHelper extends DataHelper{
 
 	 }
 
+	public Departamento getDepartamento(int id){
+		Log.v(CNT_LOG, "Pesquisando Departamento. Id [ "+id+" ]");
+		
+		this.Open();
+		
+		String where = "_id = ?";
+        String[] selectionArgs = new String[] {String.valueOf(id)};
+
+        try { 
+
+			Cursor c = db.query(TABELA, null, where, selectionArgs, null, null, null);
+			if (c.getCount() > 0){
+				List<Departamento> departamentos = bindValues(c);
+				c.close();
+				
+				Log.v(CNT_LOG, "getDepartamento. Total [ "+ departamentos.size()+" ]");
+				
+			    return departamentos.get(0);
+			}
+			else {
+				Log.v(CNT_LOG, "Nenhum Departamento Encontrado ["+id+"]");
+				return null;
+			}
+		}
+		catch (Exception e){
+		 	Log.e(CNT_LOG, "getDepartamento - Error ["+e.getMessage()+"]");
+		 	return null;
+		}
+		finally {
+		    this.Close();
+		}
+	 }
+
+	
 	public List<Departamento> getDepartamentos(){
 		Log.v(CNT_LOG, "Recupera Todos os Departamentos.");
 		// FIXME: ERRO NA INSTALACAO POR QUE NAO TEM DEPARTAMENTO, CRIAR UMA TELA PARA A PRIMEIRA ATUALIZACAO
@@ -101,8 +136,6 @@ public class DepartamentosHelper extends DataHelper{
 				
 		        this.Close();
 		        c.close();
-		        
-
 			}
 			else {
 				Log.w(CNT_LOG, "Não TEM DEPARTAMENTOS");
@@ -136,7 +169,7 @@ public class DepartamentosHelper extends DataHelper{
 			departamento.setDepartamento(c.getString(c.getColumnIndex("departamento")));
 			
 			       	
-			Cursor produtos = helper.getProdutosByDepartamentos(departamento.getId());		
+			Cursor produtos = helper.getProdutosByDepartamentos(departamento.getId());
 			departamento.setTotal(produtos.getCount());
 			produtos.close();
 			

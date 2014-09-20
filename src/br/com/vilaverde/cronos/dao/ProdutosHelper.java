@@ -376,7 +376,7 @@ public class ProdutosHelper extends DataHelper{
 
 	
 	public Cursor getProdutosByDepartamentos(int departamento_id) {
-		Log.v(CNT_LOG, "getProdutos()");		
+		Log.v(CNT_LOG, "getProdutosByDepartamentos()");		
 		this.Open();
 		
 		String depart_id = Integer.toString(departamento_id) ;
@@ -393,7 +393,7 @@ public class ProdutosHelper extends DataHelper{
 	}
 	
 	public List<Produto> ListProdutosByDepartamentos(int departamento_id){
-		Log.v(CNT_LOG, "getProdutos. Depart [ "+departamento_id+" ]");
+		Log.v(CNT_LOG, "ListProdutosByDepartamentos(). Depart [ "+departamento_id+" ]");
 		
 		this.Open();
 		// So retornar os produtos com status diferente de inativo (-1)	e que tem imagem	
@@ -402,13 +402,16 @@ public class ProdutosHelper extends DataHelper{
         String[] selectionArgs = {depart_id};
 
 		Cursor c = db.query(TABELA, null, where, selectionArgs,null , null, "descricao_curta");
+
+		List<Produto> lista = null;
 		
-		List<Produto> lista = bindValues(c);
-
-
+		if (c.getCount() > 0){
+			lista = bindValues(c);
+			Log.v(CNT_LOG, "getLista, Total [ "+ lista.size()+" ]");
+		}
+		
+		
 		this.Close();
-		
-		Log.v(CNT_LOG, "getLista, Total [ "+ lista.size()+" ]");
 		
 	    return lista;
 	 }

@@ -62,7 +62,7 @@
         <activity
             android:name="br.com.vilaverde.cronos.view.pedidos.PedidoView"
             android:label="@string/title_activity_pedidos_view" >
-        </activity>        
+        </activity>
         <activity
             android:name="br.com.vilaverde.cronos.view.clientes.ClienteSearch"
             android:label="@string/title_activity_cliente_search" >
@@ -71,12 +71,25 @@
             android:name="br.com.vilaverde.cronos.Atualizar"
             android:label="Atualizar" >
         </activity>
-        <activity 
-            android:name=".settings.SettingsActivity"
-            android:label="@string/setting_title" android:icon="@android:drawable/ic_menu_manage">
+        <activity
+            android:name="br.com.vilaverde.cronos.settings.SettingsActivity"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:label="@string/setting_title" >
         </activity>
-        <activity android:name=".view.produtos.ProdutosList"></activity>
-        
+        <activity android:name="br.com.vilaverde.cronos.view.produtos.ProdutosList" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.ProdutoListActivity"
+            android:label="@string/title_produto_list" >
+        </activity>
+        <activity
+            android:name="br.com.vilaverde.cronos.ProdutoDetailActivity"
+            android:label="@string/title_produto_detail"
+            android:parentActivityName=".ProdutoListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ProdutoListActivity" />
+        </activity>
     </application>
 
 </manifest>
